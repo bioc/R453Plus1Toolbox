@@ -1,0 +1,2 @@
+#1.1 ampId forwardCount reverseCount
+I81	224	255

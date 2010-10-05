@@ -1,0 +1,83 @@
+/***************************************************************************
+**
+**	454 Life Sciences Corporation
+**
+**	Software Release: 2.0.01.12
+**
+**	Quality Filter Metrics Results
+**
+**	Run Name:      R_2009_07_30_14_26_52_FLX12080469_Administrator_714003
+**	Analysis Name: R_2009_07_30_14_26_52_FLX12080469_Administrator_714003/D_2009_07_31_08_45_30_flxcluster_fullProcessing_714003
+**
+**	File Created:  2009/07/30 14:26:52
+**
+***************************************************************************/
+
+
+/*
+**	Run conditions
+*/
+runConditions
+{
+	dateOfFile		= "2009/07/30 14:26:52";
+	
+	rigRunName		= "R_2009_07_30_14_26_52_FLX12080469_Administrator_714003";
+	analysisName	= "R_2009_07_30_14_26_52_FLX12080469_Administrator_714003/D_2009_07_31_08_45_30_flxcluster_fullProcessing_714003";
+	PTPBarCode		= "Unknown";
+}
+
+region
+{
+	name             = 1;
+	totalRawWells    = 1039324;
+	totalKeyPass     = 1020164;
+
+	key
+	{
+		keySequence               = CATG;
+		numKeyPass                = 9825;
+		numDotFailed              = 114;
+		numMixedFailed            = 184;
+		numTrimmedTooShortQuality = 1052;
+		numTrimmedTooShortPrimer  = 0;
+		totalPassedFiltering      = 8475;
+	}
+	key
+	{
+		keySequence               = TCAG;
+		numKeyPass                = 1010339;
+		numDotFailed              = 27329;
+		numMixedFailed            = 47939;
+		numTrimmedTooShortQuality = 335953;
+		numTrimmedTooShortPrimer  = 743;
+		totalPassedFiltering      = 598375;
+	}
+}
+
+region
+{
+	name             = 2;
+	totalRawWells    = 1146202;
+	totalKeyPass     = 1113445;
+
+	key
+	{
+		keySequence               = CATG;
+		numKeyPass                = 6862;
+		numDotFailed              = 94;
+		numMixedFailed            = 208;
+		numTrimmedTooShortQuality = 1008;
+		numTrimmedTooShortPrimer  = 0;
+		totalPassedFiltering      = 5552;
+	}
+	key
+	{
+		keySequence               = TCAG;
+		numKeyPass                = 1106583;
+		numDotFailed              = 31991;
+		numMixedFailed            = 82827;
+		numTrimmedTooShortQuality = 491820;
+		numTrimmedTooShortPrimer  = 188;
+		totalPassedFiltering      = 499757;
+	}
+}

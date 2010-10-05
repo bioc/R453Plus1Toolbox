@@ -1,0 +1,102 @@
+importClassesFrom(Biobase, AnnotatedDataFrame, AssayData, MIAME, Versions, Versioned, VersionedBiobase, eSet)
+importMethodsFrom(Biobase, assayData, "assayData<-", combine, fData, featureData, "featureData<-",
+    pData, phenoData, "phenoData<-", sampleNames, varMetadata)
+importFrom(Biobase, assayDataElementNames, assayDataNew)
+    
+importFrom(biomaRt, getBM, getSequence, useMart)
+
+importClassesFrom(Biostrings, DNAString, DNAStringSet, XStringSet)
+importMethodsFrom(Biostrings, PDict, aligned, compact, complement, countIndex, deletion, endIndex,
+    insertion, matchPDict, matchPattern, mismatchTable, pairwiseAlignment, reverseComplement,
+    startIndex, translate, vmatchPattern)
+importFrom(Biostrings, BStringSet, DNAString, DNAStringSet, nucleotideSubstitutionMatrix)
+
+importClassesFrom(BSgenome, BSgenome)
+
+importFrom(graphics, axis, barplot, boxplot, legend, lines, mtext, par, plot, points, polygon, rect,
+    strheight, strwidth, text)
+
+importFrom(grDevices, dev.off, pdf, png, rgb)
+
+importClassesFrom(IRanges, RangesList)
+importMethodsFrom(IRanges, "%in%", Views, aggregate, as.data.frame, as.matrix, as.vector, cbind, 
+    colnames, "colnames<-", countOverlaps, coverage, duplicated, end, "end<-", findOverlaps, gsub,
+    intersect, lapply, levels, mad, match, matchMatrix, mean, median, nchar, ncol, nrow, order,
+    paste, pmax, pmin, ranges, rbind, restrict, rev, rownames, "rownames<-", sapply, score, sd, 
+    setdiff, shift, sort, split, start, subject, subseq, subset, substr, substring, summary, t, 
+    table, toString, union, unique, unlist, values, "values<-", which, width)
+importFrom(IRanges, IRanges, RangedData)
+
+importClassesFrom(methods, ANY, character, data.frame, list, logical, matrix, missing, numeric)
+importMethodsFrom(methods, initialize, show)
+importFrom(methods, "@<-", as, callNextMethod, new)
+
+importFrom(R2HTML, HTML, HTML.title, HTMLEndFile, HTMLInitFile)
+
+importFrom(Rsamtools, scanBam)
+
+#importMethodsFrom(rtracklayer, strand)
+
+importClassesFrom(ShortRead, AlignedRead)
+importMethodsFrom(ShortRead, chromosome, id, name, position)
+importFrom(ShortRead, AlignedDataFrame, AlignedRead, alignData, sread)
+
+importFrom(stats, as.dist, cutree, filter, hclust)
+
+importFrom(utils, read.csv, read.table, write.csv)
+
+
+exportClasses(
+    AVASet,
+    MapperSet,
+    AnnotatedVariants,
+    Breakpoints)
+
+
+exportMethods(
+    alignShortReads,
+    readsOnTarget,
+    coverageOnTarget,
+    genomeSequencerMIDs,
+    sequenceCaptureLinkers,
+    demultiplexReads,
+    removeLinker,
+
+    filterChimericReads,
+    detectBreakpoints,
+    mergeBreakpoints,
+
+    annotateVariants,
+    annotatedVariants,
+    htmlReport,
+    
+    plotVariationFrequency,
+    plotAmpliconCoverage,
+    plotVariants,
+    plotChimericReads,
+            
+    seqsC1, "seqsC1<-",
+    seqsC2, "seqsC2<-",
+    commonBpsC1, "commonBpsC1<-",
+    commonBpsC2, "commonBpsC2<-",
+    commonAlignC1, "commonAlignC1<-",
+    commonAlignC2, "commonAlignC2<-",
+    alignedReadsC1, "alignedReadsC1<-",
+    alignedReadsC2, "alignedReadsC2<-",
+             
+    MapperSet,
+    AVASet,
+    fDataAmp,
+    featureDataAmp, "featureDataAmp<-",
+    assayDataAmp, "assayDataAmp<-",
+    getAlignedReads,
+    referenceSequences, "referenceSequences<-",
+    getReadStatus,
+    getVariantPercentages,
+    setVariantFilter          
+)
+
+export(
+    extendedCIGARToList,
+    listToExtendedCIGAR
+)

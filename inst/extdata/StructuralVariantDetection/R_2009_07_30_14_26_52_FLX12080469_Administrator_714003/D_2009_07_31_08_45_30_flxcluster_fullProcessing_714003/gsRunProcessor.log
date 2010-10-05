@@ -1,0 +1,107 @@
+[Fri Jul 31 08:45:32 2009][Information][]	gsRunProcessor 2.0.01.12 (Build 236)  Starting
+[Fri Jul 31 08:45:32 2009][Information][]	gsRunProcessor 2.0.01.12 (Build 236)  Starting
+[Fri Jul 31 08:45:32 2009][Information][]	gsRunProcessor 2.0.01.12 (Build 236)  Starting
+[Fri Jul 31 08:42:58 2009][Information][]	gsRunProcessor 2.0.01.12 (Build 236)  Starting
+[Fri Jul 31 08:42:58 2009][Information][]	gsRunProcessor 2.0.01.12 (Build 236)  Starting
+[Fri Jul 31 08:45:45 2009][Information][]	gsRunProcessor 2.0.01.12 (Build 236)  Starting
+[Fri Jul 31 08:45:45 2009][Information][]	gsRunProcessor 2.0.01.12 (Build 236)  Starting
+[Fri Jul 31 08:43:45 2009][Information][]	gsRunProcessor 2.0.01.12 (Build 236)  Starting
+[Fri Jul 31 08:43:45 2009][Information][]	gsRunProcessor 2.0.01.12 (Build 236)  Starting
+[Fri Jul 31 08:43:45 2009][Information][]	gsRunProcessor 2.0.01.12 (Build 236)  Starting
+[Fri Jul 31 08:44:13 2009][Information][]	gsRunProcessor 2.0.01.12 (Build 236)  Starting
+[Fri Jul 31 08:43:45 2009][Information][]	gsRunProcessor 2.0.01.12 (Build 236)  Starting
+[Fri Jul 31 08:44:13 2009][Information][]	gsRunProcessor 2.0.01.12 (Build 236)  Starting
+[Fri Jul 31 08:44:13 2009][Information][]	gsRunProcessor 2.0.01.12 (Build 236)  Starting
+[Fri Jul 31 08:45:32 2009][Information][]	gsRunProcessor 2.0.01.12 (Build 236)  Starting
+[Fri Jul 31 08:42:58 2009][Information][]	gsRunProcessor 2.0.01.12 (Build 236)  Starting
+[Fri Jul 31 08:42:58 2009][Information][]	gsRunProcessor 2.0.01.12 (Build 236)  Starting
+[Fri Jul 31 08:45:45 2009][Information][]	gsRunProcessor 2.0.01.12 (Build 236)  Starting
+[Fri Jul 31 08:45:45 2009][Information][]	gsRunProcessor 2.0.01.12 (Build 236)  Starting
+[Fri Jul 31 08:44:13 2009][Information][]	gsRunProcessor 2.0.01.12 (Build 236)  Starting
+[Fri Jul 31 08:45:35 2009][Information][]	Detected processor speed: 2327 MHz.
+[Fri Jul 31 08:45:35 2009][Information][]	Detected system memory: 16434 megabytes.
+[Fri Jul 31 08:45:35 2009][Information][]	Allowing at most 986 megabytes per process.
+[Fri Jul 31 08:45:40 2009][Notice][ProcessingEngine]	Starting job 07cf9812-7dd0-11de-bf01-002354a53a17.
+[Fri Jul 31 08:45:41 2009][Notice][ProcessingEngine]	Processing Group 0 : Creating output files.
+[Fri Jul 31 08:43:53 2009][Notice][ProcessingEngine]	Processing Group 1 : Creating output files.
+[Fri Jul 31 08:45:41 2009][Notice][ProcessingEngine]	Processing Group 0 : Loading data.
+[Fri Jul 31 08:43:53 2009][Notice][ProcessingEngine]	Processing Group 1 : Loading data.
+[Fri Jul 31 08:45:41 2009][Notice][ProcessingEngine]	Processing Group 0 : Done loading data for region(s): 1.
+[Fri Jul 31 08:43:53 2009][Notice][ProcessingEngine]	Processing Group 1 : Done loading data for region(s): 2.
+[Fri Jul 31 08:45:41 2009][Notice][ProcessingEngine]	Processing Group 0 : Region 1 WellFinder starting.
+[Fri Jul 31 08:43:53 2009][Notice][ProcessingEngine]	Processing Group 1 : Region 2 WellFinder starting.
+[Fri Jul 31 08:46:31 2009][Information][WellFinder]	Region 1 : Found 1039324 raw wells.
+[Fri Jul 31 08:46:32 2009][Notice][ProcessingEngine]	Processing Group 0 : Region 1 WellFinder finished.
+[Fri Jul 31 08:46:32 2009][Notice][ProcessingEngine]	Processing Group 0 : Region 1 WellBuilder starting.
+[Fri Jul 31 08:44:48 2009][Information][WellFinder]	Region 2 : Found 1146202 raw wells.
+[Fri Jul 31 08:44:49 2009][Notice][ProcessingEngine]	Processing Group 1 : Region 2 WellFinder finished.
+[Fri Jul 31 08:44:49 2009][Notice][ProcessingEngine]	Processing Group 1 : Region 2 WellBuilder starting.
+[Fri Jul 31 08:47:39 2009][Information][WellBuilder]	Region 1 : 9238 control key pass, 1013232 sample key pass.
+[Fri Jul 31 08:46:12 2009][Information][WellBuilder]	Region 2 : 6349 control key pass, 1108917 sample key pass.
+[Fri Jul 31 09:34:03 2009][Notice][ProcessingEngine]	Processing Group 0 : Region 1 WellBuilder finished.
+[Fri Jul 31 09:34:03 2009][Notice][ProcessingEngine]	Processing Group 0 : Region 1 MetricsGenerator starting.
+[Fri Jul 31 09:34:03 2009][Notice][ProcessingEngine]	Processing Group 0 : Region 1 MetricsGenerator finished.
+[Fri Jul 31 09:34:03 2009][Notice][ProcessingEngine]	Processing Group 0 : Region 1 DataWriter starting.
+[Fri Jul 31 09:34:43 2009][Notice][ProcessingEngine]	Processing Group 1 : Region 2 WellBuilder finished.
+[Fri Jul 31 09:34:43 2009][Notice][ProcessingEngine]	Processing Group 1 : Region 2 MetricsGenerator starting.
+[Fri Jul 31 09:34:43 2009][Notice][ProcessingEngine]	Processing Group 1 : Region 2 MetricsGenerator finished.
+[Fri Jul 31 09:34:43 2009][Notice][ProcessingEngine]	Processing Group 1 : Region 2 DataWriter starting.
+[Fri Jul 31 09:40:20 2009][Notice][ProcessingEngine]	Processing Group 0 : Region 1 DataWriter finished.
+[Fri Jul 31 09:40:20 2009][Notice][ProcessingEngine]	Processing Group 0 : Region 1 NukeSignalStrengthBalancer (pass 1) starting.
+[Fri Jul 31 09:40:24 2009][Notice][ProcessingEngine]	Processing Group 0 : Region 1 NukeSignalStrengthBalancer (pass 1) finished.
+[Fri Jul 31 09:40:24 2009][Notice][ProcessingEngine]	Processing Group 0 : Region 1 BlowByCorrector starting.
+[Fri Jul 31 09:41:13 2009][Notice][ProcessingEngine]	Processing Group 1 : Region 2 DataWriter finished.
+[Fri Jul 31 09:41:13 2009][Notice][ProcessingEngine]	Processing Group 1 : Region 2 NukeSignalStrengthBalancer (pass 2) starting.
+[Fri Jul 31 09:41:17 2009][Notice][ProcessingEngine]	Processing Group 1 : Region 2 NukeSignalStrengthBalancer (pass 2) finished.
+[Fri Jul 31 09:41:17 2009][Notice][ProcessingEngine]	Processing Group 1 : Region 2 BlowByCorrector starting.
+[Fri Jul 31 09:48:33 2009][Notice][ProcessingEngine]	Processing Group 0 : Region 1 BlowByCorrector finished.
+[Fri Jul 31 09:48:33 2009][Notice][ProcessingEngine]	Processing Group 0 : Region 1 NucValveEventBalancer starting.
+[Fri Jul 31 09:48:40 2009][Notice][ProcessingEngine]	Processing Group 0 : Region 1 NucValveEventBalancer finished.
+[Fri Jul 31 09:48:40 2009][Notice][ProcessingEngine]	Processing Group 0 : Region 1 CafieCorrector starting.
+[Fri Jul 31 09:57:22 2009][Notice][ProcessingEngine]	Processing Group 1 : Region 2 BlowByCorrector finished.
+[Fri Jul 31 09:57:22 2009][Notice][ProcessingEngine]	Processing Group 1 : Region 2 NucValveEventBalancer starting.
+[Fri Jul 31 09:57:30 2009][Notice][ProcessingEngine]	Processing Group 1 : Region 2 NucValveEventBalancer finished.
+[Fri Jul 31 09:57:30 2009][Notice][ProcessingEngine]	Processing Group 1 : Region 2 CafieCorrector starting.
+[Fri Jul 31 12:46:37 2009][Notice][ProcessingEngine]	Processing Group 0 : Region 1 CafieCorrector finished.
+[Fri Jul 31 12:46:37 2009][Notice][ProcessingEngine]	Processing Group 0 : Region 1 NukeSignalStrengthBalancer (pass 2) starting.
+[Fri Jul 31 12:46:41 2009][Notice][ProcessingEngine]	Processing Group 0 : Region 1 NukeSignalStrengthBalancer (pass 2) finished.
+[Fri Jul 31 12:46:41 2009][Notice][ProcessingEngine]	Processing Group 0 : Region 1 MetricsGenerator starting.
+[Fri Jul 31 12:46:43 2009][Notice][ProcessingEngine]	Processing Group 0 : Region 1 MetricsGenerator finished.
+[Fri Jul 31 12:46:43 2009][Notice][ProcessingEngine]	Processing Group 0 : Region 1 IndividualWellScaler starting.
+[Fri Jul 31 12:47:39 2009][Notice][ProcessingEngine]	Processing Group 0 : Region 1 IndividualWellScaler finished.
+[Fri Jul 31 12:47:39 2009][Notice][ProcessingEngine]	Processing Group 0 : Region 1 MostLikelyErrorSubtractor starting.
+[Fri Jul 31 12:54:11 2009][Notice][ProcessingEngine]	Processing Group 0 : Region 1 MostLikelyErrorSubtractor finished.
+[Fri Jul 31 12:54:11 2009][Notice][ProcessingEngine]	Processing Group 0 : Region 1 WellScreener (pass 1) starting.
+[Fri Jul 31 12:54:25 2009][Notice][ProcessingEngine]	Processing Group 0 : Region 1 WellScreener (pass 1) finished.
+[Fri Jul 31 12:54:25 2009][Notice][ProcessingEngine]	Processing Group 0 : Region 1 MetricsGenerator starting.
+[Fri Jul 31 13:01:25 2009][Notice][ProcessingEngine]	Processing Group 0 : Region 1 MetricsGenerator finished.
+[Fri Jul 31 13:01:25 2009][Notice][ProcessingEngine]	Processing Group 0 : Region 1 QualityFilter starting.
+[Fri Jul 31 13:03:17 2009][Notice][ProcessingEngine]	Processing Group 0 : Region 1 QualityFilter finished.
+[Fri Jul 31 13:03:17 2009][Notice][ProcessingEngine]	Processing Group 0 : Region 1 BaseCaller starting.
+[Fri Jul 31 13:08:22 2009][Notice][ProcessingEngine]	Processing Group 1 : Region 2 CafieCorrector finished.
+[Fri Jul 31 13:08:22 2009][Notice][ProcessingEngine]	Processing Group 1 : Region 2 NukeSignalStrengthBalancer (pass 2) starting.
+[Fri Jul 31 13:08:26 2009][Notice][ProcessingEngine]	Processing Group 1 : Region 2 NukeSignalStrengthBalancer (pass 2) finished.
+[Fri Jul 31 13:08:26 2009][Notice][ProcessingEngine]	Processing Group 1 : Region 2 MetricsGenerator starting.
+[Fri Jul 31 13:08:28 2009][Notice][ProcessingEngine]	Processing Group 1 : Region 2 MetricsGenerator finished.
+[Fri Jul 31 13:08:28 2009][Notice][ProcessingEngine]	Processing Group 1 : Region 2 IndividualWellScaler starting.
+[Fri Jul 31 13:09:35 2009][Notice][ProcessingEngine]	Processing Group 1 : Region 2 IndividualWellScaler finished.
+[Fri Jul 31 13:09:35 2009][Notice][ProcessingEngine]	Processing Group 1 : Region 2 MostLikelyErrorSubtractor starting.
+[Fri Jul 31 13:16:46 2009][Notice][ProcessingEngine]	Processing Group 1 : Region 2 MostLikelyErrorSubtractor finished.
+[Fri Jul 31 13:16:46 2009][Notice][ProcessingEngine]	Processing Group 1 : Region 2 WellScreener (pass 2) starting.
+[Fri Jul 31 13:18:42 2009][Notice][ProcessingEngine]	Processing Group 1 : Region 2 WellScreener (pass 2) finished.
+[Fri Jul 31 13:18:42 2009][Notice][ProcessingEngine]	Processing Group 1 : Region 2 MetricsGenerator starting.
+[Fri Jul 31 13:19:52 2009][Notice][ProcessingEngine]	Processing Group 1 : Region 2 MetricsGenerator finished.
+[Fri Jul 31 13:19:52 2009][Notice][ProcessingEngine]	Processing Group 1 : Region 2 QualityFilter starting.
+[Fri Jul 31 13:21:30 2009][Notice][ProcessingEngine]	Processing Group 1 : Region 2 QualityFilter finished.
+[Fri Jul 31 13:21:30 2009][Notice][ProcessingEngine]	Processing Group 1 : Region 2 BaseCaller starting.
+[Fri Jul 31 13:26:53 2009][Notice][ProcessingEngine]	Processing Group 0 : Region 1 BaseCaller finished.
+[Fri Jul 31 13:26:53 2009][Information][ProcessingEngine]	Processing Group 0 : Processing complete for region 1.  Writing results.
+[Fri Jul 31 13:32:22 2009][Information][ProcessingEngine]	Processing Group 0 : Finished processing.  Waiting for other groups.
+[Fri Jul 31 13:42:12 2009][Notice][ProcessingEngine]	Processing Group 1 : Region 2 BaseCaller finished.
+[Fri Jul 31 13:42:12 2009][Information][ProcessingEngine]	Processing Group 1 : Processing complete for region 2.  Writing results.
+[Fri Jul 31 13:48:09 2009][Information][ProcessingEngine]	Processing Group 1 : Finished processing.  Waiting for other groups.
+[Fri Jul 31 13:49:57 2009][Information][ProcessingEngine]	Generating output reports and requested legacy files.
+[Fri Jul 31 14:04:17 2009][Information][ProcessingEngine]	Done generating reports.
+[Fri Jul 31 14:04:17 2009][Information][ProcessingEngine]	Launching post analysis script: postAnalysisScript.sh
+[Fri Jul 31 14:04:18 2009][Information][ProcessingEngine]	Post analysis script complete.
+[Fri Jul 31 14:04:18 2009][Information][ProcessingEngine]	Job complete.

@@ -1,0 +1,475 @@
+/***************************************************************************
+**
+**      454 Life Sciences Corporation
+**         Newbler Metrics Results
+**
+**      Date of Mapping: 2010/01/27 12:20:44
+**      Project Directory: /home/data/NimbleGenFinal/N03_R01
+**      Software Release: 2.3  (091027_1459)
+**
+***************************************************************************/
+
+/*
+**  Input information.
+*/
+
+referenceSequenceData
+{
+	file
+	{
+		path = "/home/data/Genomes/hg19/chr1.fa";
+		numberOfReads = 1;
+		numberOfBases = 249250621;
+	}
+
+	file
+	{
+		path = "/home/data/Genomes/hg19/chr10.fa";
+		numberOfReads = 1;
+		numberOfBases = 135534747;
+	}
+
+	file
+	{
+		path = "/home/data/Genomes/hg19/chr11.fa";
+		numberOfReads = 1;
+		numberOfBases = 135006516;
+	}
+
+	file
+	{
+		path = "/home/data/Genomes/hg19/chr12.fa";
+		numberOfReads = 1;
+		numberOfBases = 133851895;
+	}
+
+	file
+	{
+		path = "/home/data/Genomes/hg19/chr13.fa";
+		numberOfReads = 1;
+		numberOfBases = 115169878;
+	}
+
+	file
+	{
+		path = "/home/data/Genomes/hg19/chr14.fa";
+		numberOfReads = 1;
+		numberOfBases = 107349540;
+	}
+
+	file
+	{
+		path = "/home/data/Genomes/hg19/chr15.fa";
+		numberOfReads = 1;
+		numberOfBases = 102531392;
+	}
+
+	file
+	{
+		path = "/home/data/Genomes/hg19/chr16.fa";
+		numberOfReads = 1;
+		numberOfBases = 90354753;
+	}
+
+	file
+	{
+		path = "/home/data/Genomes/hg19/chr17.fa";
+		numberOfReads = 1;
+		numberOfBases = 81195210;
+	}
+
+	file
+	{
+		path = "/home/data/Genomes/hg19/chr18.fa";
+		numberOfReads = 1;
+		numberOfBases = 78077248;
+	}
+
+	file
+	{
+		path = "/home/data/Genomes/hg19/chr19.fa";
+		numberOfReads = 1;
+		numberOfBases = 59128983;
+	}
+
+	file
+	{
+		path = "/home/data/Genomes/hg19/chr2.fa";
+		numberOfReads = 1;
+		numberOfBases = 243199373;
+	}
+
+	file
+	{
+		path = "/home/data/Genomes/hg19/chr20.fa";
+		numberOfReads = 1;
+		numberOfBases = 63025520;
+	}
+
+	file
+	{
+		path = "/home/data/Genomes/hg19/chr21.fa";
+		numberOfReads = 1;
+		numberOfBases = 48129895;
+	}
+
+	file
+	{
+		path = "/home/data/Genomes/hg19/chr22.fa";
+		numberOfReads = 1;
+		numberOfBases = 51304566;
+	}
+
+	file
+	{
+		path = "/home/data/Genomes/hg19/chr3.fa";
+		numberOfReads = 1;
+		numberOfBases = 198022430;
+	}
+
+	file
+	{
+		path = "/home/data/Genomes/hg19/chr4.fa";
+		numberOfReads = 1;
+		numberOfBases = 191154276;
+	}
+
+	file
+	{
+		path = "/home/data/Genomes/hg19/chr5.fa";
+		numberOfReads = 1;
+		numberOfBases = 180915260;
+	}
+
+	file
+	{
+		path = "/home/data/Genomes/hg19/chr6.fa";
+		numberOfReads = 1;
+		numberOfBases = 171115067;
+	}
+
+	file
+	{
+		path = "/home/data/Genomes/hg19/chr7.fa";
+		numberOfReads = 1;
+		numberOfBases = 159138663;
+	}
+
+	file
+	{
+		path = "/home/data/Genomes/hg19/chr8.fa";
+		numberOfReads = 1;
+		numberOfBases = 146364022;
+	}
+
+	file
+	{
+		path = "/home/data/Genomes/hg19/chr9.fa";
+		numberOfReads = 1;
+		numberOfBases = 141213431;
+	}
+
+	file
+	{
+		path = "/home/data/Genomes/hg19/chrX.fa";
+		numberOfReads = 1;
+		numberOfBases = 155270560;
+	}
+
+	file
+	{
+		path = "/home/data/Genomes/hg19/chrY.fa";
+		numberOfReads = 1;
+		numberOfBases = 59373566;
+	}
+
+}
+
+runData
+{
+	file
+	{
+		path = "/home/data/R_2009_07_30_14_26_52_FLX12080469_Administrator_714003/D_2009_07_31_08_45_30_flxcluster_fullProcessing_714003/sff/FZY3Q2K01.sff";
+
+		numberOfReads = 168351, 165579;
+		numberOfBases = 58625151, 54805198;
+	}
+
+}
+
+/*
+**  Operation metrics.
+*/
+
+runMetrics
+{
+	numberOfReferenceSequences  = 24; 
+	totalReferenceNumberOfBases = 3095677412; 
+
+	totalNumberOfReads = 165579; 
+	totalNumberOfBases = 54805198; 
+
+	numberSearches   = 156347;
+	seedHitsFound    = 112890588, 722.05;
+	overlapsFound    = 25399599, 162.46, 22.50%;
+	overlapsReported = 159380, 1.02, 0.63%;
+	overlapsUsed     = 155710, 1.00, 97.70%;
+}
+
+readMappingResults
+{
+	file
+	{
+		path = "/home/data/R_2009_07_30_14_26_52_FLX12080469_Administrator_714003/D_2009_07_31_08_45_30_flxcluster_fullProcessing_714003/sff/FZY3Q2K01.sff";
+
+		numMappedReads     = 153707, 92.83%;
+		numMappedBases     = 53680909, 97.95%;
+		inferredReadError  = 1.29%, 678178;
+
+		numUniquelyMapped     = 148459;
+		numUniqueInRegions    = 97453, 65.64%;
+		numUniqueOutOfRegions = 51006, 34.36%;
+	}
+
+}
+
+/*
+** Consensus distribution information.
+*/
+consensusDistribution
+{
+	fullDistribution
+	{
+		signalBin =  0.0, 71446;
+		signalBin =  0.6, 5;
+		signalBin =  0.7, 153;
+		signalBin =  0.8, 40993;
+		signalBin =  0.9, 708765;
+		signalBin =  1.0, 183067;
+		signalBin =  1.1, 3996;
+		signalBin =  1.2, 262;
+		signalBin =  1.3, 52;
+		signalBin =  1.4, 19;
+		signalBin =  1.5, 17;
+		signalBin =  1.6, 70;
+		signalBin =  1.7, 1508;
+		signalBin =  1.8, 37913;
+		signalBin =  1.9, 155341;
+		signalBin =  2.0, 50382;
+		signalBin =  2.1, 2266;
+		signalBin =  2.2, 122;
+		signalBin =  2.3, 35;
+		signalBin =  2.4, 29;
+		signalBin =  2.5, 72;
+		signalBin =  2.6, 310;
+		signalBin =  2.7, 3253;
+		signalBin =  2.8, 27194;
+		signalBin =  2.9, 41909;
+		signalBin =  3.0, 6282;
+		signalBin =  3.1, 345;
+		signalBin =  3.2, 53;
+		signalBin =  3.3, 22;
+		signalBin =  3.4, 72;
+		signalBin =  3.5, 318;
+		signalBin =  3.6, 1612;
+		signalBin =  3.7, 6996;
+		signalBin =  3.8, 11566;
+		signalBin =  3.9, 4919;
+		signalBin =  4.0, 962;
+		signalBin =  4.1, 123;
+		signalBin =  4.2, 43;
+		signalBin =  4.3, 95;
+		signalBin =  4.4, 231;
+		signalBin =  4.5, 667;
+		signalBin =  4.6, 1778;
+		signalBin =  4.7, 3088;
+		signalBin =  4.8, 2090;
+		signalBin =  4.9, 578;
+		signalBin =  5.0, 116;
+		signalBin =  5.1, 49;
+		signalBin =  5.2, 105;
+		signalBin =  5.3, 194;
+		signalBin =  5.4, 354;
+		signalBin =  5.5, 553;
+		signalBin =  5.6, 575;
+		signalBin =  5.7, 382;
+		signalBin =  5.8, 115;
+		signalBin =  5.9, 49;
+		signalBin =  6.0, 56;
+		signalBin =  6.1, 91;
+		signalBin =  6.2, 114;
+		signalBin =  6.3, 183;
+		signalBin =  6.4, 193;
+		signalBin =  6.5, 141;
+		signalBin =  6.6, 67;
+		signalBin =  6.7, 35;
+		signalBin =  6.8, 36;
+		signalBin =  6.9, 26;
+		signalBin =  7.0, 45;
+		signalBin =  7.1, 56;
+		signalBin =  7.2, 51;
+		signalBin =  7.3, 38;
+		signalBin =  7.4, 24;
+		signalBin =  7.5, 25;
+		signalBin =  7.6, 23;
+		signalBin =  7.7, 29;
+		signalBin =  7.8, 29;
+		signalBin =  7.9, 29;
+		signalBin =  8.0, 23;
+		signalBin =  8.1, 30;
+		signalBin =  8.2, 20;
+		signalBin =  8.3, 26;
+		signalBin =  8.4, 17;
+		signalBin =  8.5, 23;
+		signalBin =  8.6, 18;
+		signalBin =  8.7, 14;
+		signalBin =  8.8, 9;
+		signalBin =  8.9, 12;
+		signalBin =  9.0, 13;
+		signalBin =  9.1, 8;
+		signalBin =  9.2, 11;
+		signalBin =  9.3, 10;
+		signalBin =  9.4, 7;
+		signalBin =  9.5, 14;
+		signalBin =  9.6, 6;
+		signalBin =  9.7, 10;
+		signalBin =  9.8, 4;
+		signalBin =  9.9, 4;
+		signalBin = 10.0, 6;
+		signalBin = 10.1, 8;
+		signalBin = 10.2, 5;
+		signalBin = 10.3, 7;
+		signalBin = 10.4, 9;
+		signalBin = 10.5, 6;
+		signalBin = 10.6, 3;
+		signalBin = 10.7, 7;
+		signalBin = 10.8, 3;
+		signalBin = 10.9, 4;
+		signalBin = 11.0, 3;
+		signalBin = 11.1, 5;
+		signalBin = 11.2, 9;
+		signalBin = 11.3, 2;
+		signalBin = 11.4, 3;
+		signalBin = 11.5, 6;
+		signalBin = 11.6, 6;
+		signalBin = 11.7, 5;
+		signalBin = 11.8, 2;
+		signalBin = 11.9, 9;
+		signalBin = 12.0, 4;
+		signalBin = 12.1, 4;
+		signalBin = 12.2, 1;
+		signalBin = 12.3, 3;
+		signalBin = 12.4, 5;
+		signalBin = 12.5, 4;
+		signalBin = 12.6, 3;
+		signalBin = 12.7, 2;
+		signalBin = 12.8, 4;
+		signalBin = 12.9, 1;
+		signalBin = 13.0, 4;
+		signalBin = 13.3, 2;
+		signalBin = 13.4, 1;
+		signalBin = 13.5, 3;
+		signalBin = 13.6, 2;
+		signalBin = 13.7, 1;
+		signalBin = 13.8, 2;
+		signalBin = 13.9, 1;
+		signalBin = 14.0, 2;
+		signalBin = 14.1, 2;
+		signalBin = 14.4, 1;
+		signalBin = 14.5, 1;
+		signalBin = 14.6, 1;
+		signalBin = 14.7, 3;
+		signalBin = 15.0, 1;
+		signalBin = 15.2, 2;
+		signalBin = 15.3, 1;
+		signalBin = 15.5, 2;
+		signalBin = 15.6, 2;
+		signalBin = 15.7, 1;
+		signalBin = 15.8, 1;
+		signalBin = 16.7, 1;
+		signalBin = 17.0, 1;
+		signalBin = 17.5, 2;
+		signalBin = 17.6, 2;
+		signalBin = 17.8, 2;
+		signalBin = 18.1, 1;
+		signalBin = 19.3, 1;
+		signalBin = 19.4, 1;
+		signalBin = 20.2, 1;
+		signalBin = 20.7, 1;
+	}
+
+	distributionPeaks
+	{
+		signalPeak = 1, 0.96;
+		signalPeak = 2, 1.94;
+		signalPeak = 3, 2.90;
+		signalPeak = 4, 3.82;
+		signalPeak = 5, 4.74;
+		signalPeak = 6, 5.60;
+		signalPeak = 7, 6.42;
+	}
+
+	thresholdsUsed
+	{
+		threshold = 0, 1, 0.48;
+		threshold = 1, 2, 1.52;
+		threshold = 2, 3, 2.44;
+		threshold = 3, 4, 3.30;
+		threshold = 4, 5, 4.22;
+		threshold = 5, 6, 5.14;
+		threshold = 6, 7, 5.94;
+
+		interpolationAmount = 0.91;
+	}
+}
+
+
+/*
+**  Consensus results.
+*/
+consensusResults
+{
+	readStatus
+	{
+		numMappedReads    = 155785, 92.83%;
+		numMappedBases    = 53680909, 97.95%;
+		inferredReadError = 1.29%, 678178;
+
+		numberFullyMapped     = 145023, 87.59%;
+		numberPartiallyMapped = 3436, 2.08%;
+		numberUnmapped        = 562, 0.34%;
+		numberRepeat          = 5248, 3.17%;
+		numberChimeric        = 2078, 1.25%;
+		numberTooShort        = 9232, 5.58%;
+
+		numUniquelyMapped     = 148459;
+		numUniqueInRegions    = 97453, 65.64%;
+		numUniqueOutOfRegions = 51006, 34.36%;
+	}
+
+	largeContigMetrics
+	{
+		numberOfContigs   = 273;
+		numberOfBases     = 1650146;
+
+		avgContigSize     = 6044;
+		N50ContigSize     = 18561;
+		largestContigSize = 80817;
+
+		Q40PlusBases      = 1613627, 97.79%;
+		Q39MinusBases     = 36519, 2.21%;
+
+		numUndercalls     = 2643;
+		numOvercalls      = 1691;
+		numHCUndercalls   = 1211;
+		numHCOvercalls    = 610;
+		consensusAccuracy  = 99.7374%;
+		HCconsensusAccuracy  = 99.8871%;
+	}
+
+	allContigMetrics
+	{
+		numberOfContigs = 1644;
+		numberOfBases   = 1951634;
+	}
+}

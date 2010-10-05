@@ -1,0 +1,121 @@
+\name{AVASet-class}
+\Rdversion{1.1}
+\docType{class}
+\alias{AVASet-class}
+\alias{[,AVASet,ANY,ANY-method}
+\alias{annotateVariants,AVASet-method}
+\alias{assayDataAmp,AVASet-method}
+\alias{assayDataAmp<-}
+\alias{assayDataAmp<-,AVASet,AssayData-method}
+\alias{fDataAmp,AVASet-method}
+\alias{featureDataAmp,AVASet-method}
+\alias{featureDataAmp<-}
+\alias{featureDataAmp<-,AVASet,AnnotatedDataFrame-method}
+\alias{htmlReport,AVASet-method}
+\alias{alignShortReads,AVASet,DNAStringSet,character-method}
+\alias{referenceSequences,AVASet-method}
+\alias{referenceSequences<-}
+\alias{referenceSequences<-,AVASet,AlignedRead-method}
+\alias{setVariantFilter,AVASet-method}
+\alias{getVariantPercentages,AVASet-method}
+
+\title{Class to contain Amplicon Variant Analyzer Output}
+\description{
+    Container to store data imported from a project of Roche's Amplicon Variant Analyzer Software.
+    It stores all information into an extended version of the Biobase ExpressionSet.
+}
+\section{Objects from the Class}{
+    Objects can be created by calls of the form \code{AVASet(filename)}. While filename is the path of the project data (i.e. a directory 
+    that contains the files and subdirectories "Amplicons/ProjectDef/ampliconsProject.txt", "Amplicons/Results/Variants/currentVariantDefs.txt", 
+    "Amplicons/Results/Variants", "Amplicons/Results/Align").
+}
+\section{Slots}{
+  \describe{
+    \item{\code{assayData}:}{Object of class \code{AssayData}. Contains the number of reads and the total read depth for every variant and each 
+	sample in forward and reverse direction. Its column number equals \code{nrow(phenoData)}.}
+    \item{\code{featureData}:}{Object of class \code{AnnotatedDataFrame}. Contains information about the type, position and reference of each 
+	variant.}
+    \item{\code{phenoData}:}{Object of class \code{AnnotatedDataFrame}. Contains the sample-IDs and name, annotation and group of the read data 
+	for all samples. If available, the lane, pico titer plate(s) (PTP) or MID(s) of each sample are shown as well.}
+    \item{\code{assayDataAmp}:}{Object of class \code{AssayData}. Contains the number of reads for every amplicon and each sample in forward/reverse 
+	direction. Its column number equals \code{nrow(featureDataAmp)}.}
+    \item{\code{featureDataAmp}:}{Object of class \code{AnnotatedDataFrame}. Contains the primer sequences, reference sequences and the coordinates 
+	of the target regions for every amplicon.}
+    \item{\code{referenceSequences}:}{Object of class
+      \code{AlignedRead}. If additional alignment information were computed via 
+	\code{alignShortReads}, this slot knows about the chromosome, position and the strand of each reference sequence.}
+    \item{\code{variantFilterPerc}:}{Object of class \code{numeric}. Contains a threshold to display only those variants, whose 
+	coverage (in percent) in forward and reverse direction in at least one sample is higher than this filter value. See 
+	\code{\link{setVariantFilter}} for details about setting this value.}
+    \item{\code{variantFilter}:}{Object of class \code{character}. Contains a vector of variant names whose
+        coverage (in percent) in forward and reverse direction in at least one sample is higher than the filter value in 
+	\code{variantFilterPerc}.}
+    \item{\code{dirs}:}{Object of class \code{character}. Based on a directory given at instantiation of the object, it contains a vector of several 
+	directories containing all relevant AVA-project files.}
+    \item{\code{experimentData}:}{Object of class \code{MIAME}. Contains details of the experiment.}
+    \item{\code{annotation}:}{Object of class \code{character}. Label associated with the annotation package used in the experiment.}
+    \item{\code{protocolData}:}{Object of class \code{annotatedDataFrame}. Contains additional information about the samples.}
+    \item{\code{.__classVersion__}:}{Object of class \code{Versions}. Remembers the R and R453Toolbox version numbers used to created the 
+	AVASet instance.}
+  }
+}
+\section{Extends}{
+    Class \code{\linkS4class{eSet}}, directly.
+    Class \code{\linkS4class{VersionedBiobase}}, by class "eSet", distance 2. 
+    Class \code{\linkS4class{Versioned}}, by class "eSet", distance 3.
+}
+\section{Methods}{
+  \describe{
+    \item{object[i,j]:}{Allows subsetting an AVASet object by features (i) and samples (j).}
+    \item{assayDataAmp(object), assayDataAmp(object)<-value:}{Similar to \code{assayData} of the Biobase ExpressionSet, this function 
+	returns/replaces the amplicon assay data. }
+    \item{fDataAmp(object):}{Similar to \code{fData} of the Biobase ExpressionSet, this function returns the amplicon feature data
+    	as a data frame.}
+    \item{featureDataAmp(object), featureDataAmp(object)<-value:}{Similar to \code{featureData} of the Biobase ExpressionSet, this function 
+	returns/replaces the amplicon feature data and feature meta.}
+    \item{referenceSequences(object), referenceSequences(object)<-value:}{Returns/replaces the reference sequence slot.}
+    \item{alignShortReads(object, bsGenome):}{Retrieve the chromosomal positions of the amplicon 
+	sequences.}
+    \item{setVariantFilter(object):}{Sets the filter to display only those variants, whose coverage (in percent) in forward and reverse 
+	direction in at least one sample is higher than the given value.}
+    \item{getVariantPercentages(object)}{Computes the coverage for every variant over all reads (forward and/or reverse) and for each 
+	sample.}
+    \item{annotateVariants(object):}{Annotates given genomic variants. See \code{\link{annotateVariants}} for details.}
+    \item{htmlReport(object):}{Exports all (filtered) variant data into a html report. See \code{\link{htmlReport}} for details}
+	 }
+}
+
+\author{Christoph Bartenhagen}
+
+\seealso{
+    \code{\link{MapperSet-class}},
+    \code{\link{annotateVariants}},
+    \code{\link{alignShortReads}},
+    \code{\link{htmlReport}},
+    \code{\link{setVariantFilter}},
+    \code{\link{getVariantPercentages}}
+}
+
+\examples{
+
+    # sum up class structure
+    showClass("AVASet")
+
+    # load an AVA dataset containing 6 samples, 4 amplicons and 259 variants
+    data(avaSetExample)
+    avaSetExample
+
+    # show contents of assay, feature and pheno data
+    head(assayData(avaSetExample)$variantForwCount)
+    head(assayData(avaSetExample)$totalForwCount)
+    head(assayData(avaSetExample)$variantRevCount)
+    head(assayData(avaSetExample)$totalRevCount)
+    head(fData(avaSetExample))
+    pData(avaSetExample)
+    assayDataAmp(avaSetExample)
+    fDataAmp(avaSetExample)
+    referenceSequences(avaSetExample)
+
+}
+
+\keyword{classes}

@@ -1,0 +1,2 @@
+#1.1 ampId forwardCount reverseCount
+I90	1516	2020
