@@ -70,21 +70,20 @@ data("avaSetFiltered")
 data("avaSetFiltered_annot")
 
 # create a full report showing all (unfiltered) information
-\dontrun{htmlReport(avaSetFiltered, avaSetFiltered_annot, dir="htmlReportExample", title="htmlReport Example", minMut=0)}
-
+htmlReport(avaSetFiltered, avaSetFiltered_annot, dir="htmlReportExample", title="htmlReport Example", minMut=0)
 # create a report that emphasizes on samples with variants covered by at least 50% of the reads 
-\dontrun{htmlReport(avaSetFiltered, avaSetFiltered_annot, dir="htmlReportExample", title="htmlReport Example", minMut=50)}
+htmlReport(avaSetFiltered, avaSetFiltered_annot, dir="htmlReportExample", title="htmlReport Example", minMut=50)
 
 # create a report that is structured by the reference genes
 library("ShortRead")
 refs = sapply(fData(avaSetFiltered)$referenceSeq, function(x) 
     subset(pData(alignData(referenceSequences(avaSetFiltered))), pData(alignData(referenceSequences(avaSetFiltered)))$refSeqID == x)$name)
-\dontrun{htmlReport(avaSetFiltered, avaSetFiltered_annot, dir="htmlReportExample", title="htmlReport Example", minMut=0, blocks=refs)}
+htmlReport(avaSetFiltered, avaSetFiltered_annot, dir="htmlReportExample", title="htmlReport Example", minMut=0, blocks=refs)
 
 # create a report whose sample information only lists the sample ids
 pData(avaSetFiltered)
 sampleCols = "SampleID"
-\dontrun{htmlReport(avaSetFiltered, avaSetFiltered_annot, dir="htmlReportExample", title="htmlReport Example", minMut=0, sampleCols=sampleCols)}
+htmlReport(avaSetFiltered, avaSetFiltered_annot, dir="htmlReportExample", title="htmlReport Example", minMut=0, sampleCols=sampleCols)
 }
 
 \author{Christoph Bartenhagen, Hans-Ulrich Klein, Christian Ruckert}
