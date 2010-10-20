@@ -20,7 +20,7 @@
             data = data[sort(rownames(data)), ]
             data = t(data)
 
-            maxCov = max(data[, 1] + data[, 2])
+            maxCov = max(data[1, ] + data[2, ])
             maxCov = maxCov + (0.2 * maxCov)    ## add some extra space for the legend
 
             par(oma=c(4,1,0,0))
