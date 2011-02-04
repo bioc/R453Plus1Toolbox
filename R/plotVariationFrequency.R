@@ -59,7 +59,7 @@
     myTicks = c(0, maxNumReads/2*scaleFac, maxNumReads*scaleFac)
     myLabels = as.character(c(0, maxNumReads/2, maxNumReads))
     axis(side=4, at=myTicks, tick=TRUE, label=myLabels)
-    mtext(side=4, line=3, "Number of reads (coverage)", las=0)
+    mtext(side=4, line=3, "Number of reads (coverage)", las=0, col=col[7])
 }
 
 

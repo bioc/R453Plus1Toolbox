@@ -57,6 +57,7 @@ exportMethods(
     alignShortReads,
     readsOnTarget,
     coverageOnTarget,
+    calculateTiTv,
     genomeSequencerMIDs,
     sequenceCaptureLinkers,
     demultiplexReads,

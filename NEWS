@@ -1,1 +1,2 @@
-[0.99.0] Creation of this file.
+[1.1.1] Fixed bug in plotAmpliconCoverage().
+[1.1.2] Added method for calculating Ti/Tv ratios.

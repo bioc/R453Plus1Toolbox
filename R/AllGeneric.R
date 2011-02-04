@@ -126,6 +126,9 @@ setGeneric("readsOnTarget", function(alnReads, targetRegion) {
 setGeneric("coverageOnTarget", function(alnReads, targetRegion) {
     standardGeneric("coverageOnTarget")})
 
+setGeneric("calculateTiTv", function(object) {
+    standardGeneric("calculateTiTv")})
+
 setGeneric("read454Metrics", function(rochePath, ...) {
     standardGeneric("read454Metrics")})
 
