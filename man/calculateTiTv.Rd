@@ -1,8 +1,8 @@
 \name{calculateTiTv}
 
 \alias{calculateTiTv}
-\alias{calculateTiTv,AVASet}
-\alias{calculateTiTv,MapperSet}
+\alias{calculateTiTv,AVASet-method}
+\alias{calculateTiTv,MapperSet-method}
 
 
 \title{Calculate transition transversion ratio}
