@@ -6,7 +6,7 @@ importFrom(Biobase, assayDataElementNames, assayDataNew)
 importFrom(biomaRt, getBM, getSequence, useMart)
 
 importClassesFrom(Biostrings, DNAString, DNAStringSet, XStringSet)
-importMethodsFrom(Biostrings, PDict, aligned, compact, complement, countIndex, deletion, endIndex,
+importMethodsFrom(Biostrings, PDict, aligned, complement, countIndex, deletion, endIndex,
     insertion, matchPDict, matchPattern, mismatchTable, pairwiseAlignment, reverseComplement,
     startIndex, translate, vmatchPattern)
 importFrom(Biostrings, BStringSet, DNAString, DNAStringSet, nucleotideSubstitutionMatrix)
@@ -25,7 +25,7 @@ importMethodsFrom(IRanges, "%in%", Views, aggregate, as.data.frame, as.matrix, a
     paste, pmax, pmin, ranges, rbind, restrict, rev, rownames, "rownames<-", sapply, score, sd, 
     setdiff, shift, sort, split, start, subject, subseq, subset, substr, substring, summary, t, 
     table, toString, union, unique, unlist, values, "values<-", which, width)
-importFrom(IRanges, IRanges, RangedData)
+importFrom(IRanges, IRanges, RangedData, compact)
 
 importClassesFrom(methods, ANY, character, data.frame, list, logical, matrix, missing, numeric)
 importMethodsFrom(methods, initialize, show)
