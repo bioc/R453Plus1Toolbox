@@ -169,11 +169,12 @@
 	}
     if(length(dels) > 0)
         for(d in 1:length(dels))
-	    dels[d] = shift(dels[d], -sum(width(restrict(ins, 1, start(dels[d])))))
+          dels[d] = shift(dels[d], -sum(width(restrict(ins, 1, start(dels[d])))))
 
     ## adjust coordinates of dels/ins/mismatches according to the beginning of alignment on the reference sequence
     ## take care of dels ("-") inserted prior to a deletion
-    dels = shift(dels, seq(0, length(dels) - 1) + alnStart)
+    if(length(dels) > 0)
+      dels = shift(dels, seq(0, length(dels) - 1) + alnStart)
     dels = as.data.frame(dels)
     ins = shift(ins, alnStart)
     ins = as.data.frame(ins)
