@@ -102,3 +102,64 @@ setClass("MapperSet",
     )
 )
 
+# SFFRead: representation of a single read from a Roche Standard Flowgram Format (SFF) file
+setClass("SFFRead",
+  representation=list(
+    readname="character",
+    clipQualityLeft="numeric",
+    clipQualityRight="numeric",
+    clipAdapterLeft="numeric",
+    clipAdapterRight="numeric",
+    flowgramValues="numeric",
+    flowIndexes="numeric",
+    bases="DNAString",
+    qualityScores="numeric"
+  ),
+  prototype=prototype(
+    readname="",
+    clipQualityLeft=0,
+    clipQualityRight=0,
+    clipAdapterLeft=0,
+    clipAdapterRight=0,
+    flowgramValues=0,
+    flowIndexes=0,
+    bases=DNAString(),
+    qualityScores=0
+  ),
+  validity=function(object){
+    if((length(bases) != length(flowIndexes)) | (length(flowIndexes) != length(qualityScores)))
+      stop("Number of bases must be equal to number of flow indexes and number of quality scores.")
+    return(TRUE)
+  }
+)
+
+# SFFContainer: representation of a complete Roche Standard Flowgram Format (SFF) file
+setClass("SFFContainer",
+  representation=list(
+    filename           = "character",
+    flowgramFormat     = "numeric",
+    flowChars          = "character",
+    keySequence        = "character",
+    clipQualityLeft    = "numeric",
+    clipQualityRight   = "numeric",
+    clipAdapterLeft    = "numeric",
+    clipAdapterRight   = "numeric", 
+    flowgrams          = "list",
+    flowIndexes        = "list",
+    reads              = "QualityScaledDNAStringSet"
+  ),
+  prototype=prototype(
+    filename           = "",
+    flowgramFormat     = 1,
+    flowChars          = "",
+    keySequence        = "",
+    clipQualityLeft    = numeric(0),
+    clipQualityRight   = numeric(0),
+    clipAdapterLeft    = numeric(0),
+    clipAdapterRight   = numeric(0),
+    flowgrams          = list(),
+    flowIndexes        = list(),
+    reads              = QualityScaledDNAStringSet(DNAStringSet(), PhredQuality(""))
+  )
+)
+

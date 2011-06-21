@@ -253,4 +253,92 @@ setGeneric("variantFilterPerc<-", signature = c("object","value"),
 setGeneric("variantFilter<-", signature = c("object","value"), 
     function(object, value) 
 	standardGeneric("variantFilter<-"))
+	
+	
+## generics for SFFRead and SFFContainer
 
+setGeneric("readname", function(object) standardGeneric("readname"))
+setGeneric("readname<-", function(object, value) standardGeneric("readname<-"))
+
+setGeneric("bases", function(object) standardGeneric("bases"))
+setGeneric("bases<-", function(object, value) standardGeneric("bases<-"))
+
+setGeneric("clipQualityLeft", function(object) standardGeneric("clipQualityLeft"))
+setGeneric("clipQualityLeft<-", function(object, value) standardGeneric("clipQualityLeft<-"))
+
+setGeneric("clipQualityRight", function(object) standardGeneric("clipQualityRight"))
+setGeneric("clipQualityRight<-", function(object, value) standardGeneric("clipQualityRight<-"))
+
+setGeneric("clipAdapterLeft", function(object) standardGeneric("clipAdapterLeft"))
+setGeneric("clipAdapterLeft<-", function(object, value) standardGeneric("clipAdapterLeft<-"))
+
+setGeneric("clipAdapterRight", function(object) standardGeneric("clipAdapterRight"))
+setGeneric("clipAdapterRight<-", function(object, value) standardGeneric("clipAdapterRight<-"))
+
+setGeneric("flowgramValues", function(object) standardGeneric("flowgramValues"))
+setGeneric("flowgramValues<-", function(object, value) standardGeneric("flowgramValues<-"))
+
+setGeneric("flowIndexes", function(object) standardGeneric("flowIndexes"))
+setGeneric("flowIndexes<-", function(object, value) standardGeneric("flowIndexes<-"))
+
+setGeneric("filename", function(object) standardGeneric("filename"))
+setGeneric("filename<-", function(object, value) standardGeneric("filename<-"))
+
+setGeneric("flowgramFormat", function(object) standardGeneric("flowgramFormat"))
+setGeneric("flowgramFormat<-", function(object, value) standardGeneric("flowgramFormat<-"))
+
+setGeneric("flowChars", function(object) standardGeneric("flowChars"))
+setGeneric("flowChars<-", function(object, value) standardGeneric("flowChars<-"))
+
+setGeneric("keySequence", function(object) standardGeneric("keySequence"))
+setGeneric("keySequence<-", function(object, value) standardGeneric("keySequence<-"))
+
+setGeneric("flowgrams", function(object) standardGeneric("flowgrams"))
+setGeneric("flowgrams<-", function(object, value) standardGeneric("flowgrams<-"))
+
+setGeneric("reads", function(object) standardGeneric("reads"))
+setGeneric("reads<-", function(object, value) standardGeneric("reads<-"))
+
+setGeneric("addRead", function(object, read) standardGeneric("addRead"))
+setGeneric("getRead", function(object, readname) standardGeneric("getRead"))
+
+
+## generics for quality functions
+setGeneric("readLengthStats", function(object) standardGeneric("readLengthStats"))
+setGeneric(name="readLengthHist", 
+           def=function(object, cutoff=0.99, name) standardGeneric("readLengthHist"),
+           signature=c("object"))
+
+setGeneric("baseQualityStats", function(object) standardGeneric("baseQualityStats"))
+setGeneric(name="baseQualityHist", 
+           def=function(object, name) standardGeneric("baseQualityHist"),
+           signature=c("object"))
+setGeneric(name="sequenceQualityHist", 
+           def=function(object, name) standardGeneric("sequenceQualityHist"),
+           signature=c("object"))
+setGeneric(name="positionQualityBoxplot", 
+           def=function(object, range, binsize=10, name) standardGeneric("positionQualityBoxplot"),
+           signature=c("object"))
+
+setGeneric("baseFrequency", function(object) standardGeneric("baseFrequency"))
+setGeneric(name="nucleotideCharts", 
+           def=function(object, range=0.95, name) standardGeneric("nucleotideCharts"),
+           signature=c("object"))
+setGeneric("gcContent", function(object) standardGeneric("gcContent"))
+setGeneric(name="gcPerPosition", 
+           def=function(object, range=0.95, name) standardGeneric("gcPerPosition"),
+           signature=c("object"))
+setGeneric(name="gcContentHist", 
+           def=function(object, name) standardGeneric("gcContentHist"),
+           signature=c("object"))
+
+setGeneric(name="complexity.dust", 
+           def=function(object, name) standardGeneric("complexity.dust"),
+           signature=c("object"))
+setGeneric(name="complexity.entropy", 
+           def=function(object, name) standardGeneric("complexity.entropy"),
+           signature=c("object"))
+
+setGeneric(name="dinucleotideOddsRatio", 
+           def=function(object, name) standardGeneric("dinucleotideOddsRatio"),
+           signature=c("object"))

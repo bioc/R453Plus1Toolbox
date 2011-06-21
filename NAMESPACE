@@ -39,7 +39,7 @@ importFrom(Rsamtools, scanBam)
 
 importClassesFrom(ShortRead, AlignedRead)
 importMethodsFrom(ShortRead, chromosome, id, name, position)
-importFrom(ShortRead, AlignedDataFrame, AlignedRead, alignData, sread)
+importFrom(ShortRead, AlignedDataFrame, AlignedRead, alignData, sread, alphabetByCycle)
 
 importFrom(stats, as.dist, cutree, filter, hclust)
 
@@ -50,7 +50,9 @@ exportClasses(
     AVASet,
     MapperSet,
     AnnotatedVariants,
-    Breakpoints)
+    Breakpoints,
+    SFFRead,
+    SFFContainer)
 
 
 exportMethods(
@@ -94,10 +96,45 @@ exportMethods(
     referenceSequences, "referenceSequences<-",
     getReadStatus,
     getVariantPercentages,
-    setVariantFilter          
+    setVariantFilter,
+    
+    readname, "readname<-",
+    clipQualityLeft, "clipQualityLeft<-",
+    clipQualityRight, "clipQualityRight<-",
+    clipAdapterLeft, "clipAdapterLeft<-",
+    clipAdapterRight, "clipAdapterRight<-",
+    flowgramValues, "flowgramValues<-",          
+    flowIndexes, "flowIndexes<-",
+    bases, "bases<-",
+    
+    filename, "filename<-",
+    flowgramFormat, "flowgramFormat<-",
+    flowChars, "flowChars<-",
+    keySequence, "keySequence<-",
+    flowgrams, "flowgrams<-",
+    reads, "reads<-",
+    addRead, getRead,
+    
+    readLengthStats,
+    readLengthHist,
+    baseQualityStats,
+    baseQualityHist,
+    sequenceQualityHist,
+    positionQualityBoxplot,
+    baseFrequency,
+    nucleotideCharts,
+    gcContent,
+    gcPerPosition,
+    gcContentHist,
+    complexity.dust,
+    complexity.entropy,
+    dinucleotideOddsRatio
 )
 
 export(
     extendedCIGARToList,
-    listToExtendedCIGAR
+    listToExtendedCIGAR,
+    readSFF
 )
+
+useDynLib(R453Plus1Toolbox)
