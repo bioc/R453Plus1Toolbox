@@ -2,7 +2,7 @@
 
 \alias{readSFF}
 
-\title{Function to read in Roche's .sff files}
+\title{Function To Read In Roche's .sff Files}
 
 \description{
     This function reads in files in Roche's Standard Flowgram Format (SFF) and store the contents in 

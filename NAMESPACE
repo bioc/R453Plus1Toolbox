@@ -114,6 +114,7 @@ exportMethods(
     flowgrams, "flowgrams<-",
     reads, "reads<-",
     addRead, getRead,
+    sff2fastq,
     
     readLengthStats,
     readLengthHist,

@@ -216,3 +216,20 @@ setMethod("[",
     return(sffNew)
   }
 )
+
+setMethod("sff2fastq", 
+  signature(object="SFFContainer"), 
+  function(object, outdir, fname){
+    if(missing(outdir)) {
+      outdir = getwd()
+    }
+    outdir = gsub(paste(.Platform$file.sep, "+$", sep=""), "", outdir)
+    if(missing(fname)) {
+      fname = filename(object)
+      fname = gsub("(\\.sff)?$", ".fastq", fname)
+    }
+    fp = file.path(outdir, fname)
+    write.XStringSet(reads(object), filepath=fp, format="fastq", qualities=quality(reads(object)))
+    cat("Written file", fp, "\n")
+  }
+)

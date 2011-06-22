@@ -302,6 +302,10 @@ setGeneric("reads<-", function(object, value) standardGeneric("reads<-"))
 setGeneric("addRead", function(object, read) standardGeneric("addRead"))
 setGeneric("getRead", function(object, readname) standardGeneric("getRead"))
 
+setGeneric(name="sff2fastq", 
+           def=function(object, outdir, fname) standardGeneric("sff2fastq"),
+           signature=c("object"))
+
 
 ## generics for quality functions
 setGeneric("readLengthStats", function(object) standardGeneric("readLengthStats"))

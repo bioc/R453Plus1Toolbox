@@ -3,3 +3,4 @@
 [1.3.1] Added method readSFF to read-in Roche's .sff (Standard Flowgram Format) files
         Added functions for quality control on unaligned sequences in SFFContainer, ShortReadQ and
           QualityScaledDNAStringSet format
+        Added a function to write files in FASTQ format from SFFContainer
