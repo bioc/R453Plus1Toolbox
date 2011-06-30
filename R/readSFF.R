@@ -30,7 +30,7 @@ readSFF = function(files) {
   
     sffcontainer = new("SFFContainer")
   
-    filename(sffcontainer) = basename(file)
+    name(sffcontainer) = basename(file)
     flowgramFormat(sffcontainer) = result[["flowgramFormat"]]
     flowChars(sffcontainer) = result[["flowChars"]]
     keySequence(sffcontainer) = result[["keySequence"]]

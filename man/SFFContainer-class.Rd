@@ -23,10 +23,10 @@
 \alias{clipQualityRight<-}
 \alias{clipQualityRight,SFFContainer-method}
 \alias{clipQualityRight}
-\alias{filename<-,SFFContainer,character-method}
-\alias{filename<-}
-\alias{filename,SFFContainer-method}
-\alias{filename}
+\alias{name<-,SFFContainer,character-method}
+\alias{name<-}
+\alias{name,SFFContainer-method}
+\alias{name}
 \alias{flowChars<-,SFFContainer,character-method}
 \alias{flowChars<-}
 \alias{flowChars,SFFContainer-method}
@@ -66,7 +66,7 @@ format.
 
 \section{Slots}{
   \describe{
-    \item{\code{filename}:}{Object of class \code{"character"} containing the name of the file this 
+    \item{\code{name}:}{Object of class \code{"character"} containing the name of the file this 
       SFFContainer was created from.}
     \item{\code{flowgramFormat}:}{Object of class \code{"numeric"} representing the format used to 
       encode each of the flowgram values for each read. Currently, only one flowgram format has been 
@@ -129,10 +129,10 @@ format.
       Setter-method for the clipQualityRight slot.}
     \item{clipQualityRight}{\code{signature(object = "SFFContainer")}: 
       Getter-method for the clipQualityRight slot.}
-    \item{filename<-}{\code{signature(object = "SFFContainer", value = "character")}: 
-      Setter-method for the filename slot.}
-    \item{filename}{\code{signature(object = "SFFContainer")}: 
-      Getter-method for the filename slot.}
+    \item{name<-}{\code{signature(object = "SFFContainer", value = "character")}: 
+      Setter-method for the name slot.}
+    \item{name}{\code{signature(object = "SFFContainer")}: 
+      Getter-method for the name slot.}
     \item{flowChars<-}{\code{signature(object = "SFFContainer", value = "character")}: 
       Setter-method for the flowChars slot.}
     \item{flowChars}{\code{signature(object = "SFFContainer")}: 

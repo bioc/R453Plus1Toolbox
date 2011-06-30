@@ -1,24 +1,24 @@
 ### Getter & Setter ###
-setMethod("readname", signature(object="SFFRead"),
+setMethod("name", signature(object="SFFRead"),
   function(object) {
-    return(object@readname)
+    return(object@name)
   }
 )
-setReplaceMethod("readname", signature(object="SFFRead", value="character"),
+setReplaceMethod("name", signature(object="SFFRead", value="character"),
   function(object, value) {
-    object@readname = value
+    object@name = value
     return(object)
   }
 )
 
-setMethod("bases", signature(object="SFFRead"),
+setMethod("read", signature(object="SFFRead"),
   function(object) {
-    return(object@bases)
+    return(object@read)
   }
 )
-setReplaceMethod("bases", signature(object="SFFRead", value="DNAString"),
+setReplaceMethod("read", signature(object="SFFRead", value="QualityScaledDNAStringSet"),
   function(object, value) {
-    object@bases = value
+    object@read = value
     return(object)
   }
 )
@@ -71,14 +71,14 @@ setReplaceMethod("clipAdapterRight", signature(object="SFFRead", value="numeric"
   }
 )
 
-setMethod("flowgramValues", signature(object="SFFRead"),
+setMethod("flowgram", signature(object="SFFRead"),
   function(object) {
-    return(object@flowgramValues)
+    return(object@flowgram)
   }
 )
-setReplaceMethod("flowgramValues", signature(object="SFFRead", value="numeric"),
+setReplaceMethod("flowgram", signature(object="SFFRead", value="numeric"),
   function(object, value) {
-    object@flowgramValues = value
+    object@flowgram = value
     return(object)
   }
 )
@@ -95,38 +95,26 @@ setReplaceMethod("flowIndexes", signature(object="SFFRead", value="numeric"),
   }
 )
 
-#setMethod("qualityScores", signature(object="SFFRead"),
-#  function(object) {
-#    return(object@qualityScores)
-#  }
-#)
-#setReplaceMethod("qualityScores", signature(object="SFFRead", value="numeric"),
-#  function(object, value) {
-#    object@qualityScores = value
-#    return(object)
-#  }
-#)
-
 setMethod("show",
   signature(object="SFFRead"),
   function(object){
     cat("Readname:\n")
-    show(object@readname)
+    show(object@name)
     cat("\n")
-    cat("Bases:\n")
-    show(object@bases)
+    cat("Read:\n")
+    show(object@read)
     cat("\n")
     cat("Clip quality left:  ", object@clipQualityLeft, "\n", sep="")
     cat("Clip quality right: ", object@clipQualityRight, "\n", sep="")
     cat("Clip adapter left:  ", object@clipAdapterLeft, "\n", sep="")
     cat("Clip adapter right: ", object@clipAdapterRight, "\n", sep="")
     cat("\n")
-    cat("Flowgram values: \n")
-    lfv = length(object@flowgramValues)
-    if(lfv > 20) {
-      cat(object@flowgramValues[1:10], "...", object@flowgramValues[(lfv-10):lfv], "\n", sep=" ")
+    cat("Flowgram: \n")
+    lfl = length(object@flowgram)
+    if(lfl > 20) {
+      cat(object@flowgram[1:10], "...", object@flowgram[(lfl-10):lfl], "\n", sep=" ")
     } else {
-      cat(object@flowgramValues)
+      cat(object@flowgram)
     }
     cat("\n")
     cat("Flow indexes: \n")
@@ -137,12 +125,5 @@ setMethod("show",
       cat(object@flowIndexes)
     }
     cat("\n")
-    cat("Quality scores: \n")
-    lqs = length(object@qualityScores)
-    if(lqs > 20) {
-      cat(object@qualityScores[1:10], "...", object@qualityScores[(lqs-10):lqs], "\n", sep=" ")
-    } else {
-      cat(object@qualityScores)
-    }
   }
 )

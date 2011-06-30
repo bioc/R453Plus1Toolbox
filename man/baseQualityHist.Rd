@@ -14,15 +14,18 @@
 }
 
 \usage{
-  baseQualityHist(object, name)
+  baseQualityHist(object, xlab="Quality score", ylab="Number of bases", col="firebrick1", breaks=40,
+     ...)
 }
 
 \arguments{
   \item{object}{An object of class \link{QualityScaledDNAStringSet}, \link{ShortReadQ} or 
     \link{SFFContainer}.}
-  \item{name}{Optional character defining the name to be displayed in the histogram title. Defaults
-    to the filename for \link{SFFContainer} and left empty for \link{QualityScaledDNAStringSet} and
-    \link{ShortReadQ}.}
+  \item{xlab}{The X axis label.}
+  \item{ylab}{The Y axis label.}
+  \item{col}{The plotting color.}
+  \item{breaks}{The number of breaks in the histogram (see \sQuote{hist}).}
+  \item{\dots}{Arguments to be passed to methods, such as graphical parameters (see \sQuote{par}).}
 }
 
 \author{

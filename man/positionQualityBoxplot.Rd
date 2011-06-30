@@ -14,7 +14,9 @@
 }
 
 \usage{
-  positionQualityBoxplot(object, range, binsize=10, name)
+  positionQualityBoxplot(object, range, binsize=10, 
+    xlab=paste("Read position in bp (Bin size: ", binsize, "bp)", sep=""), ylab="Quality score",
+    col="firebrick1", ...)
 }
 
 \arguments{
@@ -23,9 +25,10 @@
   \item{range}{A numeric vector of length one or two. If length one only bases from the first until 
     this position are plotted. If two all bases between these two positions are plotted.}
   \item{binsize}{Number of positions to summarize in one box in the plot.}
-  \item{name}{Optional character defining the name to be displayed in the histogram title. Defaults
-    to the filename for \link{SFFContainer} and left empty for \link{QualityScaledDNAStringSet} and
-    \link{ShortReadQ}.}
+  \item{xlab}{The X axis label.}
+  \item{ylab}{The Y axis label.}
+  \item{col}{The plotting color.}
+  \item{\dots}{Arguments to be passed to methods, such as graphical parameters (see \sQuote{par}).}
 }
 
 \author{

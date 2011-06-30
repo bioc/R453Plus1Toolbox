@@ -14,14 +14,18 @@
 }
 
 \usage{
-  complexity.entropy(object, name)
+  complexity.entropy(object, xlab="Complexity score (0=low, 100=high)", ylab="Number of sequences", 
+    xlim=c(0, 100), col="firebrick1", breaks=100, ...)
 }
 
 \arguments{
   \item{object}{An object of class \link{DNAStringSet}, \link{ShortRead} or \link{SFFContainer}.}
-  \item{name}{Optional character defining the name to be displayed in the histogram title. Defaults
-    to the filename for \link{SFFContainer} and left empty for \link{DNAStringSet} and 
-    \link{ShortRead}.}
+  \item{xlab}{The X axis label.}
+  \item{ylab}{The Y axis label.}
+  \item{xlim}{The limits of the X axis.}
+  \item{col}{The plotting color.}
+  \item{breaks}{The number of breaks in the histogram (see \sQuote{hist}).}
+  \item{\dots}{Arguments to be passed to methods, such as graphical parameters (see \sQuote{par}).}
 }
 
 \details{

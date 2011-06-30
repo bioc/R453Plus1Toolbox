@@ -14,15 +14,17 @@
 }
 
 \usage{
-  sequenceQualityHist(object, name)
+  sequenceQualityHist(object, xlab="Mean of quality scores per sequence", 
+    ylab="Number of sequences", col="firebrick1", ...)
 }
 
 \arguments{
   \item{object}{An object of class \link{QualityScaledDNAStringSet}, \link{ShortReadQ} or 
     \link{SFFContainer}.}
-  \item{name}{Optional character defining the name to be displayed in the histogram title. Defaults
-    to the filename for \link{SFFContainer} and left empty for \link{QualityScaledDNAStringSet} and
-    \link{ShortReadQ}.}
+  \item{xlab}{The X axis label.}
+  \item{ylab}{The Y axis label.}
+  \item{col}{The plotting color.}
+  \item{\dots}{Arguments to be passed to methods, such as graphical parameters (see \sQuote{par}).}
 }
 
 \author{

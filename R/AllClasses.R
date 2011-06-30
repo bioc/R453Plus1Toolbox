@@ -105,30 +105,30 @@ setClass("MapperSet",
 # SFFRead: representation of a single read from a Roche Standard Flowgram Format (SFF) file
 setClass("SFFRead",
   representation=list(
-    readname="character",
-    clipQualityLeft="numeric",
-    clipQualityRight="numeric",
-    clipAdapterLeft="numeric",
-    clipAdapterRight="numeric",
-    flowgramValues="numeric",
-    flowIndexes="numeric",
-    bases="DNAString",
-    qualityScores="numeric"
+    name               = "character",
+    clipQualityLeft    = "numeric",
+    clipQualityRight   = "numeric",
+    clipAdapterLeft    = "numeric",
+    clipAdapterRight   = "numeric",
+    flowgram           = "numeric",
+    flowIndexes        = "numeric",
+    read               = "QualityScaledDNAStringSet"
   ),
   prototype=prototype(
-    readname="",
-    clipQualityLeft=0,
-    clipQualityRight=0,
-    clipAdapterLeft=0,
-    clipAdapterRight=0,
-    flowgramValues=0,
-    flowIndexes=0,
-    bases=DNAString(),
-    qualityScores=0
+    name               = "",
+    clipQualityLeft    = 0,
+    clipQualityRight   = 0,
+    clipAdapterLeft    = 0,
+    clipAdapterRight   = 0,
+    flowgram           = 0,
+    flowIndexes        = 0,
+    read               = QualityScaledDNAStringSet(DNAStringSet(), PhredQuality(""))
   ),
   validity=function(object){
-    if((length(bases) != length(flowIndexes)) | (length(flowIndexes) != length(qualityScores)))
-      stop("Number of bases must be equal to number of flow indexes and number of quality scores.")
+    if((width(read[1]) != length(flowIndexes)))
+      stop("Read length must be equal to number of flow indexes.")
+    if(length(read) > 1)
+      stop("Read must not contain more than one read.")
     return(TRUE)
   }
 )
@@ -136,7 +136,7 @@ setClass("SFFRead",
 # SFFContainer: representation of a complete Roche Standard Flowgram Format (SFF) file
 setClass("SFFContainer",
   representation=list(
-    filename           = "character",
+    name               = "character",
     flowgramFormat     = "numeric",
     flowChars          = "character",
     keySequence        = "character",
@@ -149,7 +149,7 @@ setClass("SFFContainer",
     reads              = "QualityScaledDNAStringSet"
   ),
   prototype=prototype(
-    filename           = "",
+    name               = "",
     flowgramFormat     = 1,
     flowChars          = "",
     keySequence        = "",

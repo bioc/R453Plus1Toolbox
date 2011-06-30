@@ -27,30 +27,34 @@ setMethod("readLengthStats", signature=signature(object="ShortRead"), .readLengt
 setMethod("readLengthStats", signature=signature(object="SFFContainer"), .readLengthStats_sff)
 
 
-.readLengthHist <- function(object, cutoff, name) {
-  if (missing(name)) {
-    name = ""
-  }
+.readLengthHist <- function(object, cutoff, xlab, ylab, col, breaks, ...) {
+  args = list(...)
   readLengths = width(object)
   cut = quantile(readLengths, cutoff)
   readLengths = readLengths[readLengths <= cut]
   par(xaxs = "i")
   par(yaxs = "i")
-  title = paste("Histogram of the lengths of the sequences \n", name, sep="")
-  hist(readLengths, main=title, xlab="Read length", 
-    ylab="Number of sequences", xlim=c(0, max(readLengths)), breaks=100, col="firebrick1")
-}
-
-.readLengthHist_sr <- function(object, cutoff, name) {
-  .readLengthHist(sread(object), cutoff, name)
-}
-
-.readLengthHist_sff <- function(object, cutoff, name) {
-  if (missing(name)) {
-    name = filename(object)
+  if (!is.element("main", names(args))) {
+    main = "Histogram of the lengths of the sequences"
+    hist(readLengths, main=main, xlab=xlab, ylab=ylab, xlim=c(0, max(readLengths)), breaks=breaks, 
+    col=col, ...)
+  } else {
+    hist(readLengths, xlab=xlab, ylab=ylab, xlim=c(0, max(readLengths)), breaks=breaks, col=col, ...)
   }
-  reads = reads(object)
-  .readLengthHist(reads, cutoff, name)
+}
+
+.readLengthHist_sr <- function(object, cutoff, xlab, ylab, col, breaks, ...) {
+  .readLengthHist(sread(object), cutoff, xlab=xlab, ylab=ylab, col=col, breaks=breaks, ...)
+}
+
+.readLengthHist_sff <- function(object, cutoff, xlab, ylab, col, breaks, ...) {
+  args = list(...)
+  if (!is.element("main", names(args))) {
+    main = paste("Histogram of the lengths of the sequences \n", name(object), sep="")
+    .readLengthHist(reads(object), cutoff, main=main, xlab=xlab, ylab=ylab, col=col, breaks=breaks, ...)
+  } else {
+    .readLengthHist(reads(object), cutoff, xlab=xlab, ylab=ylab, col=col, breaks=breaks, ...)
+  }
 }
 
 setMethod("readLengthHist", signature(object="DNAStringSet"), .readLengthHist)
@@ -99,29 +103,33 @@ setMethod("baseQualityStats", signature(object="SFFContainer"), .baseQualityStat
 
 
 # Overall quality histogram
-.baseQualityHist <- function(object, name) {
-  if (missing(name)) {
-    name = ""
-  }
+.baseQualityHist <- function(object, xlab, ylab, col, breaks, ...) {
+  args = list(...)
   onestring = paste(as.character(quality(object)), collapse="")
   qualityScores = as.integer(charToRaw(onestring))-33
   par(xaxs = "i")
   par(yaxs = "i")
-  title = paste("Histogram of base quality scores\n", name, sep="")
-  hist(qualityScores, main=title, xlab="Quality score", 
-    ylab="Number of bases", breaks=40, col="firebrick1")
-}
-
-.baseQualityHist_sr <- function(object, name) {
-  .baseQualityHist(as(object, "QualityScaledDNAStringSet"), name)
-}
-
-.baseQualityHist_sff <- function(object, name) {
-  if (missing(name)) {
-    name = filename(object)
+  if (!is.element("main", names(args))) {
+    main = "Histogram of base quality scores"
+    hist(qualityScores, main=main, xlab=xlab, ylab=ylab, breaks=breaks, col=col, ...)
+  } else {
+    hist(qualityScores, xlab=xlab, ylab=ylab, breaks=breaks, col=col, ...)
   }
-  reads = reads(object)
-  .baseQualityHist(reads, name)
+}
+
+.baseQualityHist_sr <- function(object, xlab, ylab, col, breaks, ...) {
+  .baseQualityHist(as(object, "QualityScaledDNAStringSet"), xlab=xlab, ylab=ylab, col=col, 
+    breaks=breaks, ...)
+}
+
+.baseQualityHist_sff <- function(object, xlab, ylab, col, breaks, ...) {
+  args = list(...)
+  if (!is.element("main", names(args))) {
+    main = paste("Histogram of base quality scores\n", name(object), sep="")
+    .baseQualityHist(reads(object), main=main, xlab=xlab, ylab=ylab, col=col, breaks=breaks, ...)
+  } else {
+    .baseQualityHist(reads(object), xlab=xlab, ylab=ylab, col=col, breaks=breaks, ...)
+  }
 }
 
 setMethod("baseQualityHist", signature(object="QualityScaledDNAStringSet"), .baseQualityHist)
@@ -130,36 +138,46 @@ setMethod("baseQualityHist", signature(object="SFFContainer"), .baseQualityHist_
 
 
 #mean quality per sequence histogram
-.sequenceQualityHist <- function(object, name) {
-  if (missing(name)) {
-    name = ""
-  }
+.sequenceQualityHist <- function(object, xlab, ylab, col, ...) {
+  args = list(...)
   qualityScores = sapply(as.character(quality(object)), function(x) as.integer(charToRaw(x))-33)
-  title = paste("Histogram of mean quality scores per sequence\n", name, sep="")
-  hist(sapply(qualityScores, mean), 
-    main=title, 
-    xlab="Mean of quality scores per sequence", ylab="Number of sequences", col="firebrick1", 
-    breaks=40)
+  if (!is.element("main", names(args)) & !is.element("breaks", names(args))) {
+    main = "Histogram of mean quality scores per sequence"
+    hist(sapply(qualityScores, mean), main=main, xlab=xlab, ylab=ylab, col=col, breaks=40, ...)
+  } else if (!is.element("main", names(args)) & is.element("breaks", names(args))) {
+    main = "Histogram of mean quality scores per sequence"
+    hist(sapply(qualityScores, mean), main=main, xlab=xlab, ylab=ylab, col=col, ...)
+  } else if (is.element("main", names(args)) & !is.element("breaks", names(args))) {
+    hist(sapply(qualityScores, mean), xlab=xlab, ylab=ylab, col=col, breaks=40, ...)
+  } else {
+    hist(sapply(qualityScores, mean), xlab=xlab, ylab=ylab, col=col, ...)
+  }
 }
 
-.sequenceQualityHist_sr <- function(object, name) {
-  if (missing(name)) {
-    name = ""
-  }
+.sequenceQualityHist_sr <- function(object, xlab, ylab, col, ...) {
+  args = list(...)
   ma = as(quality(object), "matrix")
-  title = paste("Histogram of mean quality scores per sequence\n", name, sep="")
-  hist(apply(ma, 1, mean), 
-    main=title, 
-    xlab="Mean of quality scores per sequence", ylab="Number of sequences", col="firebrick1", 
-    breaks=max(ma))
+  if (!is.element("main", names(args)) & !is.element("breaks", names(args))) {
+    main = "Histogram of mean quality scores per sequence"
+    hist(apply(ma, 1, mean), main=main, xlab=xlab, ylab=ylab, col=col, breaks=max(ma), ...)
+  } else if (!is.element("main", names(args)) & is.element("breaks", names(args))) {
+    main = "Histogram of mean quality scores per sequence"
+    hist(apply(ma, 1, mean), main=main, xlab=xlab, ylab=ylab, col=col, ...)
+  } else if (is.element("main", names(args)) & !is.element("breaks", names(args))) {
+    hist(apply(ma, 1, mean), xlab=xlab, ylab=ylab, col=col, breaks=max(ma), ...)
+  } else {
+    hist(apply(ma, 1, mean), xlab=xlab, ylab=ylab, col=col, ...)
+  }
 }
 
-.sequenceQualityHist_sff <- function(object, name) {
-  if (missing(name)) {
-    name = filename(object)
-  }
-  reads = reads(object)
-  .sequenceQualityHist(reads, name)
+.sequenceQualityHist_sff <- function(object, xlab, ylab, col, ...) {
+  args = list(...)
+  if (!is.element("main", names(args))) {
+    main = paste("Histogram of mean quality scores per sequence\n", name(object), sep="")
+    .sequenceQualityHist(reads(object), main=main, xlab=xlab, ylab=ylab, col=col, ...)
+  } else {
+    .sequenceQualityHist(reads(object), xlab=xlab, ylab=ylab, col=col, ...)
+  } 
 }
 
 setMethod("sequenceQualityHist", signature(object="QualityScaledDNAStringSet"), .sequenceQualityHist)
@@ -168,10 +186,8 @@ setMethod("sequenceQualityHist", signature(object="SFFContainer"), .sequenceQual
 
 
 #boxplot of quality per position
-.positionQualityBoxplot <- function(object, range, binsize, name) {
-  if (missing(name)) {
-    name = ""
-  }
+.positionQualityBoxplot <- function(object, range, binsize, xlab, ylab, col, ...) {
+  args = list(...)
   qs = sapply(as.character(quality(object)), function(x) as.integer(charToRaw(x))-33)
   nreads = length(object)
   readlengths = width(object)
@@ -198,20 +214,22 @@ setMethod("sequenceQualityHist", signature(object="SFFContainer"), .sequenceQual
   mb = matrix(NA, nrow=nreads, ncol=goalsize-dim(ma)[2]) # fill with NAs
   mc = cbind(ma, mb)
   md = matrix(mc, ncol=goalsize/binsize)
-  title = paste("Boxplot of quality per position\n", name, sep="")
-  boxplot(md, outline=FALSE, col="firebrick1", axes=FALSE, main=title, 
-    xlab=paste("Read position in bp (Bin size: ", binsize, "bp)", sep=""), ylab="Quality score", 
-    frame=TRUE, ylim=c(0, max(md, na.rm=TRUE)))
+  if (!is.element("main", names(args))) {
+    main = "Boxplot of quality per position"
+    boxplot(md, outline=FALSE, col=col, axes=FALSE, main=main, xlab=xlab, ylab=ylab, frame=TRUE, 
+    ylim=c(0, max(md, na.rm=TRUE)), ...)
+  } else {
+    boxplot(md, outline=FALSE, col=col, axes=FALSE, xlab=xlab, ylab=ylab, frame=TRUE, 
+    ylim=c(0, max(md, na.rm=TRUE)), ...)
+  }
   myLabels <- pretty(0:dim(ma)[2], n=4, min.n=1)
   myTicks <- myLabels/binsize
   axis(1, at=myTicks, labels=myLabels)
   axis(2, at=c(0, 10, 20, 30, 40), labels=TRUE)
 }
 
-.positionQualityBoxplot_sr <- function(object, range, binsize, name) {
-  if (missing(name)) {
-    name = ""
-  }
+.positionQualityBoxplot_sr <- function(object, range, binsize, xlab, ylab, col, ...) {
+  args = list(...)
   ma = as(quality(object), "matrix")
   if (missing(range)) {
     range = c(1, dim(ma)[2])
@@ -232,22 +250,28 @@ setMethod("sequenceQualityHist", signature(object="SFFContainer"), .sequenceQual
   mc = cbind(ma, mb)
   md = matrix(mc, ncol=goalsize/binsize)
   maxq = max(md, na.rm=TRUE)
-  title = paste("Boxplot of quality per position\n", name, sep="")
-  boxplot(md, outline=FALSE, col="firebrick1", axes=FALSE, main=title, 
-    xlab=paste("Read position in bp (Bin size: ", binsize, "bp)", sep=""), ylab="Quality score", 
-    frame=TRUE, ylim=c(0, maxq))    
+  if (!is.element("main", names(args))) {
+    main = "Boxplot of quality per position"
+    boxplot(md, outline=FALSE, col=col, axes=FALSE, main=main, xlab=xlab, ylab=ylab, frame=TRUE, 
+    ylim=c(0, maxq), ...)
+  } else {
+    boxplot(md, outline=FALSE, col=col, axes=FALSE, xlab=xlab, ylab=ylab, frame=TRUE, 
+    ylim=c(0, maxq), ...)
+  }  
   myLabels <- pretty(0:dim(ma)[2], n=4, min.n=1)
   myTicks <- myLabels/binsize
   axis(1, at=myTicks, labels=myLabels)
   axis(2, at=c(0, 10, 20, 30, 40), labels=TRUE)
 }
 
-.positionQualityBoxplot_sff <- function(object, range, binsize, name) {
-  if (missing(name)) {
-    name = filename(object)
+.positionQualityBoxplot_sff <- function(object, range, binsize, xlab, ylab, col, ...) {
+  args = list(...)
+  if (!is.element("main", names(args))) {
+    main = paste("Boxplot of quality per position\n", name(object), sep="")
+    .positionQualityBoxplot(reads(object), range, binsize, main=main, xlab=xlab, ylab=ylab, col=col, ...)
+  } else {
+    .positionQualityBoxplot(reads(object), range, binsize, xlab=xlab, ylab=ylab, col=col, ...)
   }
-  reads = reads(object)
-  .positionQualityBoxplot(reads, range, binsize, name)
 }
 
 setMethod("positionQualityBoxplot", signature(object="QualityScaledDNAStringSet"), .positionQualityBoxplot)
@@ -282,10 +306,8 @@ setMethod("baseFrequency", signature=signature(object="ShortRead"), .baseFrequen
 setMethod("baseFrequency", signature=signature(object="SFFContainer"), .baseFrequency_sff)
 
 
-.nucleotideCharts <- function(object, range, name) {
-  if (missing(name)) {
-    name = ""
-  }
+.nucleotideCharts <- function(object, range, linetypes, linecols, xlab, ylab, ...) {
+  args = list(...)
   readLengths = width(object)
   if(length(range) == 1) {
     start = 1
@@ -299,27 +321,41 @@ setMethod("baseFrequency", signature=signature(object="SFFContainer"), .baseFreq
   if(start > dim(abc)[2] | end > dim(abc)[2]) {
     stop("Values are out of range")
   }
-  title = paste("Nucleotide frequency\n", name, sep="")
-  plot(x=start:end, y=abc["A", start:end]/nucsPerPos[start:end], type="l", col="black",
-    main=title, xlab="Position", ylab="Frequency", ylim=c(0,1))
-  lines(x=start:end, y=abc["C", start:end]/nucsPerPos[start:end], type="l", col="red")
-  lines(x=start:end, y=abc["G", start:end]/nucsPerPos[start:end], type="l", col="blue")
-  lines(x=start:end, y=abc["T", start:end]/nucsPerPos[start:end], type="l", col="green")
-  lines(x=start:end, y=abc["N", start:end]/nucsPerPos[start:end], type="l", col="grey70")
-  legend(x="top", horiz=TRUE, legend=c("A", "C", "G", "T", "N"), fill=c("black", "red", "blue", "green", 
-    "grey70"))
-}
-
-.nucleotideCharts_sr <- function(object, range, name) {
-  .nucleotideCharts(sread(object), range, name)
-}
-
-.nucleotideCharts_sff <- function(object, range, name) {
-  if (missing(name)) {
-    name = filename(object)
+  if (!is.element("main", names(args))) {
+    main = "Nucleotide frequency"
+    plot(x=start:end, y=abc["A", start:end]/nucsPerPos[start:end], type=linetypes["A"], 
+      col=linecols["A"], main=main, xlab=xlab, ylab=ylab, ylim=c(0,1), ...)
+  } else {
+    plot(x=start:end, y=abc["A", start:end]/nucsPerPos[start:end], type=linetypes["A"], 
+      col=linecols["A"], xlab=xlab, ylab=ylab, ylim=c(0,1), ...)
   }
-  reads = reads(object)
-  .nucleotideCharts(reads, range, name)
+  lines(x=start:end, y=abc["C", start:end]/nucsPerPos[start:end], type=linetypes["C"], 
+    col=linecols["C"])
+  lines(x=start:end, y=abc["G", start:end]/nucsPerPos[start:end], type=linetypes["G"], 
+    col=linecols["G"])
+  lines(x=start:end, y=abc["T", start:end]/nucsPerPos[start:end], type=linetypes["T"], 
+    col=linecols["T"])
+  lines(x=start:end, y=abc["N", start:end]/nucsPerPos[start:end], type=linetypes["N"], 
+    col=linecols["N"])
+  legend(x="top", horiz=TRUE, legend=c("A", "C", "G", "T", "N"), 
+    fill=c(linecols["A"], linecols["C"], linecols["G"], linecols["T"], linecols["N"]))
+}
+
+.nucleotideCharts_sr <- function(object, range, linetypes, linecols, xlab, ylab, ...) {
+  .nucleotideCharts(sread(object), range, linetypes=linetypes, linecols=linecols, xlab=xlab, 
+    ylab=ylab, ...)
+}
+
+.nucleotideCharts_sff <- function(object, range, linetypes, linecols, xlab, ylab, ...) {
+  args = list(...)
+  if (!is.element("main", names(args))) {
+    main = paste("Nucleotide frequency\n", name(object), sep="")
+    .nucleotideCharts(reads(object), range, linetypes=linetypes, linecols=linecols, main=main, 
+      xlab=xlab, ylab=ylab, ...)
+  } else {
+    .nucleotideCharts(reads(object), range, linetypes=linetypes, linecols=linecols,
+      xlab=xlab, ylab=ylab, ...)
+  } 
 }
 
 setMethod("nucleotideCharts", signature(object="DNAStringSet"), .nucleotideCharts)
@@ -349,10 +385,8 @@ setMethod("gcContent", signature(object="ShortRead"), .gcContent_sr)
 setMethod("gcContent", signature(object="SFFContainer"), .gcContent_sff)
 
 
-.gcPerPosition <- function(object, range, name) {
-  if (missing(name)) {
-    name = ""
-  }
+.gcPerPosition <- function(object, range, type, col, xlab, ylab, ...) {
+  args = list(...)
   readLengths = width(object)
   if(length(range) == 1) {
     start = 1
@@ -366,21 +400,28 @@ setMethod("gcContent", signature(object="SFFContainer"), .gcContent_sff)
   if(start > dim(abc)[2] | end > dim(abc)[2]) {
     stop("Values are out of range")
   }
-  title = paste("GC content per base\n", name, sep="")
-  plot(x=start:end, y=(abc["G", start:end] + abc["C", start:end])/nucsPerPos[start:end], type="l", 
-    col="blue", main=title, xlab="Position", ylab="Frequency", ylim=c(0,1))
-}
-
-.gcPerPosition_sr <- function(object, range, name) {
-  .gcPerPosition(sread(object), range, name)
-}
-
-.gcPerPosition_sff <- function(object, range, name) {
-  if (missing(name)) {
-    name = filename(object)
+  if (!is.element("main", names(args))) {
+    main = "GC content per base"
+    plot(x=start:end, y=(abc["G", start:end] + abc["C", start:end])/nucsPerPos[start:end], 
+      type=type, col=col, main=main, xlab=xlab, ylab=ylab, ylim=c(0,1), ...)
+  } else {
+    plot(x=start:end, y=(abc["G", start:end] + abc["C", start:end])/nucsPerPos[start:end], 
+      type=type, col=col, xlab=xlab, ylab=ylab, ylim=c(0,1), ...)
   }
-  reads = reads(object)
-  .gcPerPosition(reads, range, name)
+}
+
+.gcPerPosition_sr <- function(object, range, type, col, xlab, ylab, ...) {
+  .gcPerPosition(sread(object), range, type=type, col=col, xlab=xlab, ylab=ylab, ...)
+}
+
+.gcPerPosition_sff <- function(object, range, type, col, xlab, ylab, ...) {
+  args = list(...)
+  if (!is.element("main", names(args))) {
+    main = paste("GC content per base\n", name(object), sep="")
+    .gcPerPosition(reads(object), range, main=main, type=type, col=col, xlab=xlab, ylab=ylab, ...)
+  } else {
+    .gcPerPosition(reads(object), range, type=type, col=col, xlab=xlab, ylab=ylab, ...)
+  }
 }
 
 setMethod("gcPerPosition", signature(object="DNAStringSet"), .gcPerPosition)
@@ -388,28 +429,30 @@ setMethod("gcPerPosition", signature(object="ShortRead"), .gcPerPosition_sr)
 setMethod("gcPerPosition", signature(object="SFFContainer"), .gcPerPosition_sff)
 
 
-.gcContentHist <- function(object, name) {
-  if (missing(name)) {
-    name = ""
-  }
+.gcContentHist <- function(object, xlab, ylab, col, breaks, ...) {
+  args = list(...)
   af = alphabetFrequency(object, baseOnly=TRUE)
   gc = ((af[,"G"] + af[,"C"]) / (af[,"A"] + af[,"C"] + af[,"G"] + af[,"T"])) * 100
-  title = paste("Histogram of GC content per sequence\n", name, sep="")
-  hist(gc, main=title, xlim=c(0,100),
-    xlab="GC content", ylab="Number of sequences", col="firebrick1", 
-    breaks=50)
-}
-
-.gcContentHist_sr <- function(object, name) {
-  .gcContentHist(sread(object), name)
-}
-
-.gcContentHist_sff <- function(object, name) {
-  if (missing(name)) {
-    name = filename(object)
+  if (!is.element("main", names(args))) {
+    main = "Histogram of GC content per sequence"
+    hist(gc, main=main, xlim=c(0,100), xlab=xlab, ylab=ylab, col=col, breaks=breaks, ...)
+  } else {
+    hist(gc, xlim=c(0,100), xlab=xlab, ylab=ylab, col=col, breaks=breaks, ...)
   }
-  reads = reads(object)
-  .gcContentHist(reads, name)
+}
+
+.gcContentHist_sr <- function(object, xlab, ylab, col, breaks, ...) {
+  .gcContentHist(sread(object), xlab=xlab, ylab=ylab, col=col, breaks=breaks, ...)
+}
+
+.gcContentHist_sff <- function(object, xlab, ylab, col, breaks, ...) {
+  args = list(...)
+  if (!is.element("main", names(args))) {
+    main = paste("Histogram of GC content per sequence\n", name(object), sep="")
+    .gcContentHist(reads(object), main=main, xlab=xlab, ylab=ylab, col=col, breaks=breaks, ...)
+  } else {
+    .gcContentHist(reads(object), xlab=xlab, ylab=ylab, col=col, breaks=breaks, ...)
+  }
 }
 
 setMethod("gcContentHist", signature(object="DNAStringSet"), .gcContentHist)
@@ -422,33 +465,36 @@ setMethod("gcContentHist", signature(object="SFFContainer"), .gcContentHist_sff)
 ###########################
 
 ### DUST approach ###
-.complexity.dust <- function(object, name) {
-  if (missing(name)) {
-    name = ""
-  }
+.complexity.dust <- function(object, xlab, ylab, xlim, col, breaks, ...) {
+  args = list(...)
   scores = vector(mode="numeric", length=length(object))
   tfq = trinucleotideFrequency(object) # matrix mit nreads rows and 64 cols
   rls = width(object)
   scaling = ((rls - 2) * (rls - 2 - 1)) / ((rls - 2 - 1) * 2)
   scores = rowSums(tfq * (tfq - 1)) * 100 / (2 * scaling * (rls - 2 - 1))
-  title = paste("Histogram of DUST complexity scores\n", name, sep="")
-  hist(scores, main=title, 
-    xlab="Complexity score (0=high, 100=low)", ylab="Number of sequences", xlim=c(0, 100), 
-    breaks=100, col="firebrick1")
+  if (!is.element("main", names(args))) {
+    main = "Histogram of DUST complexity scores"
+    hist(scores, main=main, xlab=xlab, ylab=ylab, xlim=xlim, col=col, breaks=breaks, ...)
+  } else {
+    hist(scores, xlab=xlab, ylab=ylab, xlim=xlim, col=col, breaks=breaks, ...)
+  }
   abline(v=7, col="blue")
   return(scores)
 }
 
-.complexity.dust_sr <- function(object, name) {
-  .complexity.dust(sread(object), name)
+.complexity.dust_sr <- function(object, xlab, ylab, xlim, col, breaks, ...) {
+  .complexity.dust(sread(object), xlab=xlab, ylab=ylab, xlim=xlim, col=col, breaks=breaks, ...)
 }
 
-.complexity.dust_sff <- function(object, name) {
-  if (missing(name)) {
-    name = filename(object)
+.complexity.dust_sff <- function(object, xlab, ylab, xlim, col, breaks, ...) {
+  args = list(...)
+  if (!is.element("main", names(args))) {
+    main = paste("Histogram of DUST complexity scores\n", name(object), sep="")
+    .complexity.dust(reads(object), main=main, xlab=xlab, ylab=ylab, xlim=xlim, col=col, 
+      breaks=breaks, ...)
+  } else {
+    .complexity.dust(reads(object), xlab=xlab, ylab=ylab, xlim=xlim, col=col, breaks=breaks, ...)
   }
-  reads = reads(object)
-  .complexity.dust(reads, name)
 }
 
 setMethod("complexity.dust", signature(object="DNAStringSet"), .complexity.dust)
@@ -456,34 +502,37 @@ setMethod("complexity.dust", signature(object="ShortRead"), .complexity.dust_sr)
 setMethod("complexity.dust", signature(object="SFFContainer"), .complexity.dust_sff)
 
 ### Entropy approach ###
-.complexity.entropy <- function(object, name) {
-  if (missing(name)) {
-    name = ""
-  }
+.complexity.entropy <- function(object, xlab, ylab, xlim, col, breaks, ...) {
+  args = list(...)
   scores = vector(mode="numeric", length=length(object))
   tfq = trinucleotideFrequency(object) # matrix with nreads rows and 64 cols
   rls = width(object)
   fac1 = tfq / (rls - 2)
   fac2 = ifelse(fac1 == 0, 0, log(fac1, base=ifelse(rls < 66, rls - 2, 64)))
   scores = (-100) * rowSums(fac1 * fac2)
-  title = paste("Histogram of Entropy complexity scores\n", name, sep="")
-  hist(scores, main=title, 
-    xlab="Complexity score (0=low, 100=high)", 
-    ylab="Number of sequences", xlim=c(0, 100), breaks=100, col="firebrick1")
+  if (!is.element("main", names(args))) {
+    main = "Histogram of Entropy complexity scores"
+    hist(scores, main=main, xlab=xlab, ylab=ylab, xlim=xlim, breaks=breaks, col=col, ...)
+  } else {
+    hist(scores, xlab=xlab, ylab=ylab, xlim=xlim, breaks=breaks, col=col, ...)
+  }
   abline(v=70, col="blue")
   return(scores)
 }
 
-.complexity.entropy_sr <- function(object, name) {
-  .complexity.entropy(sread(object), name)
+.complexity.entropy_sr <- function(object, xlab, ylab, xlim, col, breaks, ...) {
+  .complexity.entropy(sread(object), xlab=xlab, ylab=ylab, xlim=xlim, col=col, breaks=breaks, ...)
 }
 
-.complexity.entropy_sff <- function(object, name) {
-  if (missing(name)) {
-    name = filename(object)
+.complexity.entropy_sff <- function(object, xlab, ylab, xlim, col, breaks, ...) {
+  args = list(...)
+  if (!is.element("main", names(args))) {
+    main = paste("Histogram of Entropy complexity scores\n", name(object), sep="")
+    .complexity.entropy(reads(object), main=main, xlab=xlab, ylab=ylab, xlim=xlim, col=col, 
+      breaks=breaks, ...)
+  } else {
+    .complexity.entropy(reads(object), xlab=xlab, ylab=ylab, xlim=xlim, col=col, breaks=breaks, ...)
   }
-  reads = reads(object)
-  .complexity.entropy(reads, name)
 }
 
 setMethod("complexity.entropy", signature(object="DNAStringSet"), .complexity.entropy)
@@ -493,10 +542,8 @@ setMethod("complexity.entropy", signature(object="SFFContainer"), .complexity.en
 ###############################
 ### Dinucleotide odds ratio ###
 ###############################
-.dinucleotideOddsRatio <- function(object, name) {
-  if (missing(name)) {
-    name = ""
-  }
+.dinucleotideOddsRatio <- function(object, xlab, col, ...) {
+  args = list(...)
   dfq = dinucleotideFrequency(object) # matrix with nreads rows and 16 cols
   nfq = oligonucleotideFrequency(object, width=1) # matrix with nreads rows and 4 cols
   dinucs = c("AA", "AC", "AG", "AT", "CA", "CC", "CG", "CT", "GA", "GC", "GG", "GT", "TA", "TC", 
@@ -513,26 +560,32 @@ setMethod("complexity.entropy", signature(object="SFFContainer"), .complexity.en
     scorema[, dinucs[i]] = (div1 / (div2 * div3)) * div4
   }
   means = apply(scorema, 2, mean)
-  title = paste("Dinucleotide odds ratio\n", name, sep="")
-  bar = barplot(means-1, main=title, 
-    xlab="Under-/over-representation of dinucleotides", horiz=TRUE, xlim=c(-1,1), col="firebrick1", 
-    las=1, axes=FALSE, axisnames=FALSE)
+  if (!is.element("main", names(args))) {
+    main = "Dinucleotide odds ratio"
+    bar = barplot(means-1, main=main, xlab=xlab, horiz=TRUE, xlim=c(-1,1), col=col, las=1, 
+      axes=FALSE, axisnames=FALSE, ...)
+  } else {
+    bar = barplot(means-1, xlab=xlab, horiz=TRUE, xlim=c(-1,1), col=col, las=1, axes=FALSE, 
+      axisnames=FALSE, ...)
+  }
   abline(v=0, col="black")
   axis(1, at=pretty(-1:1, n=4, min.n=1), labels=pretty(0:2, n=4, min.n=1))
   text(x=means-1+ifelse(means < 1, -0.08, 0.08), y=bar[, 1], labels=dinucs)
   return(scorema)
 }
 
-.dinucleotideOddsRatio_sr <- function(object, name) {
-  .dinucleotideOddsRatio(sread(object), name)
+.dinucleotideOddsRatio_sr <- function(object, xlab, col, ...) {
+  .dinucleotideOddsRatio(sread(object), xlab=xlab, col=col, ...)
 }
 
-.dinucleotideOddsRatio_sff <- function(object, name) {
-  if (missing(name)) {
-    name = filename(object)
+.dinucleotideOddsRatio_sff <- function(object, xlab, col, ...) {
+  args = list(...)
+  if (!is.element("main", names(args))) {
+    main = paste("Dinucleotide odds ratio\n", name(object), sep="")
+    .dinucleotideOddsRatio(reads(object), main=main, xlab=xlab, col=col, ...)
+  } else {
+    .dinucleotideOddsRatio(reads(object), xlab=xlab, col=col, ...)
   }
-  reads = reads(object)
-  .dinucleotideOddsRatio(reads, name)
 }
 
 setMethod("dinucleotideOddsRatio", signature(object="DNAStringSet"), .dinucleotideOddsRatio)

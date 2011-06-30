@@ -14,7 +14,7 @@
 }
 
 \usage{
-  gcPerPosition(object, range=0.95, name)
+  gcPerPosition(object, range=0.95, type="l", col="blue", xlab="Position", ylab="Frequency", ...)
 }
 
 \arguments{
@@ -22,9 +22,11 @@
   \item{range}{An integer vector of length one or two. If length one only bases up to the percent 
     quantile of read lengths defined by the given value are shown. A vector of length two gives the 
     start and end base between which the GC-content is plotted.}
-  \item{name}{Optional character defining the name to be displayed in the plot title. Defaults
-    to the filename for \link{SFFContainer} and left empty for \link{DNAStringSet} and 
-    \link{ShortRead}.}
+  \item{type}{The type of the plot (see \sQuote{plot}).}
+  \item{col}{The plotting color.}
+  \item{xlab}{The X axis label.}
+  \item{ylab}{The Y axis label.}
+  \item{\dots}{Arguments to be passed to methods, such as graphical parameters (see \sQuote{par}).}
 }
 
 \author{

@@ -15,14 +15,15 @@
 }
 
 \usage{
-  dinucleotideOddsRatio(object, name)
+  dinucleotideOddsRatio(object, xlab="Under-/over-representation of dinucleotides", 
+    col="firebrick1", ...)
 }
 
 \arguments{
   \item{object}{An object of class \link{DNAStringSet}, \link{ShortRead} or \link{SFFContainer}.}
-  \item{name}{Optional character defining the name to be displayed in the histogram title. Defaults
-    to the filename for \link{SFFContainer} and left empty for \link{DNAStringSet} and 
-    \link{ShortRead}.}
+  \item{xlab}{The X axis label.}
+  \item{col}{The plotting color.}
+  \item{\dots}{Arguments to be passed to methods, such as graphical parameters (see \sQuote{par}).}
 }
 
 \details{

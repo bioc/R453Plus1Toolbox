@@ -22,7 +22,7 @@ setMethod("getRead", signature(object="SFFContainer", readname="character"),
       car = clipAdapterRight(object)[readname]
       names(cql) = names(cqr) = names(cal) = names(car) = NULL
       read = new("SFFRead", 
-                 readname=readname, 
+                 name=readname, 
                  bases=reads(object)[[readname]],
                  clipQualityLeft=cql,
                  clipQualityRight=cqr,
@@ -36,14 +36,14 @@ setMethod("getRead", signature(object="SFFContainer", readname="character"),
   }
 )
 
-setMethod("filename", signature(object="SFFContainer"),
+setMethod("name", signature(object="SFFContainer"),
   function(object) {
-    return(object@filename)
+    return(object@name)
   }
 )
-setReplaceMethod("filename", signature(object="SFFContainer", value="character"),
+setReplaceMethod("name", signature(object="SFFContainer", value="character"),
   function(object, value) {
-    object@filename = value
+    object@name = value
     return(object)
   }
 )
@@ -171,8 +171,8 @@ setReplaceMethod("reads", signature(object="SFFContainer", value="QualityScaledD
 setMethod("show",
   signature(object="SFFContainer"),
   function(object){
-    cat("Filename: \n")
-    cat(object@filename, "\n")
+    cat("Name: \n")
+    cat(object@name, "\n")
     cat("\n")
     cat("Reads: \n")
     show(object@reads)
@@ -185,7 +185,7 @@ setMethod("[",
   function(x, i, ...){
     if(is.numeric(i)) {
       sffNew = new("SFFContainer", 
-                   filename=filename(x),
+                   name=name(x),
                    flowgramFormat=flowgramFormat(x),
                    flowChars=flowChars(x),
                    keySequence=keySequence(x),
@@ -200,7 +200,7 @@ setMethod("[",
     } else {
       reads = reads(x)[names(reads) %in% i]
       sffNew = new("SFFContainer", 
-                   filename=filename(x),
+                   name=name(x),
                    flowgramFormat=flowgramFormat(x),
                    flowChars=flowChars(x),
                    keySequence=keySequence(x),
@@ -225,7 +225,7 @@ setMethod("sff2fastq",
     }
     outdir = gsub(paste(.Platform$file.sep, "+$", sep=""), "", outdir)
     if(missing(fname)) {
-      fname = filename(object)
+      fname = name(object)
       fname = gsub("(\\.sff)?$", ".fastq", fname)
     }
     fp = file.path(outdir, fname)
