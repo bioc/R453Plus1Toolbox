@@ -257,51 +257,52 @@ setGeneric("variantFilter<-", signature = c("object","value"),
 	
 ## generics for SFFRead and SFFContainer
 
-setGeneric("name", function(object) standardGeneric("name"))
-setGeneric("name<-", function(object, value) standardGeneric("name<-"))
+setGeneric("name<-", function(x, value) standardGeneric("name<-"))
 
-setGeneric("flowgramFormat", function(object) standardGeneric("flowgramFormat"))
-setGeneric("flowgramFormat<-", function(object, value) standardGeneric("flowgramFormat<-"))
+setGeneric("flowgramFormat", function(x) standardGeneric("flowgramFormat"))
+setGeneric("flowgramFormat<-", function(x, value) standardGeneric("flowgramFormat<-"))
 
-setGeneric("flowChars", function(object) standardGeneric("flowChars"))
-setGeneric("flowChars<-", function(object, value) standardGeneric("flowChars<-"))
+setGeneric("flowChars", function(x) standardGeneric("flowChars"))
+setGeneric("flowChars<-", function(x, value) standardGeneric("flowChars<-"))
 
-setGeneric("keySequence", function(object) standardGeneric("keySequence"))
-setGeneric("keySequence<-", function(object, value) standardGeneric("keySequence<-"))
+setGeneric("keySequence", function(x) standardGeneric("keySequence"))
+setGeneric("keySequence<-", function(x, value) standardGeneric("keySequence<-"))
 
-setGeneric("clipQualityLeft", function(object) standardGeneric("clipQualityLeft"))
-setGeneric("clipQualityLeft<-", function(object, value) standardGeneric("clipQualityLeft<-"))
+setGeneric("clipQualityLeft", function(x) standardGeneric("clipQualityLeft"))
+setGeneric("clipQualityLeft<-", function(x, value) standardGeneric("clipQualityLeft<-"))
 
-setGeneric("clipQualityRight", function(object) standardGeneric("clipQualityRight"))
-setGeneric("clipQualityRight<-", function(object, value) standardGeneric("clipQualityRight<-"))
+setGeneric("clipQualityRight", function(x) standardGeneric("clipQualityRight"))
+setGeneric("clipQualityRight<-", function(x, value) standardGeneric("clipQualityRight<-"))
 
-setGeneric("clipAdapterLeft", function(object) standardGeneric("clipAdapterLeft"))
-setGeneric("clipAdapterLeft<-", function(object, value) standardGeneric("clipAdapterLeft<-"))
+setGeneric("clipAdapterLeft", function(x) standardGeneric("clipAdapterLeft"))
+setGeneric("clipAdapterLeft<-", function(x, value) standardGeneric("clipAdapterLeft<-"))
 
-setGeneric("clipAdapterRight", function(object) standardGeneric("clipAdapterRight"))
-setGeneric("clipAdapterRight<-", function(object, value) standardGeneric("clipAdapterRight<-"))
+setGeneric("clipAdapterRight", function(x) standardGeneric("clipAdapterRight"))
+setGeneric("clipAdapterRight<-", function(x, value) standardGeneric("clipAdapterRight<-"))
 
-setGeneric("flowgram", function(object) standardGeneric("flowgram"))
-setGeneric("flowgram<-", function(object, value) standardGeneric("flowgram<-"))
+setGeneric("flowgram", function(x) standardGeneric("flowgram"))
+setGeneric("flowgram<-", function(x, value) standardGeneric("flowgram<-"))
 
-setGeneric("flowgrams", function(object) standardGeneric("flowgrams"))
-setGeneric("flowgrams<-", function(object, value) standardGeneric("flowgrams<-"))
+setGeneric("flowgrams", function(x) standardGeneric("flowgrams"))
+setGeneric("flowgrams<-", function(x, value) standardGeneric("flowgrams<-"))
 
-setGeneric("flowIndexes", function(object) standardGeneric("flowIndexes"))
-setGeneric("flowIndexes<-", function(object, value) standardGeneric("flowIndexes<-"))
+setGeneric("flowIndexes", function(x) standardGeneric("flowIndexes"))
+setGeneric("flowIndexes<-", function(x, value) standardGeneric("flowIndexes<-"))
 
-setGeneric("read", function(object) standardGeneric("read"))
-setGeneric("read<-", function(object, value) standardGeneric("read<-"))
+setGeneric("read", function(x) standardGeneric("read"))
+setGeneric("read<-", function(x, value) standardGeneric("read<-"))
 
-setGeneric("reads", function(object) standardGeneric("reads"))
-setGeneric("reads<-", function(object, value) standardGeneric("reads<-"))
+setGeneric("quality<-", function(x, value) standardGeneric("quality<-"))
 
-setGeneric("addRead", function(object, read) standardGeneric("addRead"))
-setGeneric("getRead", function(object, readname) standardGeneric("getRead"))
+setGeneric("reads", function(x) standardGeneric("reads"))
+setGeneric("reads<-", function(x, value) standardGeneric("reads<-"))
+
+setGeneric("addRead", function(x, read) standardGeneric("addRead"))
+setGeneric("getRead", function(x, readname) standardGeneric("getRead"))
 
 setGeneric(name="sff2fastq", 
-           def=function(object, outdir, fname) standardGeneric("sff2fastq"),
-           signature=c("object"))
+           def=function(x, outdir, fname) standardGeneric("sff2fastq"),
+           signature=c("x"))
 
 
 ## generics for quality functions
@@ -358,3 +359,15 @@ setGeneric(name="dinucleotideOddsRatio",
            def=function(object, xlab="Under-/over-representation of dinucleotides", 
              col="firebrick1", ...) standardGeneric("dinucleotideOddsRatio"),
            signature=c("object"))
+
+setGeneric(name="flowgramBarplot",
+           def=function(x, range=c(0, length(flowgram(x))), xlab="Flow sequence", ylab="Flow intensity",
+             col=c(A="black", C="red", G="blue", T="green"), ...)
+             standardGeneric("flowgramBarplot"),
+           signature=c("x"))
+
+setGeneric(name="homopolymerHist",
+           def=function(x, range=c(0, length(flowgram(x))), xlab="Homopolymer length",
+             ylab="Number of homopolymers", col=c(A="black", C="red", G="blue", T="green"), ...)
+             standardGeneric("homopolymerHist"),
+           signature=c("x"))

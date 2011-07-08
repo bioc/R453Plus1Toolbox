@@ -106,29 +106,37 @@ setClass("MapperSet",
 setClass("SFFRead",
   representation=list(
     name               = "character",
+    flowgramFormat     = "numeric",
+    flowChars          = "character",
+    keySequence        = "character",
     clipQualityLeft    = "numeric",
     clipQualityRight   = "numeric",
     clipAdapterLeft    = "numeric",
     clipAdapterRight   = "numeric",
     flowgram           = "numeric",
     flowIndexes        = "numeric",
-    read               = "QualityScaledDNAStringSet"
+    read               = "DNAString",
+    quality            = "BString"
   ),
   prototype=prototype(
     name               = "",
+    flowgramFormat     = 1,
+    flowChars          = "",
+    keySequence        = "",
     clipQualityLeft    = 0,
     clipQualityRight   = 0,
     clipAdapterLeft    = 0,
     clipAdapterRight   = 0,
     flowgram           = 0,
     flowIndexes        = 0,
-    read               = QualityScaledDNAStringSet(DNAStringSet(), PhredQuality(""))
+    read               = DNAString(),
+    quality            = BString()
   ),
-  validity=function(object){
-    if((width(read[1]) != length(flowIndexes)))
-      stop("Read length must be equal to number of flow indexes.")
-    if(length(read) > 1)
-      stop("Read must not contain more than one read.")
+  validity=function(object) {
+    if(length(read(object)) != length(quality(object)) | length(read(object)) != length(flowIndexes(object)))
+      return("Read, quality and flowIndexes must be of equal length.")
+    if(nchar(flowChars(object)) != length(flowgram(object)))
+      stop("Flowgram and flowChars must be of equal length.")
     return(TRUE)
   }
 )
@@ -160,6 +168,12 @@ setClass("SFFContainer",
     flowgrams          = list(),
     flowIndexes        = list(),
     reads              = QualityScaledDNAStringSet(DNAStringSet(), PhredQuality(""))
-  )
+  ),
+  validity=function(object) {
+    if(length(reads(object)) != length(flowgrams(object)) |
+       length(flowgrams(object)) != length(flowIndexes(sff)))
+      return("Number of reads, flowgram length and flow indexes length must be equal")
+    return(TRUE)
+  }
 )
 

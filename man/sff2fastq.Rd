@@ -12,11 +12,11 @@
 }
 
 \usage{
-  sff2fastq(object, outdir, fname)
+  sff2fastq(x, outdir, fname)
 }
 
 \arguments{
-  \item{object}{An object of class \link{SFFContainer}.}
+  \item{x}{An object of class \link{SFFContainer}.}
   \item{outdir}{The directory where the file should be stored, defaults to the current working 
     directory.}
   \item{fname}{The name of the file to write. Defaults to the filename slot of the 

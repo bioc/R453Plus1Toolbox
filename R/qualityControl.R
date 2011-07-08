@@ -591,3 +591,58 @@ setMethod("complexity.entropy", signature(object="SFFContainer"), .complexity.en
 setMethod("dinucleotideOddsRatio", signature(object="DNAStringSet"), .dinucleotideOddsRatio)
 setMethod("dinucleotideOddsRatio", signature(object="ShortRead"), .dinucleotideOddsRatio_sr)
 setMethod("dinucleotideOddsRatio", signature(object="SFFContainer"), .dinucleotideOddsRatio_sff)
+
+
+###########################
+### Flowgram statistics ###
+###########################
+
+.flowgramBarplot <- function(x, range, xlab, ylab, col, ...) {
+  args = list(...)
+  nflows = length(flowgram(x))
+  if(length(range) != 2 | range[1] < 0 | range[2] > nflows | range[1] > range[2]) {
+    stop("Illegal range values.")
+  }
+  flowChars = unlist(strsplit(flowChars(x), NULL))[range[1]:range[2]]
+  flowgram = flowgram(x)[range[1]:range[2]]
+  colors = col[match(flowChars, names(col))]
+  if (!is.element("main", names(args))) {
+    main = paste("Flowgram intensity\n", name(x), sep="")
+    barplot(flowgram, main=main, xlab=xlab, ylab=ylab, col=colors, border=colors, width=1, space=0, ...)
+  } else {
+    barplot(flowgram, xlab=xlab, ylab=ylab, col=colors, border=colors, width=1, space=0, ...)
+  }
+  myLabels <- pretty(range[1]:range[2], n=5)
+  myTicks <- myLabels-range[1]
+  axis(1, at=myTicks, labels=myLabels)
+  legend(x="top", horiz=TRUE, legend=c("A", "C", "G", "T"), 
+    fill=c(col["A"], col["C"], col["G"], col["T"]))
+}
+
+setMethod("flowgramBarplot", signature(x="SFFRead"), .flowgramBarplot)
+
+
+.homopolymerHist <- function(x, range, xlab, ylab, col, ...) {
+  args = list(...)
+  flowChars = unlist(strsplit(flowChars(x), NULL))[range[1]:range[2]]
+  flowgram = round(flowgram(x)[range[1]:range[2]]/100)
+  longest = max(flowgram)
+  ta = table(factor(flowgram[flowChars == "A"], levels=0:longest))
+  tc = table(factor(flowgram[flowChars == "C"], levels=0:longest))
+  tg = table(factor(flowgram[flowChars == "G"], levels=0:longest))
+  tt = table(factor(flowgram[flowChars == "T"], levels=0:longest))
+  ma = matrix(c(ta,tc,tg,tt), nrow=4, byrow=TRUE)
+  rownames(ma) = c("A", "C", "G", "T")
+  colnames(ma) = 0:longest
+  if (!is.element("main", names(args))) {
+    main = paste("Homopolymers in read:\n", name(x), sep="")
+    barplot(ma, beside=TRUE, main=main, xlab=xlab, ylab=ylab, col=col, ...)
+  } else {
+    barplot(ma, beside=TRUE, xlab=xlab, ylab=ylab, col=col, ...)
+  }
+  legend(x="topright", legend=c("A", "C", "G", "T"), 
+    fill=c(col["A"], col["C"], col["G"], col["T"]))
+  #as.data.frame(table(flowgram[flowChars == "A"], exclude=c(0,1)))
+}
+
+setMethod("homopolymerHist", signature(x="SFFRead"), .homopolymerHist)

@@ -5,10 +5,10 @@ importFrom(Biobase, assayDataElementNames, assayDataNew)
     
 importFrom(biomaRt, getBM, getSequence, useMart)
 
-importClassesFrom(Biostrings, DNAString, DNAStringSet, XStringSet)
+importClassesFrom(Biostrings, DNAString, DNAStringSet, XStringSet, QualityScaledDNAStringSet, QualityScaledXStringSet, XStringQuality, BString, PhredQuality, SolexaQuality)
 importMethodsFrom(Biostrings, PDict, aligned, complement, countIndex, deletion, endIndex,
     insertion, matchPDict, matchPattern, mismatchTable, pairwiseAlignment, reverseComplement,
-    startIndex, translate, vmatchPattern)
+    startIndex, translate, vmatchPattern, quality, append)
 importFrom(Biostrings, BStringSet, DNAString, DNAStringSet, nucleotideSubstitutionMatrix)
 
 importClassesFrom(BSgenome, BSgenome)
@@ -110,6 +110,7 @@ exportMethods(
     flowgrams, "flowgrams<-",     
     flowIndexes, "flowIndexes<-",
     read, "read<-",
+    quality, "quality<-",
     reads, "reads<-",
     addRead, getRead,
     sff2fastq,
@@ -127,7 +128,9 @@ exportMethods(
     gcContentHist,
     complexity.dust,
     complexity.entropy,
-    dinucleotideOddsRatio
+    dinucleotideOddsRatio,
+    flowgramBarplot,
+    homopolymerHist
 )
 
 export(

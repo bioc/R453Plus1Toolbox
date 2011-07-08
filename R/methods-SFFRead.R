@@ -1,97 +1,133 @@
 ### Getter & Setter ###
-setMethod("name", signature(object="SFFRead"),
-  function(object) {
-    return(object@name)
+setMethod("name", signature(x="SFFRead"),
+  function(x) {
+    return(x@name)
   }
 )
-setReplaceMethod("name", signature(object="SFFRead", value="character"),
-  function(object, value) {
-    object@name = value
+setReplaceMethod("name", signature(x="SFFRead", value="character"),
+  function(x, value) {
+    x@name = value
+    return(x)
+  }
+)
+
+setMethod("read", signature(x="SFFRead"),
+  function(x) {
+    return(x@read)
+  }
+)
+setReplaceMethod("read", signature(x="SFFRead", value="QualityScaledDNAStringSet"),
+  function(x, value) {
+    x@read = value
+    return(x)
+  }
+)
+
+setMethod("flowgramFormat", signature(x="SFFRead"),
+  function(x) {
+    return(x@flowgramFormat)
+  }
+)
+setReplaceMethod("flowgramFormat", signature(x="SFFRead", value="numeric"),
+  function(x, value) {
+    x@flowgramFormat = value
+    return(x)
+  }
+)
+
+setMethod("keySequence", signature(x="SFFRead"),
+  function(x) {
+    return(x@keySequence)
+  }
+)
+setReplaceMethod("keySequence", signature(x="SFFRead", value="character"),
+  function(x, value) {
+    x@keySequence = value
+    return(x)
+  }
+)
+
+setMethod("flowChars", signature(x="SFFRead"),
+  function(x) {
+    return(x@flowChars)
+  }
+)
+setReplaceMethod("flowChars", signature(x="SFFRead", value="character"),
+  function(x, value) {
+    x@flowChars = value
+    return(x)
+  }
+)
+
+setMethod("clipQualityLeft", signature(x="SFFRead"),
+  function(x) {
+    return(x@clipQualityLeft)
+  }
+)
+setReplaceMethod("clipQualityLeft", signature(x="SFFRead", value="numeric"),
+  function(x, value) {
+    x@clipQualityLeft = value
+    return(x)
+  }
+)
+
+setMethod("clipQualityRight", signature(x="SFFRead"),
+  function(x) {
+    return(x@clipQualityRight)
+  }
+)
+setReplaceMethod("clipQualityRight", signature(x="SFFRead", value="numeric"),
+  function(x, value) {
+    x@clipQualityRight = value
+    return(x)
+  }
+)
+
+setMethod("clipAdapterLeft", signature(x="SFFRead"),
+  function(x) {
+    return(x@clipAdapterLeft)
+  }
+)
+setReplaceMethod("clipAdapterLeft", signature(x="SFFRead", value="numeric"),
+  function(x, value) {
+    x@clipAdapterLeft = value
+    return(x)
+  }
+)
+
+setMethod("clipAdapterRight", signature(x="SFFRead"),
+  function(x) {
+    return(x@clipAdapterRight)
+  }
+)
+setReplaceMethod("clipAdapterRight", signature(x="SFFRead", value="numeric"),
+  function(x, value) {
+    x@clipAdapterRight = value
+    return(x)
+  }
+)
+
+setMethod("flowgram", signature(x="SFFRead"),
+  function(x) {
+    return(x@flowgram)
+  }
+)
+setReplaceMethod("flowgram", signature(x="SFFRead", value="numeric"),
+  function(x, value) {
+    x@flowgram = value
     return(object)
   }
 )
 
-setMethod("read", signature(object="SFFRead"),
-  function(object) {
-    return(object@read)
+setMethod("flowIndexes", signature(x="SFFRead"),
+  function(x) {
+    return(x@flowIndexes)
   }
 )
-setReplaceMethod("read", signature(object="SFFRead", value="QualityScaledDNAStringSet"),
-  function(object, value) {
-    object@read = value
-    return(object)
-  }
-)
-
-setMethod("clipQualityLeft", signature(object="SFFRead"),
-  function(object) {
-    return(object@clipQualityLeft)
-  }
-)
-setReplaceMethod("clipQualityLeft", signature(object="SFFRead", value="numeric"),
-  function(object, value) {
-    object@clipQualityLeft = value
-    return(object)
-  }
-)
-
-setMethod("clipQualityRight", signature(object="SFFRead"),
-  function(object) {
-    return(object@clipQualityRight)
-  }
-)
-setReplaceMethod("clipQualityRight", signature(object="SFFRead", value="numeric"),
-  function(object, value) {
-    object@clipQualityRight = value
-    return(object)
-  }
-)
-
-setMethod("clipAdapterLeft", signature(object="SFFRead"),
-  function(object) {
-    return(object@clipAdapterLeft)
-  }
-)
-setReplaceMethod("clipAdapterLeft", signature(object="SFFRead", value="numeric"),
-  function(object, value) {
-    object@clipAdapterLeft = value
-    return(object)
-  }
-)
-
-setMethod("clipAdapterRight", signature(object="SFFRead"),
-  function(object) {
-    return(object@clipAdapterRight)
-  }
-)
-setReplaceMethod("clipAdapterRight", signature(object="SFFRead", value="numeric"),
-  function(object, value) {
-    object@clipAdapterRight = value
-    return(object)
-  }
-)
-
-setMethod("flowgram", signature(object="SFFRead"),
-  function(object) {
-    return(object@flowgram)
-  }
-)
-setReplaceMethod("flowgram", signature(object="SFFRead", value="numeric"),
-  function(object, value) {
-    object@flowgram = value
-    return(object)
-  }
-)
-
-setMethod("flowIndexes", signature(object="SFFRead"),
-  function(object) {
-    return(object@flowIndexes)
-  }
-)
-setReplaceMethod("flowIndexes", signature(object="SFFRead", value="numeric"),
-  function(object, value) {
-    object@flowIndexes = value
-    return(object)
+setReplaceMethod("flowIndexes", signature(x="SFFRead", value="numeric"),
+  function(x, value) {
+    x@flowIndexes = value
+    return(x)
   }
 )
 
@@ -101,8 +137,17 @@ setMethod("show",
     cat("Readname:\n")
     show(object@name)
     cat("\n")
+    cat("Flow chars:\n")
+    show(object@flowChars)
+    cat("\n")
+    cat("Key sequence:\n")
+    show(object@keySequence)
+    cat("\n")
     cat("Read:\n")
     show(object@read)
+    cat("\n")
+    cat("Quality:\n")
+    show(object@quality)
     cat("\n")
     cat("Clip quality left:  ", object@clipQualityLeft, "\n", sep="")
     cat("Clip quality right: ", object@clipQualityRight, "\n", sep="")
