@@ -17,7 +17,7 @@
                  
             data = cbind(assayDataAmp(avaSet)$forwCount,
                 assayDataAmp(avaSet)$revCount)
-            data = data[sort(rownames(data)), ]
+            data = data[sort(rownames(data)), , drop=FALSE]
             data = t(data)
 
             maxCov = max(data[1, ] + data[2, ])
