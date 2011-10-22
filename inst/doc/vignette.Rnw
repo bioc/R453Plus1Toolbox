@@ -629,7 +629,7 @@ reads have been aligned using BWA-SW:
 <<label=readBam, eval=TRUE>>=
 library("Rsamtools")
 bamFile = system.file("extdata", "StructuralVariantDetection", "bam", "N01.bam", package="R453Plus1Toolbox")
-parameters = ScanBamParam()
+parameters = ScanBamParam(what=scanBamWhat())
 bam = scanBam(bamFile, param=parameters)
 @ 
 
