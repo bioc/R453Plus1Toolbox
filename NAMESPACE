@@ -1,8 +1,23 @@
+importClassesFrom(methods, ANY, character, data.frame, list, logical, matrix, missing, numeric)
+importMethodsFrom(methods, initialize, show)
+importFrom(methods, "@<-", as, callNextMethod, new)
+
+importFrom(BiocGenerics, cbind, rbind, order, paste, table, union, intersect, setdiff, combine)
+
 importClassesFrom(Biobase, AnnotatedDataFrame, AssayData, MIAME, Versions, Versioned, VersionedBiobase, eSet)
 importMethodsFrom(Biobase, assayData, "assayData<-", combine, fData, featureData, "featureData<-",
     pData, phenoData, "phenoData<-", sampleNames, varMetadata)
 importFrom(Biobase, assayDataElementNames, assayDataNew)
     
+importClassesFrom(IRanges, RangesList)
+importMethodsFrom(IRanges, "%in%", Views, aggregate, as.data.frame, as.matrix, as.vector, cbind, 
+    colnames, "colnames<-", countOverlaps, coverage, duplicated, end, "end<-", findOverlaps, gsub,
+    intersect, lapply, levels, mad, match, matchMatrix, mean, median, nchar, ncol, nrow, order,
+    paste, pmax, pmin, ranges, rbind, restrict, rev, rownames, "rownames<-", sapply, score, sd, 
+    setdiff, shift, sort, split, start, subject, subseq, subset, substr, substring, summary, t, 
+    table, toString, union, unique, unlist, values, "values<-", which, width)
+importFrom(IRanges, IRanges, RangedData, compact)
+
 importFrom(biomaRt, getBM, getSequence, useMart)
 
 importClassesFrom(Biostrings, DNAString, DNAStringSet, XStringSet, QualityScaledDNAStringSet, QualityScaledXStringSet, XStringQuality, BString, PhredQuality, SolexaQuality)
@@ -17,19 +32,6 @@ importFrom(graphics, axis, barplot, boxplot, legend, lines, mtext, par, plot, po
     strheight, strwidth, text)
 
 importFrom(grDevices, dev.off, pdf, png, rgb)
-
-importClassesFrom(IRanges, RangesList)
-importMethodsFrom(IRanges, "%in%", Views, aggregate, as.data.frame, as.matrix, as.vector, cbind, 
-    colnames, "colnames<-", countOverlaps, coverage, duplicated, end, "end<-", findOverlaps, gsub,
-    intersect, lapply, levels, mad, match, matchMatrix, mean, median, nchar, ncol, nrow, order,
-    paste, pmax, pmin, ranges, rbind, restrict, rev, rownames, "rownames<-", sapply, score, sd, 
-    setdiff, shift, sort, split, start, subject, subseq, subset, substr, substring, summary, t, 
-    table, toString, union, unique, unlist, values, "values<-", which, width)
-importFrom(IRanges, IRanges, RangedData, compact)
-
-importClassesFrom(methods, ANY, character, data.frame, list, logical, matrix, missing, numeric)
-importMethodsFrom(methods, initialize, show)
-importFrom(methods, "@<-", as, callNextMethod, new)
 
 importFrom(R2HTML, HTML, HTML.title, HTMLEndFile, HTMLInitFile)
 
