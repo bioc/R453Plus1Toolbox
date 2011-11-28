@@ -2,7 +2,7 @@ importClassesFrom(methods, ANY, character, data.frame, list, logical, matrix, mi
 importMethodsFrom(methods, initialize, show)
 importFrom(methods, "@<-", as, callNextMethod, new)
 
-importFrom(BiocGenerics, cbind, rbind, order, paste, table, union, intersect, setdiff, combine)
+import(BiocGenerics)
 
 importClassesFrom(Biobase, AnnotatedDataFrame, AssayData, MIAME, Versions, Versioned, VersionedBiobase, eSet)
 importMethodsFrom(Biobase, assayData, "assayData<-", combine, fData, featureData, "featureData<-",
