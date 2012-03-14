@@ -370,37 +370,36 @@ plotVariationFrequency(file, plotRange=c(50, 150))
 
 \begin{figure}[hp]
 \begin{center}
-  \includegraphics[height=8cm]{R453Plus1-plotVarFreq}
+  \includegraphics{R453Plus1-plotVarFreq}
   \caption{Plot of the variation frequency for a given reference sequence.}
 \end{center}
 \end{figure}
 
 
 \subsubsection{Plot variant locations}
-For annotated variants (see section \ref{sec:Annotations}), the function \Rfunction{plotVariants} 
-illustrates the positions and types of all variants within a given transcript (specified by an 
-Ensembl transcript-id). The plot shows only coding regions and distinguishes between missense (white 
-markers) and nonsense (black markers) point mutations and deletions (grey markers). The coding 
-region is further divided into exons labeled with their rank in the transcript.\\
-The following example calls \Rfunction{plotVariants} for transcript "ENST00000380013" from gene TET2 
-located on chromosome 4. A data.frame containing the appropriate transcript information ist loaded 
-in advance. The attribute \Rfunarg{regions} allows to highlight special, predefined areas on the 
-transcript:\\
-
+The function \Rfunction{plotVariants} illustrates the positions and types of mutations within a given \Rfunarg{gene} and \Rfunarg{transcript} (specified by an 
+Ensembl gene/transcript id). The plot shows only coding regions (thus, units are amino acids / codons). The coding 
+region is further divided into exons labeled with their rank in the transcript. An attribute \Rfunarg{regions} allows to highlight special, predefined areas on the transcript like for example protein domains. \\ \\
+The function can be used in two ways: \\
+It offers the most functionality when used as a "standalone" function by passing all mutations as a data frame. This mode allows an individual and detailed
+annotation of the mutations like labels, colors and user defined mutation types. It requires the columns "label", "pos" "mutation" and "color". It is recommended to add more detailed info 
+for each mutation type by preparing a data frame for the parameter \Rfunarg{mutationInfo} which requires the three columns "mutation", "legend" and "color". \\ 
+The following example calls \Rfunction{plotVariants} for the gene TET2 having th Ensembl id "ENSG00000168769" and transcript "ENST00000513237":
+%%%%%% The plot will not be inserted into the vignette since it needs the package "TeachingDemos", which is only suggested by the toolbox and no dependency
 <<label=loadXLS>>=
-data(avaSetFiltered_annot)
-data(transcriptdf)
+data(plotVariantsExample)
 @
-<<label=plotVariants, fig=TRUE,include=FALSE,eps=FALSE,pdf=TRUE>>=
-plotVariants(avaSetFiltered_annot, transcript=transcriptdf, legend=TRUE, regions=c(700,1600))
+<<label=plotVariants, eval=FALSE,fig=FALSE,include=FALSE,eps=FALSE,pdf=TRUE>>=
+geneInfo = plotVariants(data=variants, gene="ENSG00000168769", transcript="ENST00000513237", regions=regions, mutationInfo=mutationInfo, horiz=TRUE)
 @
-\begin{figure}[hpb]
-\begin{center}
-  \includegraphics[height=5cm]{R453Plus1-plotVariants}
-  \caption{Plot of the variants for transcript "ENST00000380013".}
-\end{center}
-\end{figure}
-
+%\begin{figure}[hpb]
+%\begin{center}
+%  \includegraphics{R453Plus1-plotVariants}
+%  \caption{Plot of the variants for gene TET2 by passing mutations as a data frame. This version includes mutation labels and allows user defined mutation types.}
+%\end{center}
+%\end{figure}
+Especially for integration into the R453Plus1Toolbox and for compatibility to older versions \Rfunction{plotVariants} also accepts annotated variants of class 
+\Rclass{annotatedVariants} (see section \ref{sec:Annotations}). The function then only distinguishes missense, nonsense and silent point mutations and deletions and does not include mutation labels.\\
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%___Analysis of GS Mapper projects___%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

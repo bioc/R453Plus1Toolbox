@@ -1,274 +1,365 @@
-#########################################################################################
-## plotVariants creates a plot of all variant positions in a given transcript.
-## input:		
-##  variant data as returned by annotateVariants,
-##  bmInfo ensembl transcript information,
-##  legend TRUE/FALSE (optional),
-##  regions to be shaded within the plot (optional),
-##  region label for the legend (optional),
-##  col four colours for missense, silent, nonsense mutations and deletions
-##  title (optional),
-## output: nothing but a beautiful plot
-#########################################################################################
 
-.plotVariants <- function(varData, bmInfo, legend, regions, regionsGiven, regLabel, col, title){
-
-
-  message("Creating variant plot for transcript ", bmInfo$ensembl_transcript_id[1], " ... ", appendLF = FALSE)
-  transcript = bmInfo$ensembl_transcript_id[1]
-  exon_end = bmInfo$cds_length[1]	
+.plotVariants <- function(data, gene, transcript, bmExons, bmGene, bmReturn, regions, mutationInfo, horiz, cex, title, legend){
   
-  ## catch more bad input:
-  if(exon_end %% 3 == 0)
-    exon_end = exon_end / 3
-  else
-    stop("problem with transcript length")
+  data = data[order(data$pos), ]
   
-  ## regions (if any) have to consists of start and end points within a suitable range (1-exon_end)
-  if(regionsGiven)
-    if(any(regions > exon_end))
-      stop("given regions out of range")
+  ## parameter horiz stands for horizontal alignment of a group of mutations a single position
+  ## if horiz is false, these mutations will be plotted vertically
+  if(horiz == FALSE){
+    ## list of mutations for every group
+    mutGroup = !duplicated(data$pos)
+    muts = list()
+    for(i in 1:sum(mutGroup)){
+      p = data[mutGroup, "pos"][i]
+      muts[[i]] = as.character(subset(data, pos==p)$mutation)
+    }
+    numMuts = length(unique(data$pos))
+  }else{
+    ## if horiz is true every mutation will be plotted horizontally
+    mutGroup = 1:nrow(data)
+    muts = as.list(data$mutation)
+    numMuts = length(data$label)
+  }
+  maxMuts = max(table(data$pos))
+  
+  ## plot boundaries
+  xmin = 0
+  #xmax = max(max(data$pos), max(regions$end)) * 3
+  xmax = max(bmExons$cds_end/3)
+  xlength = xmax - xmin
+  ymin = 0
+  ymax = 30  ## upper margin of the plot (too large: much empty space at the top of the plot; too small: mutation labels do not fit into the plot region)
+  y0 = 6
+  y1 = 7.5
+  y2 = 10
+  axis_steps = 100
 
-  ## draw basic transcript structure:
-  par(mar = c(0.5, 0.5, 1, 0.5))
-  plot(c(1,exon_end), c(0,50), type="n", xaxt="n", yaxt="n", xlab="",
-       ylab="", frame.plot=FALSE)
-  title(title)
+  ## design parameters
+  labels.cex = cex
+  lwd = 1.3
+  pch = 21
   
-  ## mark given regions
-  if(regionsGiven){
-    for(i in seq(1,length(regions),2)){
-      x = c(regions[i], regions[i], regions[i+1], regions[i+1])
-      y = c(25,40,40,25)
-      polygon(x, y, col="gray", border="gray", density=c(20,30),
-              angle=c(-45,45)) 
+  ## initialize plot window
+  plot(c(xmin-xlength*0.2, xmax+xlength*0.2), c(ymin,ymax), type="n", xaxt="n", yaxt="n", xlab="", ylab="", frame.plot=FALSE, xaxs="i", yaxs="i", main=title)
+  axis(side=1, at=c(1, seq(xmin+axis_steps, xmax, axis_steps)), pos=y0*0.7, cex.axis=cex)
+
+  ## text size information is important to correctly adjust the lines and points to the plotted text
+  textHeight = max(strheight(letters, cex=labels.cex))
+  textWidth =  max(strwidth(letters, cex=labels.cex))
+  textWidth = textWidth + (textWidth * 0.2)
+
+  ## draw annotated regions
+  polygon(x=c(xmin,xmin,xmax,xmax), y=c(y0,y1,y1,y0), col="black", border="black", density=0, lwd=lwd)
+  text(x=xmin, y=(y0[1]+y1[1])/2, labels=bmGene$hgnc_symbol[1], pos=2, cex=cex)
+  text(x=xmax, y=(y0[1]+y1[1])/2, labels=paste(bmExons$cds_length[1]/3,"aa",sep=""), pos=4, cex=cex)
+  if(!any(is.na(regions))){
+    for(i in 1:nrow(regions)){
+      polygon(x=c(regions$start[i], regions$start[i], regions$end[i], regions$end[i]), y=c(y0,y1,y1,y0), border="black", col=as.character(regions$color)[i], lwd=lwd)
+    }
+  }
+  ## Draw exon regions
+  for(i in 1:nrow(bmExons)){
+    start = bmExons$cds_start[i]/3
+    end = bmExons$cds_end[i]/3
+    polygon(x=c(start,start,end,end), y=c(y0*0.9,y0*0.7,y0*0.7,y0*0.9), col="lightgrey", lwd=lwd)
+    if(textWidth < (end-start)){
+      text((start+end)/2, y0*0.8, bmExons$rank[i], cex=cex)
+    }
+  }
+
+  ## y-positions of labels and mutation marks
+  if(horiz== FALSE){
+    y3 = y2+((maxMuts+1)*textHeight)
+  }else{
+    y3 = y2+(2*textHeight)
+  }
+  
+  ## set mutation labels (take care of overlapping labels using xLab function from TeachingDemos package)
+  x = data$pos[mutGroup]
+  labels = data$label[mutGroup]
+  ## if the plotting device is too small, it may not be possible to align all mutation labels without overlaps (gives a warning in function spread.labs)
+  ## thus, catch this warning and retry with smaller font size (90% of original)
+  overlappingLabels = TRUE
+  while(overlappingLabels == TRUE){
+    overlappingLabels = FALSE
+    catchUpdate = tryCatch(
+             xLab <- spread.labs(x=x, mindiff=textWidth, maxiter=100000, min=xmin, max=xmax),
+             warning = function(w){
+               message("Plot region too small for all mutation labels: Reducing font size. It may be appropriate to change the width of the device and restart the plot.")
+               overlappingLabels = TRUE
+               labels.cex = labels.cex * 0.9
+               textWidth = max(strwidth(letters, cex = labels.cex))
+               textWidth = textWidth + (textWidth * 0.2)
+               return(list(overlappingLabels, labels.cex, textWidth))
+             }
+             )
+    ## overlaps
+    if(is.list(catchUpdate)){
+      overlappingLabels = catchUpdate[[1]]
+      labels.cex = catchUpdate[[2]]
+      textWidth = catchUpdate[[3]]
+    }
+    ## no overlaps
+    if(is.vector(catchUpdate)){
+      xLab = catchUpdate
+    }
+  }
+  x = data.frame(pos_axis=x, pos_labels=xLab, color=data$color[mutGroup], stringsAsFactors=FALSE)
+  text(x$pos_labels, y3+(textHeight/2), labels, srt=90, cex=labels.cex, adj=c(0,0.5), offset=3)
+
+  ## mark mutations (as colored points)
+  pt.cex = labels.cex
+  ## vertical alignment of mutation marks
+  if(horiz == FALSE){
+    for(i in 1:numMuts){
+      lines(list(x=c(x$pos_axis[i],x$pos_axis[i],x$pos_labels[i],x$pos_labels[i]), y=c(y0,y1,y2,y3)), col=x$color[i], lwd=lwd)
+      xm = x$pos_labels[i]
+      ym = y2 + textHeight
+      for(m in muts[[i]]){
+        if(!is.na(m)){
+          points(xm, ym, bg=as.character(subset(mutationInfo, mutation == m)$color), col="black", cex=pt.cex, pch=pch, )
+          ym = ym + textHeight
+        }
+      }
+  }
+  ## horizontal alignment of mutation marks
+  }else{
+    ## draw single mutation lines
+    x2 = x[!(x$pos_axis %in% x$pos_axis[duplicated(x$pos_axis)]), ]
+    for(i in 1:nrow(x2)){
+      lines(list(x=c(x2$pos_axis[i],x2$pos_axis[i],x2$pos_labels[i],x2$pos_labels[i]), y=c(y0,y1,y2,y3)), col=x2$color[i], lwd=lwd)
+    }
+    ## draw lines for mutation groups (as "forks" like in dendrograms)
+    groups = table(x$pos_axis)
+    groups = groups[groups > 1]
+    anyGroups = any(groups > 1)
+    if(anyGroups == TRUE){
+      groups = groups[groups > 1]
+      x_group= x[x$pos_axis %in% x$pos_axis[duplicated(x$pos_axis)], ]
+      for(i in 1:length(groups)){
+        x2 = subset(x_group, pos_axis == names(groups[i]))
+        lines(x=c(min(x2$pos_labels), min(x2$pos_labels), max(x2$pos_labels), max(x2$pos_labels)), y=c(y3,y2,y2,y3), col=x2$color[1], lwd=lwd)
+        #points(x=(max(x2$pos_labels)+min(x2$pos_labels))/2, y=y2, bg=x2$color[1], pch=25, cex=pt.cex*0.75)  ## "anchor point"
+        polygon(x=c(min(x2$pos_labels), min(x2$pos_labels), max(x2$pos_labels), max(x2$pos_labels)), y=c(y2,y3,y3,y2), col=x2$color[1], border=NA, density=18, lwd=lwd*0.75)
+        lines(list(x=c(x2$pos_axis[1],x2$pos_axis[1],(max(x2$pos_labels)+min(x2$pos_labels))/2), y=c(y0,y1,y2)), col=x2$color[1], lwd=lwd)
+      }
+    }
+    ## draw mutations marks
+    for(i in 1:nrow(x)){
+      m = muts[[i]]
+      xm = x$pos_labels[i]
+      ym = y2 + textHeight
+      points(xm, ym, bg=as.character(subset(mutationInfo, mutation == m)$color), col="black", cex=pt.cex, pch=pch)
     }
   }
   
-  ## draw exon regions
-  for(i in 1:nrow(bmInfo)){
-    start = bmInfo[i,"cds_start"] / 3
-    end = bmInfo[i,"cds_end"] / 3
-    x = c(start, start, end, end)
-    y = c(25 ,40, 40, 25)
-    polygon(x,y)
-    text((start + end) / 2, 28, bmInfo[i, "rank"])
+  ## draw legend for mutations and annotated regions
+  if(legend == TRUE){
+    legend(x="topleft", legend=mutationInfo$legend, pt.bg=as.character(mutationInfo$color), col="black", pch=pch, bty="n", cex=cex, pt.cex=cex)
+    if(!any(is.na(regions))){  
+      legend(x="bottomleft", legend=regions$name, fill=as.character(regions$color), bty="n", cex=cex, horiz=TRUE)
+    }
   }
-  axis(1, c(1, seq(100, exon_end,100), exon_end), pos=15)
-  text(x=exon_end/2, y=10, "position (amino acid)", pos=1)
-  
-  ## draw variant positions
-  ## calculate the drawing width according to the codon length
-  characterWidth = strwidth("A", family="mono")
-  characterHeight = strheight("A", family="mono")
-  width = characterWidth
-  height = 3
-  yMisMut = 40
-  yNonMut = 40 - height
-  yDel = 25 - height	
-  ## for the legend: remember if a mutation appears in the plot
-  nonMutPresent = FALSE
-  misMutPresent = FALSE
-  silentMutPresent = FALSE
-  delPresent = FALSE
-  numNonMut = 0
-  numMisMut = 0
-  numSilentMut = 0
-  numDel = 0
 
-  varData = annotatedVariants(varData)
-  varNames = names(varData)
-  ## test every variant if it lies within the transcript
-  for(vn in varNames){
+  return(bmReturn)
+}
+
+.annotatedVariants_to_dataFrame <- function(varAnnot, transcript){
+
+  ## convert input of class AnnotatedVariants
+  data = annotatedVariants(varAnnot)
+  mutNames = names(data)
+  label = vector(mode="character")
+  pos = vector(mode="integer")
+  type = vector(mode="character")
+  m_count = 1
+#  aminos = getAminoAbbr()  ## maybe offer the possibility to label amino acid changes
+  for(mn in mutNames){
     
-    v = varData[[vn]]$exons
+    m = data[[mn]]$exons
+    
     ## see if exon data available
-    if(nrow(v) > 0){
-      
+    if(nrow(m) > 0){
+    
       ## see if variant lies on the given transcript
-      v = subset(v, v$ensembl_transcript_id == transcript)
-      if(nrow(v) > 0){
-
-        for(i in 1:nrow(v)){
+      m = subset(m, m$ensembl_transcript_id == transcript)
+      if(nrow(m) > 0){
+        
+        for(i in 1:nrow(m)){
           
           ## draw markers for variants that lie in a coding area
-          if(v[i,"coding"] == TRUE){
-            if(length(grep("-", v[i, "codonMut"])) == 0){
-              pos = v[i, "numCodonStart"]
-              
-              if(v[i,"AminoRef"] != "*" & v[i,"AminoMut"] != "*"){
-                
-                ## white marker for missense point mutation
-                if(v[i,"AminoRef"] !=  v[i,"AminoMut"]){
-                  .plotMisMut(pos, yMisMut, width, height, col[1])
-                  misMutPresent = TRUE
-                  numMisMut = numMisMut + 1
+          if(m[i,"coding"] == TRUE){
+            if(length(grep("-", m[i, "codonMut"])) == 0){
+              pos[m_count] = m[i, "numCodonStart"]             
+              if(m[i,"AminoRef"] != "*" & m[i,"AminoMut"] != "*"){                
+                ## missense point mutation
+                if(m[i,"AminoRef"] !=  m[i,"AminoMut"]){
+                  type[m_count]= "M"
+ #                 label[m_count] = paste(aminos[m[i,"AminoRef"]], aminos[m[i,"AminoMut"]], sep=" -> ")
                 }else{
-                  ## grey marker for silent point mutation
-                  .plotSilentMut(pos, yMisMut, width, height, col[2])
-                  silentMutPresent = TRUE
-                  numSilentMut = numSilentMut + 1
-                }
-                
-                ## black marker for nonsense point mut
+                  ## silent point mutation
+                  type[m_count] = "S"
+ #                 label[m_count] = aminos[m[i,"AminoRef"]]
+                }                
+                ## nonsense point mut
               } else {
-                if(v[i,"AminoRef"] != "*" & v[i,"AminoMut"] == "*"){
-                  .plotNonMut(pos, yNonMut, width, height, col[3])
-                  nonMutPresent = TRUE
-                  numNonMut = numNonMut + 1
+                if(m[i,"AminoRef"] != "*" & m[i,"AminoMut"] == "*"){
+                  type[m_count] = "N"
+ #                 label[m_count] = paste(aminos[m[i,"AminoRef"]], aminos[m[i,"AminoMut"]], sep=" -> ")
                 }else
-                warning("variant ", vn, " is of unknown type")
-                
-              }
-              
-              ## white diamond marker for deletion
-            } else { 
-              pos = (v[i, "numCodonStart"] +
-                     v[i, "numCodonEnd"]) / 2
-              .plotDel(pos, yDel, width, height, col[4])
-              delPresent = TRUE
-              numDel = numDel + 1
+                warning("variant ", mn, " is of unknown type")                
+              }             
+              ## deletion
+            } else {
+              pos[m_count] = (m[i, "numCodonStart"] +
+                              m[i, "numCodonEnd"]) / 2
+              type[m_count] = "D"
+ #             label[m_count] = paste(aminos[m[i,"AminoRef"]], m[i,"AminoMut"], sep=" -> ")
             }
           }
+          m_count = m_count + 1
         }
       }
     }
   }
   
-  ## draw legend
-  if(legend){
-    
-    nonMutLabel = "nonsense mutation"
-    misMutLabel = "missense mutation"
-    silentMutLabel = "silent mutation"
-    delLabel = "deletion"
-    
-    nonMutLength = nonMutPresent * (1 + 4*width + nchar(nonMutLabel)*characterWidth) ## zero, if no such mutation present
-    misMutLength = misMutPresent * (1 + 4*width + nchar(misMutLabel)*characterWidth)
-    silentMutLength = silentMutPresent * (1 + 4*width + nchar(silentMutLabel)*characterWidth)
-    delLength = delPresent * (1 + 4*width + nchar(delLabel)*characterWidth)
-    x = c(1, 1 + nonMutLength, 1 + nonMutLength + misMutLength,  1 + nonMutLength + misMutLength + silentMutLength, 1 + nonMutLength + misMutLength + silentMutLength +delLength)
-    x[c(!nonMutPresent, !misMutPresent, !silentMutPresent, !delPresent, !regionsGiven)] = NA		## omit labels that do not appear in the plot
-    y = 0
-    
-    
-    ## nonsense mutation label
-    .plotNonMut(x[1], y, width, height, col[3])
-    text(x[1] + 2*width, y + (characterHeight/2), nonMutLabel, pos=4)
-    
-    ## missense mutation label
-    .plotMisMut(x[2], y, width, height, col[1])
-    text(x[2] + 2*width, y + (characterHeight/2), misMutLabel, pos=4)
-    
-    ## silent mutation label
-    .plotSilentMut(x[3], y, width, height, col[2])
-    text(x[3] + 2*width, y + (characterHeight/2), silentMutLabel, pos=4)
-    
-    ## del mutation label
-    .plotDel(x[4], y, width, height, col[4])
-    text(x[4] + 2*width, y + (characterHeight/2), delLabel, pos=4)
+  df = data.frame(label=rep(" ", length(pos)), pos=pos, mutation=type, color=rep("black", length(pos)), stringsAsFactors=FALSE)
+  mutationInfo = data.frame(mutation=c("M","N","S","D"), legend=c("Missense","Nonsense","Silent","Deletion"), color=c("cadetblue4","darkred","darkgoldenrod1","blue"), stringsAsFactors=FALSE)
+  return(list(df, mutationInfo))
+}
 
-    ## region label
-    xReg = c(x[5] - width, x[5] -width, x[5] + width, x[5] + width)
-    yReg = c(y, y + height, y + height, y)
-    polygon(xReg, yReg, col="gray", border="gray", density=c(20,30), angle=c(-45,45)) 
-    text(x[5] + 2*width, y + (characterHeight/2), regLabel, pos=4)
+.getEnsemblInfo <- function(gene, transcript){
+  ## retrieve exon and gene information from Ensembl (if Ensembl gene-id is provided)
+  ensembl=useMart("ensembl", dataset="hsapiens_gene_ensembl")
+  bmAttributes = c("ensembl_gene_id", "ensembl_transcript_id", "rank", "cds_start", "cds_end", "cds_length")
+  bmExons = getBM(attributes=bmAttributes, filters="ensembl_gene_id", values=gene, mart=ensembl)
+  bmExons = subset(bmExons, !apply(is.na(bmExons), 1, any))
+  bmReturn = bmExons
+  if(is.na(transcript)){
+    ## take largest transcript if no ensembl transcript id is given
+    transcript = subset(bmExons, cds_length == max(bmExons$cds_length)[1])$ensembl_transcript_id[1]
+    warning("No Ensembl transcript-id given. Will choose largest transcript. It is recommended to specify the transcript via the \"transcript\" parameter to ensure a most appropriate illustration.")
   }
-
-  message("done\n")
-  message("Missense mutations: ", numMisMut)
-  message("Nonsense mutations: ", numNonMut)
-  message("Silent mutations: ", numSilentMut)
-  message("Deletions: ", numDel)
-}
-
-## additional functions to draw mutations
-## defaults:
-## nonsense mutations as black triangles
-## missense mutations as grey triangles
-## silent mutations as white triangles
-## deletions as white diamonds
-.plotNonMut <- function(x, y, width, height, col){
-  x = c(x, x - width, x + width)	
-  y = c(y + height, y, y)
-  polygon(x, y, col=col)
-}
-.plotMisMut <- function(x, y, width, height, col){
-  x = c(x, x - width, x + width)
-  y = c(y, y + height, y + height)
-  polygon(x, y, col=col)
-}
-.plotSilentMut <- function(x, y, width, height, col){
-  x = c(x, x - width, x + width)
-  y = c(y, y + height, y + height)
-  polygon(x, y, col=col)
-}
-.plotDel <- function(x, y, width, height, col){
-  x = c(x, x - width, x, x + width)
-  y = c(y, y + (height/2), y + height, y + (height/2))
-  polygon(x, y, col=col)
+  bmExons = subset(bmExons, ensembl_transcript_id == transcript)
+  bmAttributes = c("ensembl_gene_id", "hgnc_symbol")
+  bmGene = getBM(attributes=bmAttributes, filters="ensembl_gene_id", values=gene, mart=ensembl)
+  return(list(gene, transcript, bmExons, bmGene, bmReturn))
 }
 
 
-.checkInput <- function(title, legend, regions, regionsGiven, regLabel, col){
-  
-  ## catch some bad input:
-  if(!is.character(title))
-    stop("invalid argument: title has to be of type character")
-  if(!is.character(regLabel))
-    stop("invalid argument: regLabel has to be of type character")
-  if(!is.logical(legend))
-    stop("invalid argument: please specify a logical value (TRUE/FALSE) for legend")
-  if(!is.vector(col, mode="character") | (length(col) != 4))
-    stop("invalid argument: please specify four valid colours for missense, silent, nonsense mutations and deletions") 
-  
-  ## regions (if any) have to consists of start and end points within a suitable range (1-exon_end)
-  regionsGiven = length(regions) > 0
-  if(regionsGiven)
-    if(!is.vector(regions, mode="numeric") || length(regions) %% 2 != 0 || any(regions < 1))
-      stop("invalid argument: given regions in wrong format; please specify start and end position for every region within a suitable range")
-  
-}
 
 
+## Method for the R453Toolbox class "AnnotatedVariants"
 setMethod("plotVariants",
-          signature=c(varData="AnnotatedVariants", transcript="character"),
-          
-          function(varData, transcript, legend=TRUE, regions=c(), regLabel="(region label)", col=c("grey","white","black","white"), title=""){
+          signature=c(data="AnnotatedVariants", "character"),
+          function(data, gene, transcript=NA, regions, horiz=FALSE, cex=1, title="", legend=TRUE){
             
-            message("Retrieving coding regions from Ensembl for transcript ", transcript, ":")
-            regionsGiven = length(regions) > 0
-            .checkInput(title, legend, regions, regionsGiven, regLabel, col)
-            ensembl=useMart("ensembl", dataset="hsapiens_gene_ensembl")
-            bmAttributes=c(
-              "ensembl_transcript_id",
-              "rank",
-              "cds_start",
-              "cds_end",
-              "cds_length"
-              )
-            bmInfo = getBM(attributes=bmAttributes, filters="ensembl_transcript_id",
-              values=transcript, mart=ensembl)
+            library(TeachingDemos)
+            library(biomaRt)
+
+            ## check integrity of transcript
+            if(!(is.character(transcript) | is.na(transcript))){
+                stop("Invalid argument: transcript has to be an Ensembl transcript-id of type character")
+            }
+            ## check integrity of regions
+            if(missing(regions)){
+              regions = NA
+            }else{
+              if(!is.data.frame(regions))
+                stop("Invalid argument: regions has to be of type data.frame")
+              if(!all( c("name", "start", "end") %in% colnames(regions)))
+                stop("Wrong columns in regions: please provide data as a data.frame with columns \"name\", \"start\", \"end\" and \"color\". See ?plotVariants for details.")
+              if(!("color" %in% colnames(regions))){
+                warning("No colors specified for given regions. Assigning colors automatically. If you find them inappropriate, please add a column \"color\" to your region data.frame. See parameter \"regions\" in ?plotVariants for details.")
+                regions$color = rainbow(nrow(regions))
+              }
+            }
+            ## check integrity of horiz, title, legend, cex
+            if(!is.logical(horiz))
+              stop("Invalid argument: horiz has to be TRUE or FALSE")
+            if(!is.character(title))
+              stop("Invalid argument: title has to be of type character")
+            if(!is.logical(legend))
+              stop("Invalid argument: legend has to be TRUE or FALSE")
+            if(!is.numeric(cex))
+              stop("Invalid argument: cex has to be a numeric value")
+
+            ## get Ensembl info for given gene / transcript
+            bmInfo = .getEnsemblInfo(gene, transcript)
             
-            ## only select coding exons
-            bmInfo = subset(bmInfo, !(is.na(bmInfo$cds_start) & is.na(bmInfo$cds_end)))
-            .plotVariants(varData, bmInfo, legend, regions, regionsGiven, regLabel, col, title)
-            return(bmInfo)
+            df = .annotatedVariants_to_dataFrame(data, bmInfo[[2]])
+            data = df[[1]]
+            mutationInfo = df[[2]]
+            
+            if(nrow(data) >0){
+              .plotVariants(data=data, gene=bmInfo[[1]], transcript=bmInfo[[2]], bmExons=bmInfo[[3]], bmGene=bmInfo[[4]], bmReturn=bmInfo[[5]], regions=regions, mutationInfo=mutationInfo, cex=cex, horiz=horiz, title=title, legend=legend)
+            }else{
+              stop("No annotation for given transcript. Stopping here. I'm sorry.")
+            }
             
           })
 
 
+## Method for data in data.frame format
 setMethod("plotVariants",
-          signature=c(varData="AnnotatedVariants", transcript="data.frame"),
-          
-          
-          function(varData, transcript, legend=TRUE, regions=c(), regLabel="(region label)", col=c("grey","white","black","white"), title=""){
+          signature=c(data="data.frame", gene="character"),
+          function(data, gene, transcript=NA, regions, mutationInfo, horiz=FALSE, cex=1, title="", legend=TRUE){
+
+            library(TeachingDemos)
+            library(biomaRt)
+        
+            ## check integrity of data
+            data = subset(data, !apply(is.na(data), 1, any))
+            if(!all(c("label", "pos", "mutation") %in% colnames(data)))
+              stop("Wrong data columns: please provide data as a data.frame with columns \"label\", \"pos\", \"mutation\" (optional: \"color\"). See ?plotVariants for details.")
+            if(!("color" %in% colnames(data)))
+              data$color = "black"
             
-            if(!all(c("ensembl_transcript_id","rank","cds_start","cds_end","cds_length") %in% colnames(transcript)))
-              stop("invalid input: transcript information requires at least the following colummns: ensembl_transcript_id, rank, cds_start, cds_end, cds_length (try calling plotVariants using an ensembl transcript-id)")
-            regionsGiven = length(regions) > 0
-            .checkInput(title, legend, regions, regionsGiven, regLabel, col)
+            ## check integrity of transcript
+              if(!(is.character(transcript) | is.na(transcript))){
+                stop("Invalid argument: transcript has to be an Ensembl transcript-id of type character")
+            }
+            ## check integrity of regions
+            if(missing(regions)){
+              regions = NA
+            }else{
+              if(!is.data.frame(regions))
+                stop("Invalid argument: regions has to be of type data.frame")
+              if(!all( c("name", "start", "end") %in% colnames(regions)))
+                stop("Wrong columns in regions: please provide data as a data.frame with columns \"name\", \"start\", \"end\" and \"color\". See ?plotVariants for details.")
+              if(!("color" %in% colnames(regions))){
+                warning("No colors specified for given regions. Assigning colors automatically. If you find them inappropriate, please add a column \"color\" to your region data.frame. See parameter \"regions\" in ?plotVariants for details.")
+                regions$color = rainbow(nrow(regions))
+              }
+            }
+            ## check integrity of mutationInfo
+            if(missing(mutationInfo)){
+              warning("Legend and colors for all mutation types were generated automatically. It is suggested to specify your own mutation info. See parameter \"mutationInfo\" in ?plotVariants for details.")
+              muts = levels(factor(data$mutation))
+              col = rainbow(length(muts))
+              mutationInfo = data.frame(mutation=muts, legend=muts, color=col, stringsAsFactors=FALSE)              
+            }else{
+              if(!is.data.frame(mutationInfo))
+                stop("Invalid argument: mutationInfo has to be a data frame")
+              if(!all(c("mutation", "legend") %in% colnames(mutationInfo)))
+                stop("Wrong columns in mutationInfo: please provide data as a data.frame with columns \"mutation\", \"legend\" and \"color\". See ?plotVariants for details.")
+              if(!("color" %in% colnames(mutationInfo))){
+                warning("No colors specified for given mutation types. Assigning colors automatically. If you find them inappropriate, please add a column \"color\" to your mutationInfo data.frame. See parameter \"mutationInfo\" in ?plotVariants for details.")
+                mutationInfo$color = rainbow(nrow(mutationInfo))
+              }
+            }
+            ## check integrity of horiz, title, legend, cex
+            if(!is.logical(horiz))
+              stop("Invalid argument: horiz has to be TRUE or FALSE")
+            if(!is.character(title))
+              stop("Invalid argument: title has to be of type character")
+            if(!is.logical(legend))
+              stop("Invalid argument: legend has to be TRUE or FALSE")
+            if(!is.numeric(cex))
+              stop("Invalid argument: cex has to be a numeric value")
+
+            ## get Ensembl info for given gene / transcript
+            bmInfo = .getEnsemblInfo(gene, transcript)
             
-            .plotVariants(varData, transcript, legend, regions, regionsGiven, regLabel, col, title)
-            
+            return(.plotVariants(data=data, gene=bmInfo[[1]], transcript=bmInfo[[2]], bmExons=bmInfo[[3]], bmGene=bmInfo[[4]], bmReturn=bmInfo[[5]], regions=regions, mutationInfo=mutationInfo, horiz=horiz, cex=cex, title=title, legend=legend))
           })

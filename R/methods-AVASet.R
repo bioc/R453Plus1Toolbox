@@ -203,8 +203,14 @@ setMethod("readSampleData",
 
 	    	MUX_MID1_tab = subset(merge(MUX_tab, MID_tab, by.x="mid1", by.y="MIDSeq", all.x=TRUE), !is.na(name))
 	    	MUX_MID2_tab = subset(merge(MUX_tab, MID_tab, by.x="mid2", by.y="MIDSeq", all.x=TRUE), !is.na(name))
-	    	RData = merge(merge(merge(MUX_tab, RDMUX_tab, by.x="mux", by.y="mux", all.x=TRUE), RD_tab, by.x="readData", by.y="RD", 
+	    	RData = merge(merge(merge(MUX_tab, RDMUX_tab, by.x="mux", by.y="mux", all.x=TRUE, suffixes=c(".mux", ".rdmux")), RD_tab, by.x="readData", by.y="RD", 
+		    all.x=TRUE), RDG_tab, by.x="readDataGroup", by.y="RDG", all.x=TRUE, suffixes=c(".rd", ".rdg"))
+
+                RData = merge(merge(merge(MUX_tab, RDMUX_tab, by.x="mux", by.y="mux", all.x=TRUE, suffixes=c(".mux", ".rdmux")), RD_tab, by.x="readData", by.y="RD", 
 		    all.x=TRUE), RDG_tab, by.x="readDataGroup", by.y="RDG", all.x=TRUE)
+
+
+                
 	    }else{
 	    	warning(paste("Read data or MID entries missing in", file.path(dir_projectDef, "ampliconsProject.txt")))
 	    	MUX_MID1_tab = data.frame(name=rep(NA, numSamples), sample=samples)
@@ -232,8 +238,8 @@ setMethod("readSampleData",
 	    	ptp = NA
 	    	lane = NA
 	    }
-	    rdAnnot = paste(unique(subset(RData, sample==s)$annotation.x), collapse=",")
-	    rgName = paste(unique(subset(RData, sample==s)$name.y), collapse=",")
+	    rdAnnot = paste(unique(subset(RData, sample==s)$annotation.rd), collapse=",")
+	    rgName = paste(unique(subset(RData, sample==s)$name.rdg), collapse=",")
 	    sampleMatrix[i, ] = c(s, mid1, mid2, ptp, lane, rgName, rdAnnot)
 	    i = i+1
     	}
