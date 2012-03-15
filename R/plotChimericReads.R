@@ -547,11 +547,11 @@
 	}else{
 	    if(geneSymbols){
     	    	geneSymbol_left = getBM(attributes=c("hgnc_symbol"), 
-        	    filter = c("chromosome_name", "start", "end"), 
+        	    filters = c("chromosome_name", "start", "end"), 
 		    values = list(chr_left, labels[2], labels[2]), 
 		    mart = ensembl)
     	    	geneSymbol_right = getBM(attributes=c("hgnc_symbol"), 
-        	    filter = c("chromosome_name", "start", "end"), 
+        	    filters = c("chromosome_name", "start", "end"), 
 		    values = list(chr_right, labels[3], labels[3]), 
 		    mart=ensembl)
 		## paste gene symbols if more than one reported

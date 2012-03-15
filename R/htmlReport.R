@@ -792,7 +792,7 @@
     ## Coverage in both directions (together)
     filenameCov1 = "coverageAmp1"
     ## PNG file
-    png(file=file.path(dir, dirReport, paste(filenameCov1, ".png", sep="")), width=pngWidth, height=pngHeight)
+    png(filename=file.path(dir, dirReport, paste(filenameCov1, ".png", sep="")), width=pngWidth, height=pngHeight)
     plotAmpliconCoverage(avaSet=object, bothDirections=FALSE, type="amplicon")
     dev.off()
     ## PDF file
@@ -802,7 +802,7 @@
     ## Coverage in both directions (separated)
     filenameCov2 = "coverageAmp2"
     ## PNG file
-    png(file=file.path(dir, dirReport, paste(filenameCov2, ".png", sep="")), width=pngWidth*2, height=pngHeight)
+    png(filename=file.path(dir, dirReport, paste(filenameCov2, ".png", sep="")), width=pngWidth*2, height=pngHeight)
     plotAmpliconCoverage(avaSet=object, bothDirections=TRUE, type="amplicon")
     dev.off()
     ## PDF file
@@ -814,7 +814,7 @@
         ## Coverage in both directions by MID (together)
         filenameCov3 = "coverageMID1"
         ## PNG file
-        png(file=file.path(dir, dirReport, paste(filenameCov3, ".png", sep="")), width=pngWidthMID, height=pngHeightMID)
+        png(filename=file.path(dir, dirReport, paste(filenameCov3, ".png", sep="")), width=pngWidthMID, height=pngHeightMID)
         plotAmpliconCoverage(avaSet=object, bothDirections=FALSE, type="mid")
         dev.off()
         ## PDF file
@@ -824,7 +824,7 @@
         ## Coverage in both directions by MID (separated)
         filenameCov4 = "coverageMID2"
         ## PNG file
-        png(file=file.path(dir, dirReport, paste(filenameCov4, ".png", sep="")), width=pngWidthMID*2, height=pngHeightMID)
+        png(filename=file.path(dir, dirReport, paste(filenameCov4, ".png", sep="")), width=pngWidthMID*2, height=pngHeightMID)
         plotAmpliconCoverage(avaSet=object, bothDirections=TRUE, type="mid")
         dev.off()
         ## PDF file
@@ -837,7 +837,7 @@
         ## Coverage in both directions by PTP (together)
         filenameCov5 = "coveragePTP1"
         ## PNG file
-        png(file=file.path(dir, dirReport, paste(filenameCov5, ".png", sep="")), width=pngWidthPTP, height=pngHeightPTP)
+        png(filename=file.path(dir, dirReport, paste(filenameCov5, ".png", sep="")), width=pngWidthPTP, height=pngHeightPTP)
         plotAmpliconCoverage(avaSet=object, bothDirections=FALSE, type="ptp")
         dev.off()
         ## PDF file
@@ -847,7 +847,7 @@
         ## Coverage in both directions by PTP (separated)
         filenameCov6 = "coveragePTP2"
         ## PNG file
-        png(file=file.path(dir, dirReport, paste(filenameCov6, ".png", sep="")), width=pngWidthPTP*2, height=pngHeightPTP)
+        png(filename=file.path(dir, dirReport, paste(filenameCov6, ".png", sep="")), width=pngWidthPTP*2, height=pngHeightPTP)
         plotAmpliconCoverage(avaSet=object, bothDirections=TRUE, type="ptp")
         dev.off()
         ## PDF file
@@ -864,7 +864,7 @@
         if(!(file.exists(file.path(dir, dirSample))))
             dir.create(file.path(dir, dirSample), recursive=TRUE)
 	## PNG file
-    	png(file=file.path(dir, dirSample, paste("coverageSample_", s, ".png", sep="")), width=pngWidth, height=pngHeight)
+    	png(filename=file.path(dir, dirSample, paste("coverageSample_", s, ".png", sep="")), width=pngWidth, height=pngHeight)
         plotAmpliconCoverage(avaSet=object[, s], bothDirections=TRUE)
 	dev.off()
 	## PDF file
@@ -991,23 +991,4 @@
         cat("<script src=\"../../sorttable.js\"></script>", file=sampleQualityHTML, append=TRUE)
     	HTML.title(paste("Amplicon coverage for sample", sample), HR=1, file=sampleQualityHTML)
     	## link to the main pages
-		cat(.createNavigation(level=c("../../", "../../", "../../")), file=sampleQualityHTML, append=TRUE)	
-
-    	## insert image with link to a pdf version
-    	cat(paste("<a href=\"coverageSample_", sample, ".pdf\" target=\"_blank\">
-	    <img src=\"coverageSample_", sample, ".png\" width=", pngWidth, "height=", pngHeight, "border=", border, "alt=Coverage />
-	    </a>", sep=""), file=sampleQualityHTML, append=TRUE)
-    	HTMLEndFile(file=sampleQualityHTML)
-
-    }
-    message("done")
-
-}
-
-setMethod("htmlReport",
-    signature=signature(object="AVASet"),
-    .initHtmlReportAVASet)
-
-setMethod("htmlReport",
-    signature=c(object="MapperSet"),
-    .initHtmlReportGSMSet)
+		cat(.createNavigation(level=c("../../", ".

@@ -2,7 +2,7 @@
 
 \alias{plotVariants}
 \alias{plotVariants,AnnotatedVariants,character-method}
-\alias{plotVariants,data.frame,data.frame-method}
+\alias{plotVariants,data.frame,character-method}
 
 \title{Plots variant positions}
 
