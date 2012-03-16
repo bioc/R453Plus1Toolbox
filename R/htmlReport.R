@@ -991,4 +991,25 @@
         cat("<script src=\"../../sorttable.js\"></script>", file=sampleQualityHTML, append=TRUE)
     	HTML.title(paste("Amplicon coverage for sample", sample), HR=1, file=sampleQualityHTML)
     	## link to the main pages
-		cat(.createNavigation(level=c("../../", ".
+		cat(.createNavigation(level=c("../../", "../../", "../../")), file=sampleQualityHTML, append=TRUE)
+
+        ## insert image with link to a pdf version
+        cat(paste("<a href=\"coverageSample_", sample, ".pdf\" target=\"_blank\">
+            <img src=\"coverageSample_", sample, ".png\" width=", pngWidth, "height=", pngHeight, "border=", border, "alt=Coverage />
+            </a>", sep=""), file=sampleQualityHTML, append=TRUE)
+        HTMLEndFile(file=sampleQualityHTML)
+
+    }
+    message("done")
+
+}
+
+setMethod("htmlReport",
+    signature=signature(object="AVASet"),
+    .initHtmlReportAVASet)
+
+setMethod("htmlReport",
+    signature=c(object="MapperSet"),
+    .initHtmlReportGSMSet)
+
+
