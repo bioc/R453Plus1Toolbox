@@ -26,7 +26,7 @@ sff_container *readSFF(char *filename) {
   unsigned long fileLen;
 
   if (NULL == (file = fopen(filename, "rb"))) {
-    fprintf(stderr, "Unable to open file %s \n", filename);
+    REprintf("Unable to open file %s \n", filename);
     return NULL;
   }
 
@@ -37,7 +37,7 @@ sff_container *readSFF(char *filename) {
 
   //Allocate memory
   if (NULL == (buffer = (char *)malloc(fileLen+1))) {
-    fprintf(stderr, "Memory error!\n");
+    REprintf("Memory error!\n");
     fclose(file);
     return NULL;
   }
@@ -56,7 +56,7 @@ sff_container *readSFF(char *filename) {
 
   sff_header *header;
   if(NULL == (header = (sff_header *)calloc(1, sizeof(*header)))) {
-    fprintf(stderr, "Memory error!\n");
+    REprintf("Memory error!\n");
 	return NULL;
   }
 
@@ -78,7 +78,7 @@ sff_container *readSFF(char *filename) {
 
   // flow
   if(NULL == (header->flow = (char *)malloc((header->flow_len)+1))) {
-    fprintf(stderr, "Memory error!\n");
+    REprintf("Memory error!\n");
     free_header(header);
   } else {
     memcpy(header->flow, buffer+31, header->flow_len);
@@ -87,7 +87,7 @@ sff_container *readSFF(char *filename) {
 
   // key
   if(NULL == (header->key = (char *)malloc((header->key_len)+1))) {
-    fprintf(stderr, "Memory error!\n");
+    REprintf("Memory error!\n");
     free_header(header);
   } else {
     memcpy(header->key, buffer+31+header->flow_len, header->key_len);
@@ -105,13 +105,13 @@ sff_container *readSFF(char *filename) {
   // Allocate space for container
   sff_read **reads;
   if(NULL == (reads = (sff_read **)calloc(header->nreads, sizeof(sff_read *)))) {
-    fprintf(stderr, "Memory error!\n");
+    REprintf("Memory error!\n");
     free_header(header);
     return NULL;
   }
   sff_container *container;
   if(NULL == (container = (sff_container *)calloc(1, sizeof(*container)))) {
-    fprintf(stderr, "Memory error!\n");
+    REprintf("Memory error!\n");
     free_header(header);
     free(reads);
 	return NULL;
@@ -136,7 +136,7 @@ sff_container *readSFF(char *filename) {
        ***********************/
       sff_read *read = NULL;
       if(NULL == (read = (sff_read *)calloc(1, sizeof(*read)))) {
-	    fprintf(stderr, "Memory error!\n");
+	    REprintf("Memory error!\n");
 	    free_container(container, read_count);
 	    return NULL;
 	  }
@@ -151,7 +151,7 @@ sff_container *readSFF(char *filename) {
 
       // name
       if(NULL == (read->name  = (char *)malloc((read->name_len)+1))) {
-        fprintf(stderr, "Memory error!\n");
+        REprintf("Memory error!\n");
         free_container(container, read_count+1);
 	    return NULL;
       } else {
@@ -167,7 +167,7 @@ sff_container *readSFF(char *filename) {
 	   *********************/
 	  // flowgram
 	  if(NULL == (read->flowgram = (uint16_t *)malloc(header->flow_len*2))) {
-	    fprintf(stderr, "Memory error!\n");
+	    REprintf("Memory error!\n");
 	    free_container(container, read_count+1);
 	    return NULL;
       } else {
@@ -180,7 +180,7 @@ sff_container *readSFF(char *filename) {
 
       // flow index
       if(NULL == (read->flow_index = (uint8_t *)malloc(read->nbases))) {
-        fprintf(stderr, "Memory error!\n");
+        REprintf("Memory error!\n");
         free_container(container, read_count+1);
 	    return NULL;
       } else {
@@ -189,7 +189,7 @@ sff_container *readSFF(char *filename) {
 
       // bases
       if(NULL == (read->bases = (char *)malloc((read->nbases)+1))) {
-	    fprintf(stderr, "Memory error!\n");
+	    REprintf("Memory error!\n");
 	    free_container(container, read_count+1);
 	    return NULL;
       } else {
@@ -199,7 +199,7 @@ sff_container *readSFF(char *filename) {
 
       // quality
       if(NULL == (read->quality = (uint8_t *)malloc(read->nbases))) {
-        fprintf(stderr, "Memory error!\n");
+        REprintf("Memory error!\n");
         free_container(container, read_count+1);
 	    return NULL;
       } else {
