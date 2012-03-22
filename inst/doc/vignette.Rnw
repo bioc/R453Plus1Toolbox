@@ -384,20 +384,19 @@ The function can be used in two ways: \\
 It offers the most functionality when used as a "standalone" function by passing all mutations as a data frame. This mode allows an individual and detailed
 annotation of the mutations like labels, colors and user defined mutation types. It requires the columns "label", "pos" "mutation" and "color". It is recommended to add more detailed info 
 for each mutation type by preparing a data frame for the parameter \Rfunarg{mutationInfo} which requires the three columns "mutation", "legend" and "color". \\ 
-The following example calls \Rfunction{plotVariants} for the gene TET2 having th Ensembl id "ENSG00000168769" and transcript "ENST00000513237":
-%%%%%% The plot will not be inserted into the vignette since it needs the package "TeachingDemos", which is only suggested by the toolbox and no dependency
+The following example calls \Rfunction{plotVariants} for the gene TET2 having th Ensembl id "ENSG00000168769" and transcript "ENST00000513237" (see Figure 4 below):
 <<label=loadXLS>>=
 data(plotVariantsExample)
 @
-<<label=plotVariants, eval=FALSE,fig=FALSE,include=FALSE,eps=FALSE,pdf=TRUE>>=
-geneInfo = plotVariants(data=variants, gene="ENSG00000168769", transcript="ENST00000513237", regions=regions, mutationInfo=mutationInfo, horiz=TRUE)
+<<label=plotVariants,fig=TRUE,include=FALSE,eps=FALSE,pdf=TRUE>>=
+geneInfo = plotVariants(data=variants, gene="ENSG00000168769", transcript="ENST00000513237", regions=regions, mutationInfo=mutationInfo, horiz=TRUE, cex=0.8)
 @
-%\begin{figure}[hpb]
-%\begin{center}
-%  \includegraphics{R453Plus1-plotVariants}
-%  \caption{Plot of the variants for gene TET2 by passing mutations as a data frame. This version includes mutation labels and allows user defined mutation types.}
-%\end{center}
-%\end{figure}
+\begin{figure}[hp]
+\begin{center}
+  \includegraphics{R453Plus1-plotVariants}
+  \caption{Plot of the variants for gene TET2 by passing mutations as a data frame. This version includes mutation labels and allows user defined mutation types.}
+\end{center}
+\end{figure}
 Especially for integration into the R453Plus1Toolbox and for compatibility to older versions \Rfunction{plotVariants} also accepts annotated variants of class 
 \Rclass{annotatedVariants} (see section \ref{sec:Annotations}). The function then only distinguishes missense, nonsense and silent point mutations and deletions and does not include mutation labels.\\
 
