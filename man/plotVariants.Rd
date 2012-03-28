@@ -9,7 +9,7 @@
 \description{This function illustrates the positions and types of mutations within a given gene and transcript. The plot shows only coding regions (thus, units are amino acids / codons). The coding 
 region is further divided into exons labeled with their rank in the transcript.}
 
-\usage{plotVariants(data, gene, transcript, regions, mutationInfo, horiz=FALSE, cex=1, title="", legend=TRUE)}
+\usage{plotVariants(data, gene, transcript, regions, mutationInfo, groupBy, horiz=FALSE, cex=1, title="", legend=TRUE)}
 
 \arguments{
   \item{data}{This can be either a data.frame or an instance of class
@@ -35,6 +35,10 @@ region is further divided into exons labeled with their rank in the transcript.}
   "mutation". The column "legend" allows for a more detailed name of the
   mutation that will appear in the legend. The color of each mutation
   type is optional and can also be assigned automatically.}
+  \item{groupBy}{By default, the mutations will be grouped by their
+  position (i.e. the column "pos"). If necessary, one might give the name of an other column
+  in the \code{\link{data}} here; for example the mutation labels. Please see
+  the details below for more information.}
   \item{horiz}{In more comprehensive datasets, more than one
   mutation may be listed for a single position. If  \code{horiz=FALSE}, these
   overlapping mutations will be aligned vertically. If
@@ -59,7 +63,14 @@ annotation of the mutations like labels, colors and user defined
 mutation types. \cr
 Passing an instance of class \code{\link{annotatedVariants}} is useful for integration into the
 R453Plus1Toolbox pipeline and for compatibility to older versions of the
-plot. Then, it will only distinguish deletions and missense, nonsense and silent mutations.
+plot. Then, it will only distinguish deletions and missense, nonsense
+and silent mutations. \cr
+By default, the plot will group mutations (horizontally or vertically) by their position. It is
+possible to group by an other column in the data (see parameter
+groupBy), but in the current version this makes
+only sense if the mutations in one group are locally clustered, i.e. have
+the same or a similar position. The parameter groupBy is
+mainly useful to modify or even disable the automatic grouping of different mutations at the same position.
 }
 
 \note{Depending on the amount of mutations and the size of the gene, the plot
@@ -137,6 +148,9 @@ regions = data.frame(
 
 # ... or horizontally in groups
 \dontrun{plotVariants(data=variants, gene="ENSG00000168769", transcript="ENST00000513237", regions=regions, mutationInfo=mutationInfo, horiz=TRUE, title="'plotVariants' Example", legend=TRUE)}
+
+# group mutations by their label and not by their position (which is the default)
+\dontrun{plotVariants(data=variants, gene="ENSG00000168769", transcript="ENST00000513237", regions=regions, mutationInfo=mutationInfo, groupBy="label", horiz=TRUE, title="'plotVariants' Example", legend=TRUE)}
 
 }
 

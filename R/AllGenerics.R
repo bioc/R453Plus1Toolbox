@@ -140,7 +140,7 @@ setGeneric("annotateVariants", function(object, bsGenome) {
 ## generics for plotting functions
 
 setGeneric("plotVariants", signature=c("data", "gene"),
-    function(data, gene, transcript=NA, regions, mutationInfo, horiz=FALSE, cex=1, title="", legend=TRUE)
+    function(data, gene, transcript=NA, regions, mutationInfo, groupBy="pos", horiz=FALSE, cex=1, title="", legend=TRUE)
         standardGeneric("plotVariants"))
 
 setGeneric("plotChimericReads", signature=("brpData"),

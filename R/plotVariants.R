@@ -1,26 +1,27 @@
 
-.plotVariants <- function(data, gene, transcript, bmExons, bmGene, bmReturn, regions, mutationInfo, horiz, cex, title, legend){
-  
-  data = data[order(data$pos), ]
+.plotVariants <- function(data, gene, transcript, bmExons, bmGene, bmReturn, regions, mutationInfo, groupBy, horiz, cex, title, legend){
+
+#  data = data[order(data$pos), ]
+  data = data[order(data[, groupBy]), ]
   
   ## parameter horiz stands for horizontal alignment of a group of mutations a single position
   ## if horiz is false, these mutations will be plotted vertically
   if(horiz == FALSE){
     ## list of mutations for every group
-    mutGroup = !duplicated(data$pos)
+    mutGroup = !duplicated(data[, groupBy])
     muts = list()
     for(i in 1:sum(mutGroup)){
-      p = data[mutGroup, "pos"][i]
-      muts[[i]] = as.character(subset(data, pos==p)$mutation)
+      g = data[mutGroup, groupBy][i]
+      muts[[i]] = as.character(data[data[, groupBy]==g, "mutation"])
     }
-    numMuts = length(unique(data$pos))
+    numMuts = length(unique(data[ , groupBy]))
   }else{
     ## if horiz is true every mutation will be plotted horizontally
     mutGroup = 1:nrow(data)
     muts = as.list(data$mutation)
     numMuts = length(data$label)
   }
-  maxMuts = max(table(data$pos))
+  maxMuts = max(table(data[, groupBy]))
   
   ## plot boundaries
   xmin = 0
@@ -104,7 +105,9 @@
       xLab = catchUpdate
     }
   }
-  x = data.frame(pos_axis=x, pos_labels=xLab, color=data$color[mutGroup], stringsAsFactors=FALSE)
+
+  x = data.frame(pos_axis=x, pos_labels=xLab, color=data$color[mutGroup], group=data[mutGroup, groupBy], stringsAsFactors=FALSE)
+  colnames(x) = c("pos_axis", "pos_labels", "color", groupBy)
   text(x$pos_labels, y3+(textHeight/2), labels, srt=90, cex=labels.cex, adj=c(0,0.5), offset=3)
 
   ## mark mutations (as colored points)
@@ -125,19 +128,19 @@
   ## horizontal alignment of mutation marks
   }else{
     ## draw single mutation lines
-    x2 = x[!(x$pos_axis %in% x$pos_axis[duplicated(x$pos_axis)]), ]
+    x2 = x[!(x[, groupBy] %in% x[duplicated(x[groupBy]), groupBy]), ]
     for(i in 1:nrow(x2)){
       lines(list(x=c(x2$pos_axis[i],x2$pos_axis[i],x2$pos_labels[i],x2$pos_labels[i]), y=c(y0,y1,y2,y3)), col=x2$color[i], lwd=lwd)
     }
     ## draw lines for mutation groups (as "forks" like in dendrograms)
-    groups = table(x$pos_axis)
+    groups = table(x[, groupBy])
     groups = groups[groups > 1]
     anyGroups = any(groups > 1)
     if(anyGroups == TRUE){
       groups = groups[groups > 1]
-      x_group= x[x$pos_axis %in% x$pos_axis[duplicated(x$pos_axis)], ]
+      x_group= x[x[, groupBy] %in% x[duplicated(x[groupBy]), groupBy], ]
       for(i in 1:length(groups)){
-        x2 = subset(x_group, pos_axis == names(groups[i]))
+        x2 = x_group[x_group[, groupBy] == names(groups[i]), ]
         lines(x=c(min(x2$pos_labels), min(x2$pos_labels), max(x2$pos_labels), max(x2$pos_labels)), y=c(y3,y2,y2,y3), col=x2$color[1], lwd=lwd)
         #points(x=(max(x2$pos_labels)+min(x2$pos_labels))/2, y=y2, bg=x2$color[1], pch=25, cex=pt.cex*0.75)  ## "anchor point"
         polygon(x=c(min(x2$pos_labels), min(x2$pos_labels), max(x2$pos_labels), max(x2$pos_labels)), y=c(y2,y3,y3,y2), col=x2$color[1], border=NA, density=18, lwd=lwd*0.75)
@@ -292,7 +295,7 @@ setMethod("plotVariants",
             mutationInfo = df[[2]]
             
             if(nrow(data) >0){
-              .plotVariants(data=data, gene=bmInfo[[1]], transcript=bmInfo[[2]], bmExons=bmInfo[[3]], bmGene=bmInfo[[4]], bmReturn=bmInfo[[5]], regions=regions, mutationInfo=mutationInfo, cex=cex, horiz=horiz, title=title, legend=legend)
+              .plotVariants(data=data, gene=bmInfo[[1]], transcript=bmInfo[[2]], bmExons=bmInfo[[3]], bmGene=bmInfo[[4]], bmReturn=bmInfo[[5]], regions=regions, mutationInfo=mutationInfo, groupBy="pos", cex=cex, horiz=horiz, title=title, legend=legend)
             }else{
               stop("No annotation for given transcript. Stopping here. I'm sorry.")
             }
@@ -303,7 +306,7 @@ setMethod("plotVariants",
 ## Method for data in data.frame format
 setMethod("plotVariants",
           signature=c(data="data.frame", gene="character"),
-          function(data, gene, transcript=NA, regions, mutationInfo, horiz=FALSE, cex=1, title="", legend=TRUE){
+          function(data, gene, transcript=NA, regions, mutationInfo, groupBy="pos", horiz=FALSE, cex=1, title="", legend=TRUE){
 
             library(TeachingDemos)
             library(biomaRt)
@@ -348,6 +351,13 @@ setMethod("plotVariants",
                 mutationInfo$color = rainbow(nrow(mutationInfo))
               }
             }
+            ## check integrity of groupBy
+            if(!is.character(groupBy)){
+              stop("Invalid argument: groupBy has to be of type character")
+            }else{
+              if(!(groupBy %in% colnames(data)))
+                stop("Column not found: When grouping mutations by a column other than \"pos\", make sure the column has the same name in your data")
+            }
             ## check integrity of horiz, title, legend, cex
             if(!is.logical(horiz))
               stop("Invalid argument: horiz has to be TRUE or FALSE")
@@ -361,5 +371,5 @@ setMethod("plotVariants",
             ## get Ensembl info for given gene / transcript
             bmInfo = .getEnsemblInfo(gene, transcript)
             
-            return(.plotVariants(data=data, gene=bmInfo[[1]], transcript=bmInfo[[2]], bmExons=bmInfo[[3]], bmGene=bmInfo[[4]], bmReturn=bmInfo[[5]], regions=regions, mutationInfo=mutationInfo, horiz=horiz, cex=cex, title=title, legend=legend))
+            return(.plotVariants(data=data, gene=bmInfo[[1]], transcript=bmInfo[[2]], bmExons=bmInfo[[3]], bmGene=bmInfo[[4]], bmReturn=bmInfo[[5]], regions=regions, mutationInfo=mutationInfo, groupBy=groupBy, horiz=horiz, cex=cex, title=title, legend=legend))
           })
