@@ -1,0 +1,13 @@
+bibentry(
+  bibtype = "Article",
+  title = "R453Plus1Toolbox: an R/Bioconductor package for analyzing Roche 454 Sequencing data",
+  author= c(person("Hans-Ulrich", "Klein"), person("Christoph", "Bartenhagen"),
+            person("Alexander", "Kohlmann"), person("Vera", "Grossmann"),
+            person("Christian", "Ruckert"), person("Thorsten", "Haferlach"),
+            person("Martin", "Dugas")),
+  journal = "Bioinformatics",
+  year = "2011",
+  volume = "27",
+  number = "8",
+  pages = "1162--1163"
+)
