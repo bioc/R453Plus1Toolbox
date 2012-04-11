@@ -1,7 +1,12 @@
 
 .plotVariants <- function(data, gene, transcript, bmExons, bmGene, bmReturn, regions, mutationInfo, groupBy, horiz, cex, title, legend){
 
-#  data = data[order(data$pos), ]
+  ## When sorting by position, take care that different mutations at the same position will not be in the same group
+  ## Therefore, combine the position with the mutation type
+  if(groupBy == "pos"){
+    groupBy = "groups"
+    data$groups = paste(data$pos, data$mutation, sep="_")
+  }
   data = data[order(data[, groupBy]), ]
   
   ## parameter horiz stands for horizontal alignment of a group of mutations a single position
