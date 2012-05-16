@@ -77,10 +77,10 @@
     matchList = findOverlaps(query=ranges(geneRanges),
         subject=ranges(variantRanges))
     for (chr in names(matchList)) {
-        numHits = nrow(matchMatrix(matchList[[chr]]))
+        numHits = nrow(as.matrix(matchList[[chr]]))
         for (hit in setdiff(0:numHits, 0)) {
-            varInd = matchMatrix(matchList[[chr]])[hit, "subject"]
-            geneInd = matchMatrix(matchList[[chr]])[hit, "query"]
+            varInd = as.matrix(matchList[[chr]])[hit, "subjectHits"]
+            geneInd = as.matrix(matchList[[chr]])[hit, "queryHits"]
             variants[[variantRanges[chr][["ID"]][varInd]]]$genes =
             rbind(variants[[variantRanges[chr][["ID"]][varInd]]]$genes,
                 as.data.frame(geneRanges[chr])[geneInd,])
@@ -105,10 +105,10 @@
     matchList = findOverlaps(query=ranges(transcriptRanges),
         subject=ranges(variantRanges))
     for (chr in names(matchList)) {
-        numHits = nrow(matchMatrix(matchList[[chr]]))
+        numHits = nrow(as.matrix(matchList[[chr]]))
         for (hit in setdiff(0:numHits, 0)) {
-            varInd = matchMatrix(matchList[[chr]])[hit, "subject"]
-            transInd = matchMatrix(matchList[[chr]])[hit, "query"]
+            varInd = as.matrix(matchList[[chr]])[hit, "subjectHits"]
+            transInd = as.matrix(matchList[[chr]])[hit, "queryHits"]
             variants[[variantRanges[chr][["ID"]][varInd]]]$transcripts =
             rbind(variants[[variantRanges[chr][["ID"]][varInd]]]$transcripts,
                 as.data.frame(transcriptRanges[chr])[transInd,])
@@ -143,10 +143,10 @@
     matchList = findOverlaps(query=ranges(exonRanges),
         subject=ranges(variantRanges))
     for (chr in names(matchList)) {
-        numHits = nrow(matchMatrix(matchList[[chr]]))
+        numHits = nrow(as.matrix(matchList[[chr]]))
         for (hit in setdiff(0:numHits, 0)) {
-            varInd = matchMatrix(matchList[[chr]])[hit, "subject"]
-            exonInd = matchMatrix(matchList[[chr]])[hit, "query"]
+            varInd = as.matrix(matchList[[chr]])[hit, "subjectHits"]
+            exonInd = as.matrix(matchList[[chr]])[hit, "queryHits"]
             tmpExon = as.data.frame(exonRanges[chr])[exonInd,]
             tmpVar = as.data.frame(variantRanges[chr])[varInd,]
 
@@ -156,7 +156,7 @@
             if (is.na(tmpExon$X5_utr_start)) {
                 tmpExon$utr_5 = FALSE
             } else {
-                mm = matchMatrix(findOverlaps(
+                mm = as.matrix(findOverlaps(
                     IRanges(tmpExon$X5_utr_start, tmpExon$X5_utr_end),
                     IRanges(tmpVar$start, tmpVar$end)))
                 tmpExon$utr_5 = nrow(mm) == 1
@@ -166,7 +166,7 @@
             if (is.na(tmpExon$X3_utr_start)) {
                 tmpExon$utr_3 = FALSE
             } else {
-                mm = matchMatrix(findOverlaps(
+                mm = as.matrix(findOverlaps(
                     IRanges(tmpExon$X3_utr_start, tmpExon$X3_utr_end),
                     IRanges(tmpVar$start, tmpVar$end)))
                 tmpExon$utr_3 = nrow(mm) == 1
@@ -176,7 +176,7 @@
             if (is.na(cds[1])) {
                 tmpExon$coding = FALSE
             } else {
-                mm = matchMatrix(findOverlaps(
+                mm = as.matrix(findOverlaps(
                     IRanges(cds[1], cds[2]),
                     IRanges(tmpVar$start, tmpVar$end)))
                 tmpExon$coding = nrow(mm) == 1
@@ -387,10 +387,10 @@
         matchList = findOverlaps(query=ranges(snpRanges),
             subject=ranges(variantRanges))
         for (chr in names(matchList)) {
-            numHits = nrow(matchMatrix(matchList[[chr]]))
+            numHits = nrow(as.matrix(matchList[[chr]]))
             for (hit in setdiff(0:numHits, 0)) {
-                varInd = matchMatrix(matchList[[chr]])[hit, "subject"]
-                snpInd = matchMatrix(matchList[[chr]])[hit, "query"]
+                varInd = as.matrix(matchList[[chr]])[hit, "subjectHits"]
+                snpInd = as.matrix(matchList[[chr]])[hit, "queryHits"]
                 tmpSNP = as.data.frame(snpRanges[chr])[snpInd,]
                 tmpVar = as.data.frame(variantRanges[chr])[varInd,]
 
