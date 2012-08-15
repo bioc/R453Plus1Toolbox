@@ -99,28 +99,28 @@ setMethod("alignShortReads",
     signature=signature(object="DNAStringSet", bsGenome="BSgenome",
         seqNames="missing", ensemblNotation="logical"),
     function(object, bsGenome, ensemblNotation) {
-        return(.alignShortReads_DNAStringSet(object, bsGenome, names(bsGenome), ensemblNotation))
+        return(.alignShortReads_DNAStringSet(object, bsGenome, names(bsGenome)[1:24], ensemblNotation))
     })
 
 setMethod("alignShortReads", 
     signature=signature(object="AVASet", bsGenome="BSgenome",
         seqNames="missing", ensemblNotation="logical"),
     function(object, bsGenome, ensemblNotation) {
-        return(.alignShortReads_AVASet(object, bsGenome, names(bsGenome), ensemblNotation))
+        return(.alignShortReads_AVASet(object, bsGenome, names(bsGenome)[1:24], ensemblNotation))
     })
 
 setMethod("alignShortReads", 
     signature=signature(object="DNAStringSet", bsGenome="BSgenome",
         seqNames="missing", ensemblNotation="missing"),
     function(object, bsGenome) {
-        return(.alignShortReads_DNAStringSet(object, bsGenome, names(bsGenome), FALSE))
+        return(.alignShortReads_DNAStringSet(object, bsGenome, names(bsGenome)[1:24], FALSE))
     })
 
 setMethod("alignShortReads", 
     signature=signature(object="AVASet", bsGenome="BSgenome",
         seqNames="missing", ensemblNotation="missing"),
     function(object, bsGenome) {
-        return(.alignShortReads_AVASet(object, bsGenome, names(bsGenome), FALSE))
+        return(.alignShortReads_AVASet(object, bsGenome, names(bsGenome)[1:24], FALSE))
     })
 
 

@@ -388,8 +388,8 @@ setMethod("readVariants_AVACLI",
             featureData=data.frame(row.names=rownames(variants), name=variants$Name,
               canonicalPattern=variants$Pattern,
               referenceSeqID=variants$Reference,
-              start=start,
-              end=end,
+              start=as.numeric(start),
+              end=as.numeric(end),
               variantBase=variantSeq,
               referenceBases=referenceSeq,
               stringsAsFactors=FALSE)
@@ -462,8 +462,8 @@ setMethod("readAmplicons_AVACLI",
               primer1=amps$Primer1,
               primer2=amps$Primer2,
               referenceSeqID=amps$Reference,
-              targetEnd=amps$End,
-              targetStart=amps$Start,
+              targetEnd=as.numeric(amps$End),
+              targetStart=as.numeric(amps$Start),
               stringsAsFactors=FALSE)
             
             ## construct meta data for the features
