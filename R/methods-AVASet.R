@@ -2,14 +2,17 @@
 ########## METHODS TO CREATE AN AVASET ##########################################
 #################################################################################
 
-# AVASet reads all relevant information (sample-, variant- and amplicon
-# data)
-# from the (sub-) directories of the project
-# output: AVASet, object from a subclass of the Biobase eSet and extended by
-# two slots for amplicon data (assay- and feature data) and reference sequences
+## AVASet reads all relevant information (sample-, variant- and amplicon data)
+## from the (sub-) directories of the project
+## Input:
+## Project driectory
+## Output:
+## AVASet, object from a subclass of the Biobase eSet and extended by
+## two slots for amplicon data (assay- and feature data) and reference sequences
 
 setMethod("AVASet",
-    signature(dirname="character"),
+    #signature(dirname="character"),
+          signature(dirname="character", avaBin="missing", file_sample="missing", file_amp="missing", file_reference="missing", file_variant="missing", file_variantHits="missing"),
 
     function(dirname){
 
@@ -68,9 +71,216 @@ setMethod("AVASet",
         )
         return(avaSet)
  
+      }
+)
+
+## This AVASet method reads the project data via the AVA Commad Line Interface (AVA-CLI)
+## The AVA-CLI is started with the command "doAmplicon" from the AVA-Software installation directory.
+## It is started from R and its output (tables) is piped directly to the "read.table" function
+## Input:
+## Project directory
+## AVA-Software installation directory
+## Iutput:
+## AVASet, object from a subclass of the Biobase eSet and extended by
+## two slots for amplicon data (assay- and feature data) and reference sequences
+
+setMethod("AVASet",
+          signature(dirname="character", avaBin="character", file_sample="missing", file_amp="missing", file_reference="missing", file_variant="missing", file_variantHits="missing"),
+
+    function(dirname, avaBin){
+      dirs=dirname
+      doAmplicon = file.path(avaBin, "doAmplicon")
+
+      ## 1.) SAMPLES
+      message("Reading sample data ... ", appendLF=FALSE)
+      cmd = "list sample"
+      samples =  read.table(pipe(paste("printf \"open ", dirname, " -control readOnly\\n", cmd, "\" | ", doAmplicon, " -", sep="")), sep="\t", header=TRUE, stringsAsFactors=FALSE)
+      if(any(duplicated(samples$Name))){
+        samples = samples[!duplicated(samples$Name), ]
+        warning("Samples with duplicate names found and removed.")
+      }
+      sampleData = readSampleData_AVACLI(samples)
+            
+      ## 2.) REFERENCE SEQUENCES
+      message("done\nReading reference sequences ... ", appendLF=FALSE)
+      cmd = "list reference"
+      references = read.table(pipe(paste("printf \"open ", dirname, " -control readOnly\\n", cmd, "\" | ", doAmplicon, " -", sep="")), sep="\t", header=TRUE, stringsAsFactors=FALSE)
+      if(any(duplicated(references$Name))){
+        references = references[!duplicated(references$Name), ]
+        warning("Reference sequences with duplicate names found and removed.")
+      }
+      refSeqData = readReferenceSequences_AVACLI(references)
+            
+      ## 3.) VARIANTS
+      message("done\nReading variant data ... ", appendLF=FALSE)
+      cmd = "list variant"
+      variants = read.table(pipe(paste("printf \"open ", dirname, " -control readOnly\\n", cmd, "\" | ", doAmplicon, " -", sep="")), sep="\t", header=TRUE, stringsAsFactors=FALSE)      
+      variants = variants[!duplicated(paste(variants$Name, variants$Reference, sep="_")), ]
+      rownames(variants) = paste(variants$Name, variants$Reference, sep="_")
+      cmd = "report variantHits"
+      variantHits = read.table(pipe(paste("printf \"open ", dirname, " -control readOnly\\n", cmd, "\" | ", doAmplicon, " -", sep="")), sep="\t", header=TRUE, stringsAsFactors=FALSE)
+      varData = readVariants_AVACLI(variants, variantHits, samples)
+      
+      ## 4.) AMPLICONS
+      message("done\nReading amplicon data ... ", appendLF=FALSE)
+      cmd = "list amplicon"      
+      amps = read.table(pipe(paste("printf \"open ", dirname, " -control readOnly\\n", cmd, "\" | ", doAmplicon, " -", sep="")), sep="\t", header=TRUE, stringsAsFactors=FALSE)
+      if(any(duplicated(amps$Name))){
+        amps = amps[!duplicated(amps$Name), ]
+        warning("Amplicons with duplicate names found and removed.")
+      }
+      
+      ## read one amplicon alignment file for every combination of sample and reference/amplicon sequence
+      amps_align = vector(mode="list", length=nrow(samples) * nrow(amps))
+      i = 1
+      for(s in samples$Name){
+        for(r in references$Name){
+          ## Take care:
+          ## Annotate spaces as special characters (" " as "\ " or in R "\\\\ ")
+          ## Otherwise the call for "doAmplicon will not work!
+          s2= gsub(" ", "\\\\ ", s)
+          r2= gsub(" ", "\\\\ ", r)
+          cmd = paste("report align -sample ", s2, " -reference ", r2, sep="")  
+          amps_align[[i]] = NA
+          tryCatch({
+            amps_align[[i]] = read.table(pipe(paste("printf \"open ", dirname, " -control readOnly\\n", cmd, "\" | ", doAmplicon, " -", sep="")), sep="\t", header=FALSE, stringsAsFactors=FALSE)
+            amps_align[[i]] = amps_align[[i]][, 1]  ## convert data.frame to a vector of strings -> combatibility to the alternative import of a fasta file line by line (see below)
+          },
+                   error = function(e) {amps_align[[i]] = NA}
+          )
+          names(amps_align)[i] = paste(s, r, sep="_")
+          i = i+1
+        }
+      }
+      ampData = readAmplicons_AVACLI(amps, amps_align, samples)
+      message("done")
+      
+      avaSet = new("AVASet",
+        variantForwCount=varData[[1]], 
+        totalForwCount=varData[[2]], 
+        variantRevCount=varData[[3]],
+        totalRevCount=varData[[4]], 
+        forwCount=ampData[[1]],
+        revCount=ampData[[2]],
+        featureDf=varData[[5]], 
+        featureMeta=varData[[6]], 
+        phenoDf=sampleData[[1]], 
+        phenoMeta=sampleData[[2]],
+        featureDfAmp=ampData[[3]], 
+        featureMetaAmp=ampData[[4]],
+        refSeqs=refSeqData,
+        dirs = dirs
+        )
+      return(avaSet)
+ 
     }
 )
 
+
+## This AVASet method reads the project data from tables that are saved on hard disc
+## Only exceptions are the aligned amplicons. Here, it expects a directory name which points to
+## a directory structure with subdirectories "samplename/referencename" with a fasta file in each of these directories;
+## this directory structure can be created using AVACLI command "report alignment -sample * -reference * -outputDir dir"
+## Input:
+## The filenames/dirnames of all tables: Samples, Amplicons, References, Variants and Varianthits
+## Output:
+## AVASet, object from a subclass of the Biobase eSet and extended by
+## two slots for amplicon data (assay- and feature data) and reference sequences
+
+setMethod("AVASet",
+          signature(dirname="character", avaBin="missing", file_sample="character", file_amp="character", file_reference="character", file_variant="character", file_variantHits="character"),
+          function(dirname, avaBin, file_sample, file_amp, file_reference, file_variant, file_variantHits){
+            
+            if(!all(file.exists(file_sample, file_amp, file_reference, file_variant, file_variantHits))){
+              file_sample = file.path(dirname, file_sample)
+              file_amp = file.path(dirname, file_amp)              
+              file_reference = file.path(dirname, file_reference)
+              file_variant = file.path(dirname, file_variant)
+              file_variantHits = file.path(dirname, file_variantHits)
+            }
+            if(!all(file.exists(file_sample, file_amp, file_reference, file_variant, file_variantHits))){
+              stop("File(s) not found.")
+            }
+            dirs = dirname
+            
+            ## 1.) SAMPLES
+            message("Reading sample data ... ", appendLF=FALSE)
+            samples = read.table(file_sample, sep=",", header=TRUE, stringsAsFactors=FALSE)
+            if(any(duplicated(samples$Name))){
+              samples = samples[!duplicated(samples$Name), ]
+              warning("Samples with duplicate names found and removed.")
+            }
+            sampleData = readSampleData_AVACLI(samples)
+            
+            ## 2.) REFERENCE SEQUENCES
+            message("done\nReading reference sequences ... ", appendLF=FALSE)
+            references = read.table(file_reference, sep=",", header=TRUE, stringsAsFactors=FALSE)
+            if(any(duplicated(references$Name))){
+              references = references[!duplicated(references$Name), ]
+              warning("Reference sequences with duplicate names found and removed.")
+            } 
+            refSeqData = readReferenceSequences_AVACLI(references)
+            
+            ## 3.) VARIANTS
+            message("done\nReading variant data ... ", appendLF=FALSE)
+            variants = read.table(file_variant, sep=",", header=TRUE, stringsAsFactors=FALSE)
+            variants = variants[!duplicated(paste(variants$Name, variants$Reference, sep="_")), ]
+            rownames(variants) = paste(variants$Name, variants$Reference, sep="_")            
+            variantHits = read.table(file_variantHits, sep=",", header=TRUE, stringsAsFactors=FALSE)
+            varData = readVariants_AVACLI(variants, variantHits, samples)
+
+            ## 4.) AMPLICONS            
+            message("done\nReading amplicon data ... ", appendLF=FALSE)
+            amps = read.table(file_amp, sep=",", header=TRUE, stringsAsFactors=FALSE)
+            if(any(duplicated(amps$Name))){
+              amps = amps[!duplicated(amps$Name), ]
+              warning("Amplicons with duplicate names found and removed.")
+            }                                               
+            ## read one amplicon alignment file for every combination of sample and reference/amplicon sequence
+            amps_align = vector(mode="list", length=nrow(samples) * nrow(amps))
+            i = 1
+            for(s in samples$Name){
+              for(r in references$Name){
+                path = file.path(dirname, s, r)
+                files = list.files(path)
+                if(length(files) == 0){
+                  warning("There are no alignment data for the combination of sample ", s, " and reference sequence ", r)
+                  amps_align[[i]] = NA
+                }else{
+                  ## there should normally be only one file in each folder; select this one
+                  file = files[1]
+                  if(length(files) > 1){
+                    warning("More than one alignment exported for a sample-reference-combination. Reading only the first one.")
+                  }
+                  amps_align[[i]]= readLines(file.path(path, file))
+                }
+                names(amps_align)[i] = paste(s, r, sep="_")
+                i = i+1
+              }
+            }
+            ampData = readAmplicons_AVACLI(amps, amps_align, samples)
+            message("done")
+  
+            avaSet = new("AVASet",
+              variantForwCount=varData[[1]], 
+              totalForwCount=varData[[2]], 
+              variantRevCount=varData[[3]],
+              totalRevCount=varData[[4]], 
+              forwCount=ampData[[1]],
+              revCount=ampData[[2]],
+              featureDf=varData[[5]], 
+              featureMeta=varData[[6]], 
+              phenoDf=sampleData[[1]], 
+              phenoMeta=sampleData[[2]],
+              featureDfAmp=ampData[[3]], 
+              featureMetaAmp=ampData[[4]],
+              refSeqs=refSeqData,
+              dirs = dirs
+              )
+            return(avaSet)
+            
+          }
+          )
 
 # extend the eSet initialize method by the two new amplicon slots
 
@@ -114,6 +324,194 @@ setMethod("initialize",
     }
 )
 
+#################################################################################
+###### IMPORT OF FEATURE AND PHENODATA 454 COMMAND LINE EXPORT (AVA-CLI) ########
+#################################################################################
+## test: setwd("/home/c_bart07/R453Plus1Toolbox_AVASoftware_Update_v2.6/testdata")
+
+
+setMethod("readSampleData_AVACLI",
+    signature(samples="data.frame"),
+          function(samples){
+
+            ## Only when sample annotation has a consistent format:
+            ## reading MID and Lane from sample annotation which has the format like "07-009440_PTP 421677_MID1_Lane 1"
+            ## mid = sapply(strsplit(samples$Annotation, split="_"), function(x) return(grep("MID", x, value=TRUE)))
+            ## lane = sapply(strsplit(samples$Annotation, split="_"), function(x) return(grep("Lane", x, value=TRUE)))
+            ## Otherwise mid and lane are not accessible:
+            mid = NA
+            lane = NA
+            sampleData = data.frame(row.names=samples$Name, SampleID=samples$Name, MID1=mid, MID2=mid, PTP_AccNum=NA, Lane=lane, ReadGroup=NA, Annotation=samples$Annotation)
+
+            ## no label desription needed
+            sampleMeta=data.frame(row.names=colnames(sampleData),
+              labelDescription=c("-","-","-","-","-","-","-"))
+            
+            return(list(sampleData,sampleMeta))
+            
+          }
+          )
+
+# readVariants runs through the subdirectory ".../Amplicons/Results/Variants/"
+# and reads feature- and assay data for each variant 
+# output: list containing
+# variantForwCounts, the number of occurences of the variants in a reference
+# sequence (read forwards)
+# totalForwCount, the number of forward reads
+# variantRevCounts, the number of occurences of the variants in a reference
+# sequence (read backwards)
+# totalRevCount, the number of reverse reads
+# featureData, for each variant the name, canonical pattern and reference
+# sequence
+# featureMeta, some further information about the featureData
+
+setMethod("readVariants_AVACLI",
+    signature(variants="data.frame", variantHits="data.frame", samples="data.frame"),
+          function(variants, variantHits, samples){
+
+            ## 1. Read featureData and featureMetaData
+            
+            ## Read positions from variant names
+            ## SNPs and indels can are named like "333-335:CAC/---", "333:A/G", "334.5:-/C"
+            var = strsplit(variants$Name, split=":")
+            start = sapply(var, function(x) return(strsplit(x[1], split="-")[[1]][1]))
+            end = sapply(var, function(x) return(strsplit(x[1], split="-")[[1]][2]))
+            ## No end position for SNP or insertion
+            end[is.na(end)] = start[is.na(end)]
+            
+            ## Read mutated sequence from variant names
+            ## SNPs and indels can are named like "333-335:CAC/---", "333:A/G", "334.5:-/C"
+            var = strsplit(variants$Name, split=":")
+            referenceSeq = sapply(var, function(x) return(strsplit(x[2], split="/")[[1]][1]))
+            variantSeq = sapply(var, function(x) return(strsplit(x[2], split="/")[[1]][2]))
+            
+            featureData=data.frame(row.names=rownames(variants), name=variants$Name,
+              canonicalPattern=variants$Pattern,
+              referenceSeqID=variants$Reference,
+              start=start,
+              end=end,
+              variantBase=variantSeq,
+              referenceBases=referenceSeq,
+              stringsAsFactors=FALSE)
+            
+            ## construct meta data for the features
+            ## no label description needed
+            featureMeta=data.frame(row.names=colnames(featureData),
+              labelDescription=c("-","-","-","-","-","-","-"))
+
+            ## 2. Read assayData:
+            
+            ## Use the "Consensus" calls instead if "Individual"
+            variantHits = variantHits[variantHits$Read.Type=="Consensus", ]
+            ## two separate matrices for forward and reverse reads each
+            sampleNames=as.character(samples$Name)
+            num_samples=length(sampleNames)
+            init = matrix(0, nrow(variants), num_samples)
+            rownames(init) = rownames(variants)
+            colnames(init) = sampleNames
+            variantForwCount = init
+            totalForwCount = init
+            variantRevCount = init
+            totalRevCount = init
+            for(s in sampleNames){
+              v = variantHits[variantHits$Sample.Name == as.character(s), ]
+              variantForwCount[paste(v$Variant.Name, v$Reference.Name, sep="_"), as.character(s)] = v$Forward.Hits
+              variantRevCount[paste(v$Variant.Name, v$Reference.Name, sep="_"), as.character(s)] = v$Reverse.Hits
+              totalForwCount[paste(v$Variant.Name, v$Reference.Name, sep="_"),  as.character(s)] = v$Forward.Denom
+              totalRevCount[paste(v$Variant.Name, v$Reference.Name, sep="_"), as.character(s)] = v$Reverse.Denom
+            }
+            return(list(variantForwCount, totalForwCount,
+                        variantRevCount, totalRevCount, featureData,
+                        featureMeta))
+            
+          }
+          )
+
+setMethod("readReferenceSequences_AVACLI",
+    signature(references="data.frame"),
+          function(references){
+
+            ## build DNAStringSet for the reference sequence slot
+            refSeqDNASet=DNAStringSet(references$Sequence)
+            names(refSeqDNASet)=references$Name
+            refSeqNames=references$Name
+            refSeqGenes=sapply(refSeqNames, function(x) strsplit(x, "_")[[1]][1] )
+            refSeqData=data.frame(row.names=refSeqNames, name=refSeqNames,
+              refSeqID=references$Name, gene=refSeqGenes, stringsAsFactors=FALSE)
+            refSeqAligned = AlignedRead(sread=refSeqDNASet, 
+              id=BStringSet(references$Name),
+              position=as.integer(rep(1, length(references$Name))),
+              alignData=AlignedDataFrame(data=refSeqData,
+                metadata=data.frame(row.names=colnames(refSeqData))))
+            return(refSeqAligned)
+            
+          }
+          )
+
+setMethod("readAmplicons_AVACLI",
+    signature(amps="data.frame", amps_align="list", samples="data.frame"),
+          function(amps, amps_align, samples){
+
+            ## 1. Read featureData and featureMetaData
+
+            ## read the featureData for the amplicons (its name, reference sequence,
+            ## primer and end/start):
+            ##amp = read.table(file, sep=",", header=TRUE, stringsAsFactors=FALSE)
+            featureData=data.frame(row.names=amps$Name,
+              ampID=amps$Name,
+              primer1=amps$Primer1,
+              primer2=amps$Primer2,
+              referenceSeqID=amps$Reference,
+              targetEnd=amps$End,
+              targetStart=amps$Start,
+              stringsAsFactors=FALSE)
+            
+            ## construct meta data for the features
+            featureMeta=data.frame(row.names=colnames(featureData),
+              labelDescription=c("-", "-", "-", "-", "-", "-"))
+            
+            ## 2. Read assayData:
+            
+            ## initialize assay data consisting of forward and reverse coverage
+            sampleNames = as.character(samples$Name)
+            ampNames = as.character(amps$Reference)
+            init = matrix(0, length(ampNames), length(sampleNames))
+            rownames(init) = ampNames
+            colnames(init) = sampleNames
+            numReadsForward = init
+            numReadsReverse = init
+            num_amps = length(amps_align)
+            for(s in sampleNames){
+              for(r in ampNames){
+                aln = amps_align[[paste(s, r, sep="_")]]  ## take care: list names must be pasted by sample- and reference name!
+                if(!any(is.na(aln))){
+                  ## parse entries with "reverseCount=x" and forwardCount=x"
+                  counts = grep(">", aln, value=TRUE)[-1]   ## lines with amplicon counts start with ">"; except for first line
+                  if(length(counts) > 0){
+                    counts = lapply(strsplit(counts, split=" "), function(x) return(grep("forwardCount", x, value=TRUE)))
+                    if(length(counts) > 0){
+                      counts = sapply(strsplit(unlist(counts), split="="), function(x) return(as.numeric(x[2])))
+                      if(length(counts) > 0){
+                        numReadsForward[r, s] = sum(counts)
+                      }
+                    }
+                  }
+                  counts = grep(">", aln, value=TRUE)[-1]   ## lines with amplicon counts start with ">"; except for first line
+                  if(length(counts) > 0){
+                    counts = lapply(strsplit(counts, split=" "), function(x) return(grep("reverseCount", x, value=TRUE)))
+                    if(length(counts) > 0){
+                      counts = sapply(strsplit(unlist(counts), split="="), function(x) return(as.numeric(x[2])))
+                      if(length(counts) > 0){
+                        numReadsReverse[r, s] = sum(counts)
+                      }
+                    }
+                  }
+                }
+              }
+            }
+            return(list(numReadsForward,numReadsReverse,featureData,featureMeta))	
+          }
+          )
 
 #################################################################################
 ########## IMPORT OF FEATURE AND PHENODATA (internal methods) ###################

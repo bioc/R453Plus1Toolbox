@@ -181,8 +181,20 @@ setGeneric("variantFilter", signature = c("object"),
 
 ## generics for the AVASet:
 
-setGeneric("AVASet", function(dirname) 
+setGeneric("AVASet", function(dirname, avaBin, file_sample, file_amp, file_reference, file_variant, file_variantHits) 
     standardGeneric("AVASet"))
+
+setGeneric("readSampleData_AVACLI", function(samples) 
+    standardGeneric("readSampleData_AVACLI"))
+
+setGeneric("readVariants_AVACLI", function(variants, variantHits, samples) 
+    standardGeneric("readVariants_AVACLI"))
+
+setGeneric("readReferenceSequences_AVACLI", function(references) 
+    standardGeneric("readReferenceSequences_AVACLI"))
+
+setGeneric("readAmplicons_AVACLI", function(amps, amps_align, samples) 
+    standardGeneric("readAmplicons_AVACLI"))
 
 setGeneric("readSampleData", function(dir_projectDef) 
     standardGeneric("readSampleData"))
