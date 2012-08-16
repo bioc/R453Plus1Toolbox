@@ -3,6 +3,7 @@
 #    dataset = "hsapiens_gene_ensembl"
 #    snpDataset = "hsapiens_snp"
 
+    object$chromosome = gsub("chr", "", object$chromosome)
     # create final annotation data structure
     variants = list()
     for (v in row.names(object)) {
