@@ -80,7 +80,7 @@ setMethod("AVASet",
 ## Input:
 ## Project directory
 ## AVA-Software installation directory
-## Iutput:
+## Output:
 ## AVASet, object from a subclass of the Biobase eSet and extended by
 ## two slots for amplicon data (assay- and feature data) and reference sequences
 
@@ -114,11 +114,22 @@ setMethod("AVASet",
       ## 3.) VARIANTS
       message("done\nReading variant data ... ", appendLF=FALSE)
       cmd = "list variant"
-      variants = read.table(pipe(paste("printf \"open ", dirname, " -control readOnly\\n", cmd, "\" | ", doAmplicon, " -", sep="")), sep="\t", header=TRUE, stringsAsFactors=FALSE)      
-      variants = variants[!duplicated(paste(variants$Name, variants$Reference, sep="_")), ]
-      rownames(variants) = paste(variants$Name, variants$Reference, sep="_")
+      variants = data.frame()
+      tryCatch({
+        variants = read.table(pipe(paste("printf \"open ", dirname, " -control readOnly\\n", cmd, "\" | ", doAmplicon, " -", sep="")), sep="\t", header=TRUE, stringsAsFactors=FALSE)      
+        variants = variants[!duplicated(paste(variants$Name, variants$Reference, sep="_")), ]
+        rownames(variants) = paste(variants$Name, variants$Reference, sep="_")
+      },
+               error = function(e) {variants = data.frame()}
+      )
       cmd = "report variantHits"
       variantHits = read.table(pipe(paste("printf \"open ", dirname, " -control readOnly\\n", cmd, "\" | ", doAmplicon, " -", sep="")), sep="\t", header=TRUE, stringsAsFactors=FALSE)
+      if(nrow(variantHits) == 0){
+         variantHits = data.frame()
+       }
+      if(any(nrow(variants) == 0, nrow(variantHits) == 0)){
+        warning("No variants reported for this experiment: ", dirname)
+      }
       varData = readVariants_AVACLI(variants, variantHits, samples)
       
       ## 4.) AMPLICONS
@@ -366,33 +377,46 @@ setMethod("readSampleData_AVACLI",
 # featureMeta, some further information about the featureData
 
 setMethod("readVariants_AVACLI",
-    signature(variants="data.frame", variantHits="data.frame", samples="data.frame"),
+          signature(variants="data.frame", variantHits="data.frame", samples="data.frame"),
           function(variants, variantHits, samples){
 
             ## 1. Read featureData and featureMetaData
+            ## If variant information is available:
+            if(nrow(variants)>0){
+              ## Read positions from variant names
+              ## SNPs and indels can are named like "333-335:CAC/---", "333:A/G", "334.5:-/C"
+              var = strsplit(variants$Name, split=":")
+              start = sapply(var, function(x) return(strsplit(x[1], split="-")[[1]][1]))
+              end = sapply(var, function(x) return(strsplit(x[1], split="-")[[1]][2]))
+              ## No end position for SNP or insertion
+              end[is.na(end)] = start[is.na(end)]
             
-            ## Read positions from variant names
-            ## SNPs and indels can are named like "333-335:CAC/---", "333:A/G", "334.5:-/C"
-            var = strsplit(variants$Name, split=":")
-            start = sapply(var, function(x) return(strsplit(x[1], split="-")[[1]][1]))
-            end = sapply(var, function(x) return(strsplit(x[1], split="-")[[1]][2]))
-            ## No end position for SNP or insertion
-            end[is.na(end)] = start[is.na(end)]
+              ## Read mutated sequence from variant names
+              ## SNPs and indels can are named like "333-335:CAC/---", "333:A/G", "334.5:-/C"
+              var = strsplit(variants$Name, split=":")
+              referenceSeq = sapply(var, function(x) return(strsplit(x[2], split="/")[[1]][1]))
+              variantSeq = sapply(var, function(x) return(strsplit(x[2], split="/")[[1]][2]))
             
-            ## Read mutated sequence from variant names
-            ## SNPs and indels can are named like "333-335:CAC/---", "333:A/G", "334.5:-/C"
-            var = strsplit(variants$Name, split=":")
-            referenceSeq = sapply(var, function(x) return(strsplit(x[2], split="/")[[1]][1]))
-            variantSeq = sapply(var, function(x) return(strsplit(x[2], split="/")[[1]][2]))
-            
-            featureData=data.frame(row.names=rownames(variants), name=variants$Name,
-              canonicalPattern=variants$Pattern,
-              referenceSeqID=variants$Reference,
-              start=as.numeric(start),
-              end=as.numeric(end),
-              variantBase=variantSeq,
-              referenceBases=referenceSeq,
-              stringsAsFactors=FALSE)
+              featureData=data.frame(row.names=rownames(variants), name=variants$Name,
+                canonicalPattern=variants$Pattern,
+                referenceSeqID=variants$Reference,
+                start=as.numeric(start),
+                end=as.numeric(end),
+                variantBase=variantSeq,
+                referenceBases=referenceSeq,
+                stringsAsFactors=FALSE)
+            ## If no variant information is available, return a dummy data.frame
+            }else{
+              featureData=data.frame(name=NA,
+                canonicalPattern=NA,
+                referenceSeqID=NA,
+                start=NA,
+                end=NA,
+                variantBase=NA,
+                referenceBases=NA,
+                stringsAsFactors=FALSE)
+              featureData = featureData[-1, ]
+            }
             
             ## construct meta data for the features
             ## no label description needed
@@ -400,25 +424,32 @@ setMethod("readVariants_AVACLI",
               labelDescription=c("-","-","-","-","-","-","-"))
 
             ## 2. Read assayData:
-            
-            ## Use the "Consensus" calls instead if "Individual"
-            variantHits = variantHits[variantHits$Read.Type=="Consensus", ]
-            ## two separate matrices for forward and reverse reads each
+            ## If variant information is available:
             sampleNames=as.character(samples$Name)
             num_samples=length(sampleNames)
-            init = matrix(0, nrow(variants), num_samples)
-            rownames(init) = rownames(variants)
-            colnames(init) = sampleNames
-            variantForwCount = init
-            totalForwCount = init
-            variantRevCount = init
-            totalRevCount = init
-            for(s in sampleNames){
-              v = variantHits[variantHits$Sample.Name == as.character(s), ]
-              variantForwCount[paste(v$Variant.Name, v$Reference.Name, sep="_"), as.character(s)] = v$Forward.Hits
-              variantRevCount[paste(v$Variant.Name, v$Reference.Name, sep="_"), as.character(s)] = v$Reverse.Hits
-              totalForwCount[paste(v$Variant.Name, v$Reference.Name, sep="_"),  as.character(s)] = v$Forward.Denom
-              totalRevCount[paste(v$Variant.Name, v$Reference.Name, sep="_"), as.character(s)] = v$Reverse.Denom
+            if(nrow(variants)>0){
+              ## Use the "Consensus" calls instead if "Individual"
+              variantHits = variantHits[variantHits$Read.Type=="Consensus", ]
+              ## two separate matrices for forward and reverse reads each
+              init = matrix(0, nrow(variants), num_samples)
+              rownames(init) = rownames(variants)
+              colnames(init) = sampleNames
+              variantForwCount = init
+              totalForwCount = init
+              variantRevCount = init
+              totalRevCount = init
+              for(s in sampleNames){
+                v = variantHits[variantHits$Sample.Name == as.character(s), ]
+                variantForwCount[paste(v$Variant.Name, v$Reference.Name, sep="_"), as.character(s)] = v$Forward.Hits
+                variantRevCount[paste(v$Variant.Name, v$Reference.Name, sep="_"), as.character(s)] = v$Reverse.Hits
+                totalForwCount[paste(v$Variant.Name, v$Reference.Name, sep="_"),  as.character(s)] = v$Forward.Denom
+                totalRevCount[paste(v$Variant.Name, v$Reference.Name, sep="_"), as.character(s)] = v$Reverse.Denom
+              }
+            ## If no variant information is available, return dummy data.frames
+            }else{
+              init = matrix(0, 0, num_samples)
+              colnames(init) = sampleNames
+              variantForwCount = variantRevCount = totalForwCount = totalRevCount = init
             }
             return(list(variantForwCount, totalForwCount,
                         variantRevCount, totalRevCount, featureData,
