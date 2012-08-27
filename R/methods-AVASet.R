@@ -292,6 +292,106 @@ setMethod("AVASet",
             
           }
           )
+## This AVASet method reads the project data from tables that are saved on hard disc
+## Only exceptions are the aligned amplicons. Here, it expects a directory name which points to
+## a directory structure with subdirectories "samplename/referencename" with a fasta file in each of these directories;
+## this directory structure can be created using AVACLI command "report alignment -sample * -reference * -outputDir dir"
+## Input:
+## The filenames/dirnames of all tables: Samples, Amplicons, References, Variants and Varianthits
+## Output:
+## AVASet, object from a subclass of the Biobase eSet and extended by
+## two slots for amplicon data (assay- and feature data) and reference sequences
+
+setMethod("AVASet",
+          signature(dirname="character", avaBin="missing", file_sample="character", file_amp="character", file_reference="character", file_variant="missing", file_variantHits="missing"),
+          function(dirname, avaBin, file_sample, file_amp, file_reference){
+            
+            if(!all(file.exists(file_sample, file_amp, file_reference))){
+              file_sample = file.path(dirname, file_sample)
+              file_amp = file.path(dirname, file_amp)              
+              file_reference = file.path(dirname, file_reference)
+            }
+            if(!all(file.exists(file_sample, file_amp, file_reference))){
+              stop("File(s) not found.")
+            }
+            dirs = dirname
+            
+            ## 1.) SAMPLES
+            message("Reading sample data ... ", appendLF=FALSE)
+            samples = read.table(file_sample, sep=",", header=TRUE, stringsAsFactors=FALSE)
+            if(any(duplicated(samples$Name))){
+              samples = samples[!duplicated(samples$Name), ]
+              warning("Samples with duplicate names found and removed.")
+            }
+            sampleData = readSampleData_AVACLI(samples)
+            
+            ## 2.) REFERENCE SEQUENCES
+            message("done\nReading reference sequences ... ", appendLF=FALSE)
+            references = read.table(file_reference, sep=",", header=TRUE, stringsAsFactors=FALSE)
+            if(any(duplicated(references$Name))){
+              references = references[!duplicated(references$Name), ]
+              warning("Reference sequences with duplicate names found and removed.")
+            } 
+            refSeqData = readReferenceSequences_AVACLI(references)
+            
+            ## 3.) VARIANTS
+            message("done\nReading variant data ... No variants for this experiment", appendLF=FALSE)
+            variants = data.frame()
+            variantHits = data.frame()
+            varData = readVariants_AVACLI(variants, variantHits, samples)
+
+            ## 4.) AMPLICONS            
+            message("\nReading amplicon data ... ", appendLF=FALSE)
+            amps = read.table(file_amp, sep=",", header=TRUE, stringsAsFactors=FALSE)
+            if(any(duplicated(amps$Name))){
+              amps = amps[!duplicated(amps$Name), ]
+              warning("Amplicons with duplicate names found and removed.")
+            }                                               
+            ## read one amplicon alignment file for every combination of sample and reference/amplicon sequence
+            amps_align = vector(mode="list", length=nrow(samples) * nrow(amps))
+            i = 1
+            for(s in samples$Name){
+              for(r in references$Name){
+                path = file.path(dirname, s, r)
+                files = list.files(path)
+                if(length(files) == 0){
+                  warning("There are no alignment data for the combination of sample ", s, " and reference sequence ", r)
+                  amps_align[[i]] = NA
+                }else{
+                  ## there should normally be only one file in each folder; select this one
+                  file = files[1]
+                  if(length(files) > 1){
+                    warning("More than one alignment exported for a sample-reference-combination. Reading only the first one.")
+                  }
+                  amps_align[[i]]= readLines(file.path(path, file))
+                }
+                names(amps_align)[i] = paste(s, r, sep="_")
+                i = i+1
+              }
+            }
+            ampData = readAmplicons_AVACLI(amps, amps_align, samples)
+            message("done")
+  
+            avaSet = new("AVASet",
+              variantForwCount=varData[[1]], 
+              totalForwCount=varData[[2]], 
+              variantRevCount=varData[[3]],
+              totalRevCount=varData[[4]], 
+              forwCount=ampData[[1]],
+              revCount=ampData[[2]],
+              featureDf=varData[[5]], 
+              featureMeta=varData[[6]], 
+              phenoDf=sampleData[[1]], 
+              phenoMeta=sampleData[[2]],
+              featureDfAmp=ampData[[3]], 
+              featureMetaAmp=ampData[[4]],
+              refSeqs=refSeqData,
+              dirs = dirs
+              )
+            return(avaSet)
+            
+          }
+          )
 
 # extend the eSet initialize method by the two new amplicon slots
 
