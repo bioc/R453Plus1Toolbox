@@ -450,6 +450,11 @@
 .annotateVariants_AVASet <- function(object){
     refSeqs=referenceSequences(object)
 
+    if(any(is.na(chromosome(refSeqs)))){
+      stop("Aligned reference sequences are required for variant annotation. Please use the function alignShortReads first to perform the alignment.")
+      return(NULL)
+    }
+    
     mInd=match(fData(object)$referenceSeqID, as.character(id(refSeqs)))
 
     variantData=data.frame(

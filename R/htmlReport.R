@@ -11,7 +11,7 @@
         if(!is.vector(transcripts, mode="character"))
 	    stop("invalid argument: please specify a character vector of containing Ensembl transcript-IDs")
     if(!is.vector(sampleCols, mode="character")){
-	stop("invalid argument: please specify a character vector of column names of the sample data (phenoData) of your
+	stop("invalid argument: lease specify a character vector of column names of the sample data (phenoData) of your
 		AVASet/MapperSet object")}
     if(!is.numeric(minMut) | (minMut < 0) | (minMut > 100))
 	stop("invalid argument: please specify a numeric vale for minMut between 0 and 100")
@@ -202,10 +202,11 @@
 ########################################################################################################################
 
 .initHtmlReportAVASet <- function(object, annot, blocks=c(), transcripts=c(), sampleCols, minMut=3, dir="HTMLReport", title="Summary"){
-
+  
     ## catch some bad input and missing arguments
     if(missing(sampleCols))
         sampleCols = colnames(pData(object))
+
     .catchBadInput(object, blocks, transcripts, sampleCols, minMut, dir, title)
     if(missing(annot)){
         message("No variant information specified: loading data from ensembl for all variants")
@@ -213,7 +214,6 @@
     }
 
     annot = annotatedVariants(annot)
-
     if(!is.null(blocks) & length(blocks) != length(annot)){
 	warning("argument of illegal size: blocks were ommitted")
 	blocks = NULL
@@ -367,8 +367,9 @@
     cssFile=file.path(.find.package("R2HTML"), "samples/R2HTML.css")
     s=file.copy(cssFile, file.path(dir, "R2HTML.css"), overwrite=TRUE)
     ## load java script for sorting tables
-    jsFile=file.path(.path.package("R453Plus1Toolbox"),
-        "javascript/sorttable.js")
+#    jsFile=file.path(.path.package("R453Plus1Toolbox"),
+#        "javascript/sorttable.js")
+    jsFile = "/home/c_bart07/R453Plus1Toolbox/inst/javascript/sorttable.js"
     js=file.copy(jsFile, file.path(dir, "sorttable.js"), overwrite=TRUE)
 
 

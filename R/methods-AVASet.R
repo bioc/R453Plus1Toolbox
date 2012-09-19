@@ -116,19 +116,27 @@ setMethod("AVASet",
       cmd = "list variant"
       variants = data.frame()
       tryCatch({
-        variants = read.table(pipe(paste("printf \"open ", dirname, " -control readOnly\\n", cmd, "\" | ", doAmplicon, " -", sep="")), sep="\t", header=TRUE, stringsAsFactors=FALSE)      
-        variants = variants[!duplicated(paste(variants$Name, variants$Reference, sep="_")), ]
-        rownames(variants) = paste(variants$Name, variants$Reference, sep="_")
+        variants = read.table(pipe(paste("printf \"open ", dirname, " -control readOnly\\n", cmd, "\" | ", doAmplicon, " -", sep="")), sep="\t", header=TRUE, stringsAsFactors=FALSE)
+        v = paste(variants$Name, variants$Reference, sep="_")
+        variants = variants[!duplicated(v), ]
+        rownames(variants) = v
+        variants$CVariant = paste("C", 1:nrow(variants), sep="")  ## Assign a unique ID to every variant
       },
                error = function(e) {variants = data.frame()}
       )
       cmd = "report variantHits"
       variantHits = read.table(pipe(paste("printf \"open ", dirname, " -control readOnly\\n", cmd, "\" | ", doAmplicon, " -", sep="")), sep="\t", header=TRUE, stringsAsFactors=FALSE)
+      ## Use the "Consensus" calls instead if "Individual"
+      variantHits = variantHits[variantHits$Read.Type=="Consensus", ]
       if(nrow(variantHits) == 0){
          variantHits = data.frame()
        }
       if(any(nrow(variants) == 0, nrow(variantHits) == 0)){
         warning("No variants reported for this experiment: ", dirname)
+      }
+      else{
+        v = paste(variantHits$Variant.Name, variantHits$Reference.Name, sep="_")
+        variantHits$CVariant = variants[v, "CVariant"]  ## retrieve variant ID for every hit
       }
       varData = readVariants_AVACLI(variants, variantHits, samples)
       
@@ -210,7 +218,7 @@ setMethod("AVASet",
               file_variantHits = file.path(dirname, file_variantHits)
             }
             if(!all(file.exists(file_sample, file_amp, file_reference, file_variant, file_variantHits))){
-              stop("File(s) not found.")
+              stop("File(s) not found in directory ", dirname)
             }
             dirs = dirname
             
@@ -235,9 +243,13 @@ setMethod("AVASet",
             ## 3.) VARIANTS
             message("done\nReading variant data ... ", appendLF=FALSE)
             variants = read.table(file_variant, sep=",", header=TRUE, stringsAsFactors=FALSE)
-            variants = variants[!duplicated(paste(variants$Name, variants$Reference, sep="_")), ]
-            rownames(variants) = paste(variants$Name, variants$Reference, sep="_")            
+            v = paste(variants$Name, variants$Reference, sep="_")
+            variants = variants[!duplicated(v), ]
+            rownames(variants) = v
+            variants$CVariant = paste("C", 1:nrow(variants), sep="")  ## Assign a unique ID to every variant
             variantHits = read.table(file_variantHits, sep=",", header=TRUE, stringsAsFactors=FALSE)
+            v = paste(variantHits$Variant.Name, variantHits$Reference.Name, sep="_")
+            variantHits$CVariant = variants[v, "CVariant"]  ## retrieve variant ID for every hit
             varData = readVariants_AVACLI(variants, variantHits, samples)
 
             ## 4.) AMPLICONS            
@@ -497,7 +509,7 @@ setMethod("readVariants_AVACLI",
               referenceSeq = sapply(var, function(x) return(strsplit(x[2], split="/")[[1]][1]))
               variantSeq = sapply(var, function(x) return(strsplit(x[2], split="/")[[1]][2]))
             
-              featureData=data.frame(row.names=rownames(variants), name=variants$Name,
+              featureData=data.frame(row.names=variants$CVariant, name=variants$Name,
                 canonicalPattern=variants$Pattern,
                 referenceSeqID=variants$Reference,
                 start=as.numeric(start),
@@ -528,11 +540,9 @@ setMethod("readVariants_AVACLI",
             sampleNames=as.character(samples$Name)
             num_samples=length(sampleNames)
             if(nrow(variants)>0){
-              ## Use the "Consensus" calls instead if "Individual"
-              variantHits = variantHits[variantHits$Read.Type=="Consensus", ]
               ## two separate matrices for forward and reverse reads each
               init = matrix(0, nrow(variants), num_samples)
-              rownames(init) = rownames(variants)
+              rownames(init) = variants$CVariant
               colnames(init) = sampleNames
               variantForwCount = init
               totalForwCount = init
@@ -540,10 +550,10 @@ setMethod("readVariants_AVACLI",
               totalRevCount = init
               for(s in sampleNames){
                 v = variantHits[variantHits$Sample.Name == as.character(s), ]
-                variantForwCount[paste(v$Variant.Name, v$Reference.Name, sep="_"), as.character(s)] = v$Forward.Hits
-                variantRevCount[paste(v$Variant.Name, v$Reference.Name, sep="_"), as.character(s)] = v$Reverse.Hits
-                totalForwCount[paste(v$Variant.Name, v$Reference.Name, sep="_"),  as.character(s)] = v$Forward.Denom
-                totalRevCount[paste(v$Variant.Name, v$Reference.Name, sep="_"), as.character(s)] = v$Reverse.Denom
+                variantForwCount[v$CVariant, as.character(s)] = v$Forward.Hits
+                variantRevCount[v$CVariant, as.character(s)] = v$Reverse.Hits
+                totalForwCount[v$CVariant, as.character(s)] = v$Forward.Denom
+                totalRevCount[v$CVariant, as.character(s)] = v$Reverse.Denom
               }
             ## If no variant information is available, return dummy data.frames
             }else{
@@ -593,8 +603,8 @@ setMethod("readAmplicons_AVACLI",
               primer1=amps$Primer1,
               primer2=amps$Primer2,
               referenceSeqID=amps$Reference,
-              targetEnd=as.numeric(amps$End),
               targetStart=as.numeric(amps$Start),
+              targetEnd=as.numeric(amps$End),
               stringsAsFactors=FALSE)
             
             ## construct meta data for the features
@@ -992,8 +1002,8 @@ setMethod("readAmplicons",
             primer1=primer_tab$primer1,
             primer2=primer_tab$primer2,
             referenceSeqID=primer_tab$referenceSeq,
-            targetEnd=primer_tab$targetEnd,
             targetStart=primer_tab$targetStart,
+            targetEnd=primer_tab$targetEnd,
             stringsAsFactors=FALSE)
 
         # construct meta data for the features
