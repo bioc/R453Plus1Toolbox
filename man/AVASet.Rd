@@ -18,10 +18,10 @@
 
 \arguments{
   \item{dirname}{The path of the AVA project. \cr 
-	AVA version < 2.6: A directory that contains the files and subdirectories
+	Without AVA-CLI (AVA version < 2.6): A directory that contains the files and subdirectories
 	"Amplicons/ProjectDef/ampliconsProject.txt", "Amplicons/Results/Variants/currentVariantDefs.txt", "Amplicons/Results/Variants", 
 	"Amplicons/Results/Align". \cr 
-	AVA version >= 2.6: Path usually ends with directory "projectfolder"}
+	Using AVA-CLI (recommended): Path usually ends with directory "projectfolder"}
   \item{avaBin}{The directory containing the AVA-CLI binary doAmplicon (usually "bin" in the AVA installation directory)}
   \item{file_sample}{Sample information exported with the AVA-CLI. File has to be in CSV format.}
   \item{file_amp}{Amplicons exported with the AVA-CLI. File has to be in CSV format.}
@@ -31,9 +31,9 @@
 }
 
 \details{
-The five arguments for AVA command line interface (AVA-CLI) exports are optional and useful for exported projects, when no AVA software is available. 
+The five arguments for AVA command line interface (AVA-CLI) exports are optional and useful for exported projects, when no AVA software is installed. 
 For exporting, start the AVA-CLI with the command "doAmplicon" and use the commands "open", then "list sample", "list amplicon", "list reference", 
-"list variant" and "report variantHits" (without quotes). See AVASet-class for more details. \cr
+"list variant" and "report variantHits". See \code{\link{AVASet-class} for more details. \cr
 Giving only a project directory and the path to the AVA-CLI binary doAmplicon, \code{AVASet} will 
 import all information by accessing the AVA-CLI from within R. 
 
@@ -74,7 +74,7 @@ plate(s) (PTP) or MID(s) of each sample are shown as well (using the AVA-CLI, PT
     An instance of the AVASet class.
 }
 \note{
-    The integration of the AVA-CLI works with AVA version >= 2.6.
+    It is recommended to use the import via AVA-CLI access. Although deprecated, the import for projects created with older version of the AVA software (< v2.6) is still possible.  
 }
 
 \seealso{
@@ -87,16 +87,16 @@ plate(s) (PTP) or MID(s) of each sample are shown as well (using the AVA-CLI, PT
 data(avaSetExample)
 avaSetExample
 
-# Loading exported date from AVA version >= 2.6:
+# Loading exported data, that was exported via AVA-CLI
 # Load an AVA dataset containing 6 samples, 4 amplicons and 222 variants
 # by specifying each file exported from the AVA-CLI
-projectDir = file.path(.path.package("R453Plus1Toolbox"), "extdata", "AVASet_doAmplicon")
+projectDir = system.file("extdata", "AVASet_doAmplicon", package="R453Plus1Toolbox")
 avaSetExample = AVASet(dirname=projectDir, file_sample="sample.csv", file_amp="amp.csv", file_reference="reference.csv", file_variant="variant.csv", file_variantHits="variantHits.csv")
 avaSetExample
 
-# In case AVA version >= 2.6 is installed:
+# In case AVA software is installed:
 # Saying, for example, the AVA software was installed to the directory "/home/User/AVA",
-# the easiest way to import a project would look like:
+# the easiest way to import a project via AVA-CLI would look like:
 # avaSetExample = AVASet(dirname="myProjectDir", avaBin="/home/User/AVA/bin")
 
 

@@ -57,26 +57,83 @@ from specifically designed PCR products.
 
 \subsection{Importing a Roche Amplicon Variant Analyzer project}
 \label{sec:AVASetFunctions}
-The function \Rfunction{AVASet} imports data from Roche's Amplicon Variant Analyzer. It expects a 
-\Rfunarg{dirname} pointing to the project data, i.e. a directory that contains the following files 
-and subdirectories: \\
+The function \Rfunction{AVASet} imports data from Roche's Amplicon Variant Analyzer (AVA). This can be done in three ways, depending on the version
+of your AVA software:
+\subsubsection{Import from AVA without AVA-CLI (version 2.5 and lower)}
+For projects created with the AVA software version $\leq$ 2.5, \Rfunction{AVASet} expects only a \Rfunarg{dirname} pointing 
+to the project data, i.e. a directory that contains the following files and subdirectories: \\
 \begin{itemize}
 \item "Amplicons/\-ProjectDef/\-ampliconsProject.txt"
 \item "Amplicons/\-Results/\-Variants/\-currentVariantDefs.txt"
 \item "Amplicons/\-Results/\-Variants"
 \item "Amplicons/\-Results/\-Align"
 \end{itemize}
-The following example imports a project containing 6 samples, 4 amplicons and 259 variants: 
-<<label=createRocheAVASet>>=
-avaDir = system.file("extdata", "AVASet", package = "R453Plus1Toolbox") 
-avaSet = AVASet(avaDir)
+There is an example project "AVASet" included in the \Rpackage{R453Plus1Toolbox} installation directory:
+<<label=createRocheAVASet1>>=
+projectDir = system.file("extdata", "AVASet", package = "R453Plus1Toolbox") 
+avaSet = AVASet(dirname=projectDir)
+@
+\subsubsection{Import from AVA with AVA-CLI}
+The function \Rfunction{AVASet} can directly access the AVA Command Line Interface (AVA-CLI) from within R. If the AVA software is installed on the same machine 
+that runs R, the easiest way to import a project is to specify the project directory with \Rfunarg{dirname} 
+and the path to the binaries in the AVA software's installation directory with \Rfunarg{avaBin}. It is usually the directory "bin" 
+containing the AVA-CLI command interpreter "doAmplicon".\\
+Let's say the AVA software was installed to the directory "/home/User/AVA". Then, the function call looks like:
+<<label=createRocheAVASet2, eval=FALSE>>=
+projectDir = "My/AVA/Project"
+avaSet = AVASet(dirname=projectDir, avaBin="/home/User/AVA/bin")
 @
 
-
+\subsubsection{Import from AVA with projects exported via AVA-CLI}
+If the AVA software is not installed on the same machine that runs R, all data must be exported manually using AVA-CLI.
+It can be accessed via the command line interpreter "doAmplicon" from the AVA software's installation directory. 
+Within the AVA-CLI, load your project with the command "open". \Rfunction{AVASet} expects five files (variant information is optional): \\
+\begin{table}[ht]
+\begin{scriptsize}
+	\begin{center}
+		\begin{tabular}{l|l|p{3cm}}
+		\hline                    
+		\Rfunction{AVASet} argument
+		& AVA-CLI command
+		& Description \\
+		\hline
+		\Rfunarg{file\_sample}                     
+		& list sample -outputFile sample.csv
+		& Table with sample names and annotations \\
+		\Rfunarg{file\_amp}                     
+		& list amplicon -outputFile amp.csv
+		& Table with primer sequences, positions and annotations \\
+		\Rfunarg{file\_reference}                     
+		& list reference -outputFile reference.csv
+		& Reference sequences \\
+		\Rfunarg{file\_variant}                     
+		& list variant -outputFile variant.csv
+		& Detected variants (if available) \\
+		\Rfunarg{file\_variantHits}                     
+		& report variantHits -outputFile variantHits.csv
+		& Variant hits for all samples (if available) \\
+		\hline
+		\end{tabular}
+	\end{center}
+	\caption{\Rfunction{AVASet} function arguments for loading projects exported via AVA-CLI.}
+	\label{table:AVASet_AVACLI}
+\end{scriptsize}
+\end{table} 
+\\
+Note, that all exported tables are expected to be in csv-format. \\
+There is an example project "AVASet\_doAmplicon" included in the \Rpackage{R453Plus1Toolbox} installation directory:
+<<label=createRocheAVASet3, eval=FALSE>>=
+projectDir = system.file("extdata", "AVASet_doAmplicon", package="R453Plus1Toolbox")
+avaSetExample = AVASet(dirname=projectDir, file_sample="sample.csv",
+ file_amp="amp.csv", file_reference="reference.csv", file_variant="variant.csv", 
+ file_variantHits="variantHits.csv")
+@
+\Rfunction{AVASet} searches the specified \Rfunarg{dirname} for the exported csv-files. \Rfunarg{file\_variant} \Rfunarg{file\_variantHits} can be omitted if no variant information is
+available for the project.
 
 \subsection{The AVASet class}
 The \Rclass{AVASet} class defines a container to store data imported from projects conducted with 
-Roche's Amplicon Variant Analyzer Software. It extends the \Rpackage{Biobase} \Rclass{eSet} to store 
+Roche's AVA software. It extends the \Rpackage{Biobase} \Rclass{eSet} to store 
 all relevant information.\\
 <<label=showAVASet>>=
 avaSet
@@ -215,7 +272,8 @@ avaSubSet = subset(avaSet, subset=1:10, dimension="variants")
 @ 
 The following is equivalent to the \Rcode{"[]"}-example above:
 <<label=AVASubSet3>>=
-avaSubSet = subset(subset(avaSet, subset=1:10, dimension="variants"), subset="Sample_1", dimension="samples")
+avaSubSet = subset(subset(avaSet, subset=1:10, dimension="variants"), subset="Sample_1", 
+ dimension="samples")
 @ 
 In contrast to the \Rcode{"[]"}-Notation, the function \Rfunction{subset} allows further subsetting 
 by amplicons:
@@ -285,7 +343,8 @@ example below the hg19 assembly as provided by UCSC from package
 <<label=alignShortReads, eval=FALSE>>=
 library(BSgenome.Hsapiens.UCSC.hg19)
 seqNames = names(Hsapiens)[1:24]
-avaSet = alignShortReads(avaSet, bsGenome=Hsapiens, seqNames=seqNames, ensemblNotation=TRUE)
+avaSet = alignShortReads(avaSet, bsGenome=Hsapiens, 
+ seqNames=seqNames, ensemblNotation=TRUE)
 @
 The function \Rfunction{annotateVariants} annotates genomic variants (mutations) given in a data 
 frame or more likely an \Rclass{AVASet}. Annotation includes affected genes, exons and codons. 
@@ -321,8 +380,10 @@ using the argument \Rfunarg{minMut} (\Rfunarg{minMut}=3 is the default value). T
 example the corresponding genes for each variant are used to create blocks, resulting in only one 
 block in the example data set:
 <<label=htmlReport, eval=FALSE>>=
-blocks = as.character(sapply(annotatedVariants(avaAnnot), function(x) x$genes$external_gene_id))
-htmlReport(avaSet, annot=avaAnnot, blocks=blocks, dir="htmlReportExampleAVA", title="htmlReport Example", minMut=3)
+blocks = as.character(sapply(annotatedVariants(avaAnnot), 
+ function(x) x$genes$external_gene_id))
+htmlReport(avaSet, annot=avaAnnot, blocks=blocks, dir="htmlReportExampleAVA", 
+ title="htmlReport Example", minMut=3)
 @
 
 
@@ -362,7 +423,8 @@ of reads carrying the variant. A second y-axis indicates the absolute number of 
 variant. \Rfunarg{plotRange} defines the start and end base of the reference sequence that should be 
 plotted.
 <<label=loadXLS>>=
-file = system.file("extdata", "AVAVarFreqExport", "AVAVarFreqExport.xls", package="R453Plus1Toolbox")
+file = system.file("extdata", "AVAVarFreqExport", "AVAVarFreqExport.xls", 
+ package="R453Plus1Toolbox")
 @
 <<label=plotVarFreq,fig=TRUE,include=FALSE,eps=FALSE,pdf=TRUE>>=
 plotVariationFrequency(file, plotRange=c(50, 150))
@@ -389,7 +451,9 @@ The following example calls \Rfunction{plotVariants} for the gene TET2 having th
 data(plotVariantsExample)
 @
 <<label=plotVariants,fig=TRUE,include=FALSE,eps=FALSE,pdf=TRUE>>=
-geneInfo = plotVariants(data=variants, gene="ENSG00000168769", transcript="ENST00000513237", regions=regions, mutationInfo=mutationInfo, horiz=TRUE, cex=0.8)
+geneInfo = plotVariants(data=variants, gene="ENSG00000168769", 
+ transcript="ENST00000513237", regions=regions, 
+ mutationInfo=mutationInfo, horiz=TRUE, cex=0.8)
 @
 \begin{figure}[hp]
 \begin{center}
@@ -526,7 +590,8 @@ The report is structured into two pages:
 The following command creates a report containing only variants covered by at least 3\% of the reads 
 using the argument \Rfunarg{minMut} (\Rfunarg{minMut}=3 is also the default value):
 <<label=htmlReportMapper, eval=FALSE>>=
-htmlReport(mapperSet, annot=mapperAnnot, dir="htmlReportExampleMapper", title="htmlReport Example", minMut=3)
+htmlReport(mapperSet, annot=mapperAnnot, dir="htmlReportExampleMapper", 
+ title="htmlReport Example", minMut=3)
 @
 
 
@@ -557,7 +622,10 @@ MID library kits can be retrieved by calling \Rfunction{genomeSequencerMIDs}. Th
 show that all reads could be successfully demultiplexed.\\
 
 <<label=demultiplex, eval=TRUE>>=
-fnaFile = system.file("extdata", "StructuralVariantDetection", "R_2009_07_30_14_26_52_FLX12080469_Administrator_714003", "D_2009_07_31_08_45_30_flxcluster_fullProcessing_714003", "1.TCA.454Reads.fna", package="R453Plus1Toolbox")
+fnaFile = system.file("extdata", "StructuralVariantDetection", 
+ "R_2009_07_30_14_26_52_FLX12080469_Administrator_714003", 
+ "D_2009_07_31_08_45_30_flxcluster_fullProcessing_714003", 
+ "1.TCA.454Reads.fna", package="R453Plus1Toolbox")
 seqs = read.DNAStringSet(fnaFile, format="fasta")
 MIDSeqs = genomeSequencerMIDs(c("MID1", "MID2", "MID3"))
 dmReads = demultiplexReads(seqs, MIDSeqs, numMismatches=2, trim=TRUE)
@@ -626,7 +694,8 @@ In the following example, we use the reads from sample N01 presented in the prev
 reads have been aligned using BWA-SW:
 <<label=readBam, eval=TRUE>>=
 library("Rsamtools")
-bamFile = system.file("extdata", "StructuralVariantDetection", "bam", "N01.bam", package="R453Plus1Toolbox")
+bamFile = system.file("extdata", "StructuralVariantDetection", "bam", "N01.bam", 
+ package="R453Plus1Toolbox")
 parameters = ScanBamParam(what=scanBamWhat())
 bam = scanBam(bamFile, param=parameters)
 @ 
@@ -637,7 +706,8 @@ alignment are discarded. The following example creates a target region out of a 
 containing region information using functions from package \Rpackage{rtracklayer}. 
 <<label=filterReads, eval=TRUE>>=
 library("rtracklayer")
-bedFile = system.file("extdata", "StructuralVariantDetection", "chip", "CaptureArray_hg19.bed", package="R453Plus1Toolbox")
+bedFile = system.file("extdata", "StructuralVariantDetection", "chip", 
+ "CaptureArray_hg19.bed", package="R453Plus1Toolbox")
 chip = import.ucsc(bedFile, subformat="bed")
 chip = ranges(chip[[1]])
 names(chip) = gsub("chr", "", names(chip))

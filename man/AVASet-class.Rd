@@ -32,8 +32,8 @@
     start the AVA software command line and import all necessary data.
     
     If the AVA software is not installed on the same machine that runs
-    R, all data must be exported manually using the AVA command
-    line. After having exported all text files, the consructor
+    R, all data must be exported manually using the AVA Command
+    Line Interface (AVA-CLI). After having exported all text files, the constructor
     \code{AVASet(dirname, avaBin, file_sample, file_amp, file_reference, file_variant, file_variantHits)}
     can be used to import them. See the example below.
     
@@ -113,20 +113,6 @@
 
 \examples{
 
-    # Use these commands to export a project from within the AVA command
-    # line tool (doAmplicon):
-    # > list sample -outputFile sample.csv
-    # > list amplicon -outputFile amp.csv
-    # > list reference -outputFile reference.csv
-    # > list variant -outputFile variant.csv
-    # > report variantHits -outputFile variantHits.csv
-    # > report alignment -sample * -reference * -outputDir alignmentReport
-
-    ## toDo: add example files
-    # ava = AVAset(dirname="alignmentReport", file_sample="sample.csv",
-    #    file_amp="amp.csv", file_reference="reference.csv",
-    #    file_variant="variant.csv", file_variantHits="variantHits.csv")
-
     # sum up class structure
     showClass("AVASet")
 
@@ -145,6 +131,17 @@
     fDataAmp(avaSetExample)
     referenceSequences(avaSetExample)
 
+    # Use these commands to export a project from within the AVA-CLI (doAmplicon):
+    # > list sample -outputFile sample.csv
+    # > list amplicon -outputFile amp.csv
+    # > list reference -outputFile reference.csv
+    # > list variant -outputFile variant.csv
+    # > report variantHits -outputFile variantHits.csv
+
+    # Load an AVA dataset containing 6 samples, 4 amplicons and 222 variants
+    # by specifying five files, that were exported with the AVA-CLI:
+    projectDir = system.file("extdata", "AVASet_doAmplicon", package="R453Plus1Toolbox")
+    avaSetExample = AVASet(dirname=projectDir, file_sample="sample.csv", file_amp="amp.csv", file_reference="reference.csv", file_variant="variant.csv", file_variantHits="variantHits.csv")
 }
 
 \keyword{classes}

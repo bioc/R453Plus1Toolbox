@@ -16,6 +16,9 @@ setMethod("AVASet",
 
     function(dirname){
 
+	## it is suggested to use the import via AVA-CLI
+	.Deprecated(new="AVASet(dirname, avaBin)", old="AVASet(dirname)")
+
         # check if the given dirname leads to all relevant files and directories
 	dir_root = file.path(dirname, "Amplicons")
 	dir_results = file.path(dir_root,"Results")
