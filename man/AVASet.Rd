@@ -33,7 +33,7 @@
 \details{
 The five arguments for AVA command line interface (AVA-CLI) exports are optional and useful for exported projects, when no AVA software is installed. 
 For exporting, start the AVA-CLI with the command "doAmplicon" and use the commands "open", then "list sample", "list amplicon", "list reference", 
-"list variant" and "report variantHits". See \code{\link{AVASet-class} for more details. \cr
+"list variant" and "report variantHits". See \code{\link{AVASet-class}} for more details. \cr
 Giving only a project directory and the path to the AVA-CLI binary doAmplicon, \code{AVASet} will 
 import all information by accessing the AVA-CLI from within R. 
 
