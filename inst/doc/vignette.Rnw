@@ -626,7 +626,7 @@ fnaFile = system.file("extdata", "StructuralVariantDetection",
  "R_2009_07_30_14_26_52_FLX12080469_Administrator_714003", 
  "D_2009_07_31_08_45_30_flxcluster_fullProcessing_714003", 
  "1.TCA.454Reads.fna", package="R453Plus1Toolbox")
-seqs = read.DNAStringSet(fnaFile, format="fasta")
+seqs = readDNAStringSet(fnaFile, format="fasta")
 MIDSeqs = genomeSequencerMIDs(c("MID1", "MID2", "MID3"))
 dmReads = demultiplexReads(seqs, MIDSeqs, numMismatches=2, trim=TRUE)
 length(seqs)
