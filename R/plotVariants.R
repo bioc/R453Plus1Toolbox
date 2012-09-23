@@ -262,8 +262,8 @@ setMethod("plotVariants",
           signature=c(data="AnnotatedVariants", "character"),
           function(data, gene, transcript=NA, regions, horiz=FALSE, cex=1, title="", legend=TRUE){
             
-            library(TeachingDemos)
-            library(biomaRt)
+            #library(TeachingDemos)
+            #library(biomaRt)
 
             ## check integrity of transcript
             if(!(is.character(transcript) | is.na(transcript))){
@@ -313,8 +313,8 @@ setMethod("plotVariants",
           signature=c(data="data.frame", gene="character"),
           function(data, gene, transcript=NA, regions, mutationInfo, groupBy="pos", horiz=FALSE, cex=1, title="", legend=TRUE){
 
-            library(TeachingDemos)
-            library(biomaRt)
+            #library(TeachingDemos)
+            #library(biomaRt)
         
             ## check integrity of data
             data = subset(data, !apply(is.na(data), 1, any))

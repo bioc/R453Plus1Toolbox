@@ -241,6 +241,10 @@ setGeneric("referenceSequences<-", signature = c("object","value"),
     function(object, value) 
 	standardGeneric("referenceSequences<-"))
 
+setGeneric(name="ava2vcf",
+           def=function(object, filename, annot) standarGeneric("ava2vcf"),
+           signature=c("object"))
+
 
 #generics for the MapperSet:
 

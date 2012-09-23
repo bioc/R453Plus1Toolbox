@@ -115,7 +115,7 @@ setMethod("flowgram", signature(x="SFFRead"),
 setReplaceMethod("flowgram", signature(x="SFFRead", value="numeric"),
   function(x, value) {
     x@flowgram = value
-    return(object)
+    return(x)
   }
 )
 

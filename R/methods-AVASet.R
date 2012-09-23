@@ -1069,7 +1069,7 @@ setMethod("readAmpliconPositions",
         ensembl = useMart("ensembl", dataset = dataset)
         geneInfo = getBM(attributes = c("hgnc_symbol", "ensembl_gene_id", 
             "start_position", "end_position", "strand", "chromosome_name"), 
-            filter = "hgnc_symbol", values = unique(genes), mart = ensembl)
+            filters = "hgnc_symbol", values = unique(genes), mart = ensembl)
 
         geneSeqs = getSequence(id=geneInfo$ensembl_gene_id, type="ensembl_gene_id", 
             seqType="gene_exon_intron", mart=ensembl)
