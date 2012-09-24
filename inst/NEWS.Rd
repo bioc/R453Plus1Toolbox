@@ -2,7 +2,7 @@
 \title{News for Package 'R453Plus1Toolbox'}
 \encoding{UTF-8}
 
-\section{Version 1.7.2}{
+\section{Version 1.7.4}{
   \itemize{
     \item Added ability to read in data from Roche's latest Amplicon Variant Analyzer (v2.7).
     \item New method ava2vcf to write the variants in an AVA-Set to a file in VCF format.
