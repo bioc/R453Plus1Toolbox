@@ -293,7 +293,7 @@
 
     ## report change of amino acid
     as_change=as.character(sapply(annot, function(x) {
-        if (nrow(x$exon) == 0) {
+        if (nrow(x$exons) == 0) {
             return(FALSE)
         } else {
             aaChanges=x$exons$coding &
