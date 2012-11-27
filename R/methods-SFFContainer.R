@@ -257,7 +257,7 @@ setMethod("sff2fastq",
       fname = gsub("(\\.sff)?$", ".fastq", fname)
     }
     fp = file.path(outdir, fname)
-    write.XStringSet(reads(x), filepath=fp, format="fastq", qualities=quality(reads(x)))
+    writeXStringSet(reads(x), filepath=fp, format="fastq", qualities=quality(reads(x)))
     cat("Written file", fp, "\n")
   }
 )
