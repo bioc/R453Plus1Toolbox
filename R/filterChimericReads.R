@@ -77,7 +77,7 @@
         readRanges = RangedData(
             IRanges(start=reads$start, end=reads$end),
             space=reads$rname, name=reads$qname)
-        ind = readRanges %in% targetRegion
+        ind = overlapsAny(readRanges, targetRegion)
         targetReads = character()
         for (chr in names(ind[sum(ind) > 0])) {
             targetReads = c(targetReads, readRanges[chr]$name[ind[[chr]]])
