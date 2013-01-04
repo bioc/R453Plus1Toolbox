@@ -1,6 +1,6 @@
 importClassesFrom(methods, ANY, character, data.frame, list, logical, matrix, missing, numeric)
 importMethodsFrom(methods, initialize, show)
-importFrom(methods, "@<-", as, callNextMethod, new)
+importFrom(methods, as, callNextMethod, new)
 
 import(BiocGenerics)
 
