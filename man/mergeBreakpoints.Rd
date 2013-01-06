@@ -76,7 +76,7 @@ Hans-Ulrich Klein
 \examples{
 # Load bam file and filter chimeric reads
 library(Rsamtools)
-bamFile = system.file("extdata", "StructuralVariantDetection", "bam", "N01.bam", package="R453Plus1Toolbox")
+bamFile = system.file("extdata", "SVDetection", "bam", "N01.bam", package="R453Plus1Toolbox")
 bam = scanBam(bamFile)
 data(captureArray)
 linker = sequenceCaptureLinkers("gSel3")[[1]]

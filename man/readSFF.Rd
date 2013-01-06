@@ -1,4 +1,4 @@
-\name{readSff}
+\name{readSFF}
 
 \alias{readSFF}
 
@@ -22,11 +22,11 @@
 }
 
 \seealso{
-  \code{\linkS4class{SFFContainer}}.
+  \code{\link{writeSFF}}, \code{\linkS4class{SFFContainer}}.
 }
 
 \examples{
-\dontrun{sffContainer = readSFF("test.sff")}
+  \dontrun{sffContainer = readSFF("test.sff")}
 }
 
 \author{Christian Ruckert}

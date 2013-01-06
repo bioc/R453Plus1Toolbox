@@ -50,7 +50,7 @@ Hans-Ulrich Klein
 
 \examples{
 library(Rsamtools)
-bamFile = system.file("extdata", "StructuralVariantDetection", "bam", "N01.bam", package="R453Plus1Toolbox")
+bamFile = system.file("extdata", "SVDetection", "bam", "N01.bam", package="R453Plus1Toolbox")
 bam = scanBam(bamFile)
 region = RangesList("11"=IRanges(start=118307205, end=118395936))
 cov = coverageOnTarget(bam, region)
