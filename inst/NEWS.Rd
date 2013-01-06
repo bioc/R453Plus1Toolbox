@@ -4,7 +4,8 @@
 
 \section{Version 1.9.1}{
   \itemize{
-    \item Added function writeSFF to create a .sff file from a SFFContainer object
+    \item Added function writeSFF to create a .sff file from a SFFContainer object.
+    \item Fixed a bug in the function to subset SFFContainers.
   }
 }
 
