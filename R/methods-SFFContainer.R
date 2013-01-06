@@ -212,34 +212,31 @@ setMethod("[",
   signature("SFFContainer"),
   function(x, i, ...){
     if(is.numeric(i)) {
-      sffNew = new("SFFContainer", 
-                   name=name(x),
-                   flowgramFormat=flowgramFormat(x),
-                   flowChars=flowChars(x),
-                   keySequence=keySequence(x),
-                   clipQualityLeft=clipQualityLeft(x)[i],
-                   clipQualityRight=clipQualityRight(x)[i],
-                   clipAdapterLeft=clipAdapterLeft(x)[i],
-                   clipAdapterRight=clipAdapterRight(x)[i],
-                   flowgrams=flowgrams(x)[i],
-                   flowIndexes=flowIndexes(x)[i],
-                   reads=reads(x)[i]
-                  )
+      sffNew <- new("SFFContainer")
+      name(sffNew) <- name(x)
+      flowgramFormat(sffNew) <- flowgramFormat(x)
+      flowChars(sffNew) <- flowChars(x)
+      keySequence(sffNew) <- keySequence(x)
+      clipQualityLeft(sffNew) <- clipQualityLeft(x)[i]
+      clipQualityRight(sffNew) <- clipQualityRight(x)[i]
+      clipAdapterLeft(sffNew) <- clipAdapterLeft(x)[i]
+      clipAdapterRight(sffNew) <- clipAdapterRight(x)[i]
+      flowgrams(sffNew) <- flowgrams(x)[i]
+      flowIndexes(sffNew) <- flowIndexes(x)[i]
+      reads(sffNew) <- reads(x)[i]
     } else {
-      reads = reads(x)[names(reads) %in% i]
-      sffNew = new("SFFContainer", 
-                   name=name(x),
-                   flowgramFormat=flowgramFormat(x),
-                   flowChars=flowChars(x),
-                   keySequence=keySequence(x),
-                   clipQualityLeft=clipQualityLeft(x)[i],
-                   clipQualityRight=clipQualityRight(x)[i],
-                   clipAdapterLeft=clipAdapterLeft(x)[i],
-                   clipAdapterRight=clipAdapterRight(x)[i],
-                   flowgrams=flowgrams(x)[i],
-                   flowIndexes=flowIndexes(x)[i],
-                   reads=reads
-                  )
+      sffNew <- new("SFFContainer") 
+      name(sffNew) <- name(x)
+      flowgramFormat(sffNew) <- flowgramFormat(x)
+      flowChars(sffNew) <- flowChars(x)
+      keySequence(sffNew) <- keySequence(x)
+      clipQualityLeft(sffNew) <- clipQualityLeft(x)[i]
+      clipQualityRight(sffNew) <- clipQualityRight(x)[i]
+      clipAdapterLeft(sffNew) <- clipAdapterLeft(x)[i]
+      clipAdapterRight(sffNew) <- clipAdapterRight(x)[i]
+      flowgrams(sffNew) <- flowgrams(x)[i]
+      flowIndexes(sffNew) <- flowIndexes(x)[i]
+      reads <- reads(x)[names(reads(x)) %in% i]
     }
     return(sffNew)
   }
