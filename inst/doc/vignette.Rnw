@@ -622,9 +622,9 @@ MID library kits can be retrieved by calling \Rfunction{genomeSequencerMIDs}. Th
 show that all reads could be successfully demultiplexed.\\
 
 <<label=demultiplex, eval=TRUE>>=
-fnaFile = system.file("extdata", "StructuralVariantDetection", 
- "R_2009_07_30_14_26_52_FLX12080469_Administrator_714003", 
- "D_2009_07_31_08_45_30_flxcluster_fullProcessing_714003", 
+fnaFile = system.file("extdata", "SVDetection", 
+ "R_2009_07_30", 
+ "D_2009_07_31", 
  "1.TCA.454Reads.fna", package="R453Plus1Toolbox")
 seqs = readDNAStringSet(fnaFile, format="fasta")
 MIDSeqs = genomeSequencerMIDs(c("MID1", "MID2", "MID3"))
@@ -694,7 +694,7 @@ In the following example, we use the reads from sample N01 presented in the prev
 reads have been aligned using BWA-SW:
 <<label=readBam, eval=TRUE>>=
 library("Rsamtools")
-bamFile = system.file("extdata", "StructuralVariantDetection", "bam", "N01.bam", 
+bamFile = system.file("extdata", "SVDetection", "bam", "N01.bam", 
  package="R453Plus1Toolbox")
 parameters = ScanBamParam(what=scanBamWhat())
 bam = scanBam(bamFile, param=parameters)
@@ -706,7 +706,7 @@ alignment are discarded. The following example creates a target region out of a 
 containing region information using functions from package \Rpackage{rtracklayer}. 
 <<label=filterReads, eval=TRUE>>=
 library("rtracklayer")
-bedFile = system.file("extdata", "StructuralVariantDetection", "chip", 
+bedFile = system.file("extdata", "SVDetection", "chip", 
  "CaptureArray_hg19.bed", package="R453Plus1Toolbox")
 chip = import.ucsc(bedFile, subformat="bed", asRangedData=TRUE)
 chip = ranges(chip[[1]])

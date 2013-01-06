@@ -2,6 +2,12 @@
 \title{News for Package 'R453Plus1Toolbox'}
 \encoding{UTF-8}
 
+\section{Version 1.9.1}{
+  \itemize{
+    \item Added function writeSFF to create a .sff file from a SFFContainer object
+  }
+}
+
 \section{Version 1.7.4}{
   \itemize{
     \item Added ability to read in data from Roche's latest Amplicon Variant Analyzer (v2.7).
