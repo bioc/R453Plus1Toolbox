@@ -1,6 +1,7 @@
-importClassesFrom(methods, ANY, character, data.frame, list, logical, matrix, missing, numeric)
-importMethodsFrom(methods, initialize, show)
-importFrom(methods, as, callNextMethod, new)
+#importClassesFrom(methods, ANY, character, data.frame, list, logical, matrix, missing, numeric)
+#importMethodsFrom(methods, initialize, show)
+#importFrom(methods, "@<-", as, callNextMethod, new)
+import(methods)
 
 import(BiocGenerics)
 
@@ -143,7 +144,8 @@ exportMethods(
 export(
     extendedCIGARToList,
     listToExtendedCIGAR,
-    readSFF
+    readSFF,
+    writeSFF
 )
 
 useDynLib(R453Plus1Toolbox)
