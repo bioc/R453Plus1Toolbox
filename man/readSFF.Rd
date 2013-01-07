@@ -26,7 +26,9 @@
 }
 
 \examples{
-  \dontrun{sffContainer = readSFF("test.sff")}
+  file <- system.file("extdata", "SFF", "example.sff", package="R453Plus1Toolbox")
+  sffContainer <- readSFF(file)
+  sffContainer
 }
 
 \author{Christian Ruckert}

@@ -21,8 +21,10 @@
 }
 
 \examples{
-  \dontrun{sffContainer = readSFF("test.sff")}
-  \dontrun{writeSFF(sffContainer, "test2.sff")}
+  file <- system.file("extdata", "SFF", "example.sff", package="R453Plus1Toolbox")
+  sffContainer <- readSFF(file)
+  sffContainer2 <- sffContainer[1:5] 
+  \dontrun{writeSFF(sffContainer2, "output.sff")}
 }
 
 \author{Christian Ruckert}
