@@ -51,6 +51,9 @@ importFrom(utils, read.csv, read.table, write.csv)
 importFrom(VariantAnnotation, VCF, VCFHeader)
 importMethodsFrom(VariantAnnotation, writeVcf)
 
+importFrom(xtable, xtable)
+
+importFrom(tools, texi2dvi)
 
 exportClasses(
     AVASet,
@@ -145,7 +148,8 @@ export(
     extendedCIGARToList,
     listToExtendedCIGAR,
     readSFF,
-    writeSFF
+    writeSFF,
+    qualityReportSFF
 )
 
 useDynLib(R453Plus1Toolbox)

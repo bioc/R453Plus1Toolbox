@@ -2,9 +2,10 @@
 \title{News for Package 'R453Plus1Toolbox'}
 \encoding{UTF-8}
 
-\section{Version 1.9.1}{
+\section{Version 1.9.2}{
   \itemize{
     \item Added function writeSFF to create a .sff file from a SFFContainer object.
+    \item Added function qualityReportSFF to create a pdf quality report for SFF files.
     \item Fixed a bug in the function to subset SFFContainers.
   }
 }

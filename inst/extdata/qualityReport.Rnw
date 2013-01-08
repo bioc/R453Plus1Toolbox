@@ -1,0 +1,274 @@
+\documentclass[10pt]{article}
+\usepackage[section]{placeins}
+
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+\title {Quality report}
+
+\maketitle
+
+\section{Processed files}
+
+<<label=preliminaries, echo=FALSE, results=hide>>=
+library(xtable)
+library(R453Plus1Toolbox)
+if(exists("sfffiles", envir=tmp)) { filenames <- tmp$sfffiles }
+sfffiles <- readSFF(filenames)
+if(length(sfffiles) == 1) {
+  sfffiles <- list(sfffiles)
+}
+cols <- ceiling((length(sfffiles) + 2) / 3)
+rows <- ceiling(length(sfffiles) / cols)
+@
+
+<<label=processedFiles, echo=FALSE, results=tex>>=
+print(xtable(data.frame(filenames)))
+@
+
+\section{Read length statistics}
+
+<<label=readLengthStats, echo=FALSE, results=tex>>=
+df <- data.frame(row.names=c("mean", "median", "min", "max", "sd"))
+for(sff in sfffiles) {
+  df[, name(sff)] <- readLengthStats(sff)
+}
+for(i in 1:ceiling(length(sfffiles) / 4)) {
+  print(xtable(df[, (i*1 + (i-1)*4):(min(length(sfffiles), i*4))]))
+}
+@
+
+<<label=readLengthHist, fig=FALSE, echo=FALSE, results=hide, include=FALSE>>=
+pdf("qcreport-readLengthHist.pdf", width=cols*7, height=rows*7)
+par(mfrow=c(rows, cols))
+for(sff in sfffiles) {
+  readLengthHist(sff, cutoff=0.99)
+}
+dev.off()
+@
+
+\begin{figure}[htb]
+\begin{center}
+  \includegraphics[width=13cm]{qcreport-readLengthHist}
+  \caption{Histogram of the lengths of the sequences.}
+\end{center}
+\end{figure}
+
+\clearpage
+
+
+\section{Base quality statistics}
+
+<<label=baseQualityStats, echo=FALSE, results=tex>>=
+df <- data.frame(row.names=c("mean", "min", "max", "sd"))
+for(sff in sfffiles) {
+  df[, name(sff)] <- baseQualityStats(sff)
+}
+for(i in 1:ceiling(length(sfffiles) / 4)) {
+  print(xtable(df[, (i*1 + (i-1)*4):(min(length(sfffiles), i*4))]))
+}
+@
+
+<<label=baseQualityHist, fig=FALSE, echo=FALSE, results=hide, include=FALSE>>=
+pdf("qcreport-baseQualityHist.pdf", width=cols*7, height=rows*7)
+par(mfrow=c(rows, cols))
+for(sff in sfffiles) {
+  baseQualityHist(sff)
+}
+dev.off()
+@
+
+\begin{figure}[ht]
+\begin{center}
+  \includegraphics[width=13cm]{qcreport-baseQualityHist}
+  \caption{Histogram of base quality scores.}
+\end{center}
+\end{figure}
+
+
+<<label=sequenceQualityHist, fig=FALSE, echo=FALSE, results=hide, include=FALSE>>=
+pdf("qcreport-sequenceQualityHist.pdf", width=cols*7, height=rows*7)
+par(mfrow=c(rows, cols))
+for(sff in sfffiles) {
+  sequenceQualityHist(sff)
+}
+dev.off()
+@
+
+\begin{figure}[ht]
+\begin{center}
+  \includegraphics[width=13cm]{qcreport-sequenceQualityHist}
+  \caption{Histogram of mean quality scores per sequence.}
+\end{center}
+\end{figure}
+
+
+<<label=positionQualityBoxplot, fig=FALSE, echo=FALSE, results=hide, include=FALSE>>=
+pdf("qcreport-positionQualityBoxplot.pdf", width=cols*7, height=rows*7)
+par(mfrow=c(rows, cols))
+for(sff in sfffiles) {
+  positionQualityBoxplot(sff, range=200, binsize=10)
+}
+dev.off()
+@
+
+\begin{figure}[ht]
+\begin{center}
+  \includegraphics[width=13cm]{qcreport-positionQualityBoxplot}
+  \caption{Boxplot of base quality per position.}
+\end{center}
+\end{figure}
+
+\clearpage
+
+
+\section{Base distribution statistics}
+
+\subsection{Absolute nucleotide frequencies:}
+<<label=absoluteBaseFrequency, echo=FALSE, results=tex>>=
+dfabs <- data.frame(row.names=c("A", "C", "G", "T", "other", "total"))
+dfrel <- data.frame(row.names=c("A", "C", "G", "T", "other", "total"))
+for(sff in sfffiles) {
+  bf <- baseFrequency(sff)
+  dfabs[, name(sff)] <- bf[,"absolute"]
+  dfrel[, name(sff)] <- bf[,"relative"]
+}
+for(i in 1:ceiling(length(sfffiles) / 4)) {
+  print(xtable(dfabs[, (i*1 + (i-1)*4):(min(length(sfffiles), i*4))]))
+}
+@
+
+\subsection{Relative nucleotide frequencies:}
+<<label=relativeBaseFrequency, echo=FALSE, results=tex>>=
+for(i in 1:ceiling(length(sfffiles) / 4)) {
+  print(xtable(dfrel[, (i*1 + (i-1)*4):(min(length(sfffiles), i*4))]))
+}
+@
+
+<<label=nucleotideCharts, fig=FALSE, echo=FALSE, results=hide, include=FALSE>>=
+pdf("qcreport-nucleotideCharts.pdf", width=cols*7, height=rows*7)
+par(mfrow=c(rows, cols))
+for(sff in sfffiles) {
+  nucleotideCharts(sff, range=c(1,20))
+}
+dev.off()
+@
+
+\begin{figure}[ht]
+\begin{center}
+  \includegraphics[width=13cm]{qcreport-nucleotideCharts}
+  \caption{Nucleotide frequency per position.}
+\end{center}
+\end{figure}
+
+\section{GC-content}
+
+\large{Relative frequency of GC-content:}
+<<label=gcContent, echo=FALSE, results=tex>>=
+df <- data.frame(row.names=c("GC-content"))
+for(sff in sfffiles) {
+  df[, name(sff)] <- gcContent(sff)
+}
+for(i in 1:ceiling(length(sfffiles) / 4)) {
+  print(xtable(df[, (i*1 + (i-1)*4):(min(length(sfffiles), i*4))]))
+}
+@
+
+
+<<label=gcPerPosition, fig=FALSE, echo=FALSE, results=hide, include=FALSE>>=
+pdf("qcreport-gcPerPosition.pdf", width=cols*7, height=rows*7)
+par(mfrow=c(rows, cols))
+for(sff in sfffiles) {
+  gcPerPosition(sff, range=0.95)
+}
+dev.off()
+@
+
+\begin{figure}[ht]
+\begin{center}
+  \includegraphics[width=13cm]{qcreport-gcPerPosition}
+  \caption{GC content per position.}
+\end{center}
+\end{figure}
+
+
+<<label=gcContentHist, fig=FALSE, echo=FALSE, results=hide, include=FALSE>>=
+pdf("qcreport-gcContentHist.pdf", width=cols*7, height=rows*7)
+par(mfrow=c(rows, cols))
+for(sff in sfffiles) {
+  gcContentHist(sff, col="blue")
+}
+dev.off()
+@
+
+\begin{figure}[ht]
+\begin{center}
+  \includegraphics[width=13cm]{qcreport-gcContentHist}
+  \caption{GC content histogram.}
+\end{center}
+\end{figure}
+
+\clearpage
+
+
+\section{Sequence complexity}
+
+Sequence complexity measures help to detect regions of low complexity (e.g. dinucleotide repeats ATATATATATATATAT). Both approaches use trinucleotide frequencies in windows of given size and are scaled between 0 and 100. For the DUST approach scores above 7 (vertical line) can be considered low-complexity (TTTTTTTTT has score 100, TATATATA has score around 49, TAGTAGTAGTAG has a score around 32). For the entropy approach lower values imply lower complexity, a value below 70 (vertical bar) can be considered low-complexity (TTTTTTTTT has value 0, TATATATA has a value around 16 and TAGTAGTAGTAG has a score around 26). \\
+
+<<label=complexityDust, fig=FALSE, echo=FALSE, results=hide, include=FALSE>>=
+pdf("qcreport-complexityDust.pdf", width=cols*7, height=rows*7)
+par(mfrow=c(rows, cols))
+for(sff in sfffiles) {
+  complexity.dust(sff)
+}
+dev.off()
+@
+
+\begin{figure}[ht]
+\begin{center}
+  \includegraphics[width=13cm]{qcreport-complexityDust}
+  \caption{Histogram of DUST complexity scores.}
+\end{center}
+\end{figure}
+
+
+<<label=complexityEntropy, fig=FALSE, echo=FALSE, results=hide, include=FALSE>>=
+pdf("qcreport-complexityEntropy.pdf", width=cols*7, height=rows*7)
+par(mfrow=c(rows, cols))
+for(sff in sfffiles) {
+  complexity.entropy(sff)
+}
+dev.off()
+@
+
+\begin{figure}[ht]
+\begin{center}
+  \includegraphics[width=13cm]{qcreport-complexityEntropy}
+  \caption{Histogram of Entropy complexity scores.}
+\end{center}
+\end{figure}
+
+\clearpage
+
+
+\section{Dinucleotide odds ratio}
+
+The dinucleotide odds ratio shows the over-/under-representation of dinucleotides given the the numbers of the corresponding nucleotides.
+
+<<label=dinucleotideOddsRatio, fig=FALSE, echo=FALSE, results=hide, include=FALSE>>=
+pdf("qcreport-dinucleotideOddsRatio.pdf", width=cols*7, height=rows*7)
+par(mfrow=c(rows, cols))
+for(sff in sfffiles) {
+  dinucleotideOddsRatio(sff)
+}
+dev.off()
+@
+
+\begin{figure}[ht]
+\begin{center}
+  \includegraphics[width=13cm]{qcreport-dinucleotideOddsRatio}
+  \caption{Dinucleotide odds ratio}
+\end{center}
+\end{figure}
+
+\end{document}
+
