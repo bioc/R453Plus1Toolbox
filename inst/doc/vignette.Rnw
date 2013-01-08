@@ -21,10 +21,11 @@
 
 
 \begin{document}
+\SweaveOpts{concordance=TRUE}
 
 \title{R453Plus1Toolbox \\ A package for importing and analyzing data from Roche's Genome Sequencer System}
 \author{Hans-Ulrich Klein, Christoph Bartenhagen, Christian Ruckert}
-\date{September 1, 2010}
+\date{January 8, 2012}
 
 \maketitle
 
@@ -770,6 +771,68 @@ plotChimericReads(mbp[1], plotBasePairs=TRUE, maxBasePairs=30)
   \caption{Plot of the breakpoint region including base pairs.}
 \end{center}
 \end{figure}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%___Analysis and manipulation of SFF files___%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Analysis and manipulation of SFF files}
+
+The Standard Flowgram Format(SFF) is a binary file format designed by Roche to store the homopolymer stretches typical for 454 sequencing. It consists of a common header section, containing general information (e.g. number of reads, nucleotides used for each flow) and for each read a read header (e.g. read length, read name) and read data section (e.g. called bases, flow values, quality scores). 
+
+\subsection{Importing SFF files}
+SFF files be imported using the \Rfunction{readSFF} function.
+<<label=importSFFfiles, eval=TRUE>>=
+file <- system.file("extdata", "SFF", "example.sff", package="R453Plus1Toolbox")
+sffContainer <- readSFF(file)
+@
+
+\subsection{The SFF container}
+The contents of the SFF file are stored in an object of class \Rclass{SFFContainer} with different slots:
+<<label=SFFcontainer, eval=TRUE>>=
+showClass("SFFContainer")
+@
+
+The most import slot is the reads slot containing the called bases and the corresponding quality measures:
+<<label=sffreads, eval=TRUE>>=
+reads(sffContainer)
+@
+
+An \Rclass{SFFContainer} object can be subsetted using the \Rcode{[} operator and some read names or numbers:
+<<label=sffsubsetting, eval=TRUE>>=
+subSffContainer <- sffContainer[1:5]
+@
+
+\subsection{Writing SFF files}
+An \Rclass{SFFContainer} can be written back into a file using the \Rfunction{writeSFF} method:
+<<label=sffsubsetting, eval=FALSE>>=
+writeSFF(subSffContainer, subSffFile.sff)
+@
+
+\subsection{Quality control of SFF files}
+The \Rfunction{qualityReportSFF} function creates a PDF document from one or more SFF files containing information relevant for quality control (e.g. read length distributions, quality histograms, GC content). Two example plots are shown below:
+<<label=positionQualityBoxplot, eval=TRUE, fig=TRUE, include=FALSE, results=hide, eps=FALSE, pdf=TRUE>>=
+positionQualityBoxplot(sffContainer)
+@
+\begin{figure}[hbp]
+\begin{center}
+  \includegraphics[height=8cm]{R453Plus1-positionQualityBoxplot}
+  \caption{Position quality boxplot - One of the plots contained in the PDF quality report.}
+\end{center}
+\end{figure}
+@
+
+<<label=dinucleotideOddsRatio, eval=TRUE, results=hide, fig=TRUE, include=FALSE, eps=FALSE, pdf=TRUE>>=
+dinucleotideOddsRatio(sffContainer)
+@
+\begin{figure}[hbp]
+\begin{center}
+  \includegraphics[height=8cm]{R453Plus1-dinucleotideOddsRatio}
+  \caption{Dinucleotide odds ratio showing the over-/under-representation of dinucleotides - One of the plots contained in the PDF quality report.}
+\end{center}
+\end{figure}
+@
 
 
 \begin{thebibliography}{}
