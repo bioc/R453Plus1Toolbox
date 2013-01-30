@@ -830,7 +830,8 @@ setMethod("readVariants",
         deletions=sapply(v_splits, function(x) x[1] == "d")
         start=as.numeric(sapply(v_splits,function(x)x[2]))
         end=start
-        end[deletions]=as.numeric(variantSeq[deletions])
+        # for deletions, variantSeq contains the end coordinate; take care of deletions of a single base pair (format d(pos) instead of d(start-end))
+        end[deletions & !is.na(variantSeq)]=as.numeric(variantSeq[deletions & !is.na(variantSeq)])
         del_length=end[deletions] - start[deletions] + 1
         del_length=sapply(del_length, function(x) paste(rep("-",x), collapse=""))
         
@@ -839,21 +840,30 @@ setMethod("readVariants",
            
         # get the bases from the reference sequences corresponding to the
         # variants
-        for(i in 1:num_variants) {
+        for(i in 1:num_variants){
             v_split=v_splits[[i]]
             refSeq_start=as.numeric(v_split[2])
-            if(v_split[1] == "s") {
-                refSeq_end=as.numeric(v_split[2])
+            if(v_split[1] == "s" | v_split[1] == "i") {
+                refSeq_end=refSeq_start
             } else {
                 if(v_split[1] == "d") {
+                  # end coordinate is NA if deletion affects only one base pair
+                  if(is.na(v_split[3])){
+                    refSeq_end=refSeq_start
+                  }else{
                     refSeq_end=as.numeric(v_split[3])
+                  }
 	        } else {
-                    stop("illegal canonical pattern")
+                  stop("illegal canonical pattern")
                 }
             }
-            refSeq=refSeqs[names(refSeqs) == variantDefs$referenceSeq[i]]
-            referenceSeq[i]=toString(subseq(refSeq[[1]], refSeq_start,
-                refSeq_end))
+            # no reference sequence for insertions
+            if(v_split[1] == "i"){
+              referenceSeq[i]="-"
+            }else{
+              refSeq=refSeqs[names(refSeqs) == variantDefs$referenceSeq[i]]
+              referenceSeq[i]=toString(subseq(refSeq[[1]], refSeq_start, refSeq_end))
+            }
         }
         # build name of the variant
         name=paste(start, ":", referenceSeq, "/", variantSeq, sep="")
