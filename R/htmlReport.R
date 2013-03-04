@@ -364,7 +364,7 @@
         dir.create(file.path(dir,"qualityReport"), recursive=TRUE)
 
     ## load style sheet
-    cssFile=file.path(.find.package("R2HTML"), "samples/R2HTML.css")
+    cssFile=file.path(find.package("R2HTML"), "samples/R2HTML.css")
     s=file.copy(cssFile, file.path(dir, "R2HTML.css"), overwrite=TRUE)
     ## load java script for sorting tables
     jsFile=file.path(.path.package("R453Plus1Toolbox"),
