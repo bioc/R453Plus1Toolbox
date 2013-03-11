@@ -14,7 +14,7 @@
 
         target = RangedData(targetRegion)
 
-        ml = rd %in% target
+        ml = overlapsAny(rd, target)
         values(rd)[, "onTarget"] = ml
         result[[i]] = rd[["onTarget"]][order(as.numeric(rd[["no"]]))]
     }
@@ -25,25 +25,6 @@
 setMethod("readsOnTarget",
     signature=signature(alnReads="list", targetRegion="RangesList"),
     .readsOnTarget)
-
-
-#.readsOnTarget <- function(alnReads, target) {
-#
-#    alnReads[, "rownr"] = rownames(alnReads)
-#    alnReads[, "onTarget"] = FALSE
-#    colnames(alnReads)[colnames(alnReads) == "chr"] = "space"
-#    rd = as(alnReads, "RangedData")
-#
-#    rdr = RangedData(target)
-#    
-#    ml = rd %in% rdr
-#    values(rd)[ml, "onTarget"] = TRUE
-#    values(rd)[, "onTarget"] = ml    
-#
-#    return(rd[["onTarget"]][order(as.numeric(rd[["rownr"]]))])
-#}
-
-
 
 
 

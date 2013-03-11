@@ -25,7 +25,7 @@
 
 \title{R453Plus1Toolbox \\ A package for importing and analyzing data from Roche's Genome Sequencer System}
 \author{Hans-Ulrich Klein, Christoph Bartenhagen, Christian Ruckert}
-\date{January 8, 2012}
+\date{March 11, 2013}
 
 \maketitle
 
