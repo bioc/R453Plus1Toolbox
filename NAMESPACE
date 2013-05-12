@@ -15,9 +15,12 @@ importMethodsFrom(IRanges, "%in%", Views, aggregate, as.data.frame, as.matrix, a
     colnames, "colnames<-", countOverlaps, coverage, duplicated, end, "end<-", findOverlaps, gsub,
     intersect, lapply, levels, mad, match, mean, median, nchar, ncol, nrow, order,
     paste, pmax, pmin, ranges, rbind, restrict, rev, rownames, "rownames<-", sapply, score, sd, 
-    setdiff, shift, sort, split, start, subject, subseq, subset, substr, substring, summary, t, 
-    table, toString, union, unique, unlist, values, "values<-", which, width)
-importFrom(IRanges, IRanges, RangedData, compact)
+    setdiff, shift, sort, split, start, subject, subset, substr, substring, summary, t, 
+    table, union, unique, unlist, values, "values<-", which, width)
+importFrom(IRanges, IRanges, RangedData)
+
+importFrom(XVector, subseq, compact)
+importMethodsFrom(XVector, toString)
 
 importFrom(biomaRt, getBM, getSequence, useMart)
 
