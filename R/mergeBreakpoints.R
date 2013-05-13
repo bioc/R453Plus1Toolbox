@@ -249,7 +249,7 @@
             # commonBps
             breakpoints@commonBpsC2[[k]] = breakpoints@commonBpsC1[[l]]
 
-            # commonAlign (PairwiseAlignedFixedSubject)
+            # commonAlign (PairwiseAlignmentsSingleSubject)
             breakpoints@commonAlignC2[[k]] = breakpoints@commonAlignC1[[l]]
             
             # alignedReads (AlignedRead)

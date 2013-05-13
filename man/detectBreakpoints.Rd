@@ -105,7 +105,7 @@ detectBreakpoints(chimericReads, bpDist=100, minClusterSize=4, removeSoftClips=T
     sequence itself, including positions "localStart"/"localEnd"
     indicating which part of the reference belongs to which breakpoint.}
   \item{commonAlign}{An object of class
-    \code{\link{PairwiseAlignedFixedSubject}} of the
+    \code{\link{PairwiseAlignmentsSingleSubject}} of the
     Biostrings package that contains the alignment to the
     (best) consensus reference sequence.}
   \item{alignedReads}{On the basis of \code{commonAlign} and \code{commonBps},

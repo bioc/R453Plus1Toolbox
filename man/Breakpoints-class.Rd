@@ -81,12 +81,12 @@ detected by \code{\link{mergeBreakpoints}}.
       consensus breakpoint sequence as well as the breakpoint
       coordinates of the second breakpoint.}
     \item{\code{commonAlignC1}:}{Object of class \code{"list"} with one
-      object of class \code{\link{PairwiseAlignedFixedSubject-class}}
+      object of class \code{\link{PairwiseAlignmentsSingleSubject-class}}
       for each breakpoint storing the alignments of the chimeric
       reads against the consensus breakpoint sequence for the
       first breakpoint.}
     \item{\code{commonAlignC2}:}{Object of class \code{"list"} with one
-      object of class \code{\link{PairwiseAlignedFixedSubject-class}}
+      object of class \code{\link{PairwiseAlignmentsSingleSubject-class}}
       for each breakpoint storing the alignments of the chimeric
       reads against the consensus breakpoint sequence for the
       second breakpoint.}
