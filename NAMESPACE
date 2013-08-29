@@ -41,8 +41,6 @@ importFrom(R2HTML, HTML, HTML.title, HTMLEndFile, HTMLInitFile)
 
 importFrom(Rsamtools, scanBam)
 
-#importMethodsFrom(rtracklayer, strand)
-
 importClassesFrom(ShortRead, AlignedRead)
 importMethodsFrom(ShortRead, chromosome, id, name, position)
 importFrom(ShortRead, AlignedDataFrame, AlignedRead, alignData, sread, alphabetByCycle)

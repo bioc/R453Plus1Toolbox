@@ -1303,7 +1303,7 @@ setMethod("subset",
             ## Todo: substitute for loop by apply command
             for(v in rownames(vars)){
               var = vars[v, ]
-              amps_var = subset(remainingAmps, referenceSeqID == var$referenceSeq)
+              amps_var = subset(remainingAmps, referenceSeqID == var$referenceSeqID)
               ## in case of one reference for more than one amplicon: test if variant lies within amplicon range
               if(any((var$start >= amps_var$targetStart) & (var$end <= amps_var$targetEnd))){
                 remainingVars[i] = v
