@@ -1,8 +1,8 @@
 Package: R453Plus1Toolbox
 Type: Package
 Title: A package for importing and analyzing data from Roche's Genome Sequencer System.
-Version: 1.11.3
-Date: 2013-08-29
+Version: 1.11.4
+Date: 2013-10-13
 Author: Hans-Ulrich Klein, Christoph Bartenhagen, Christian Ruckert
 Maintainer: Hans-Ulrich Klein <h.klein@uni-muenster.de>
 Imports: BiocGenerics (>= 0.1.3), Biobase (>= 2.15.1), biomaRt, Biostrings, BSgenome, IRanges (>= 1.19.5), XVector, methods, R2HTML, Rsamtools, ShortRead, VariantAnnotation, xtable, tools

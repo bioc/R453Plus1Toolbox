@@ -710,7 +710,7 @@ library("rtracklayer")
 bedFile = system.file("extdata", "SVDetection", "chip", 
  "CaptureArray_hg19.bed", package="R453Plus1Toolbox")
 chip = import.ucsc(bedFile, subformat="bed")
-chip = ranges(split(chip[[1]], seqnames(chip[[1]])))
+chip = split(ranges(chip[[1]]), seqnames(chip[[1]]))
 names(chip) = gsub("chr", "", names(chip))
 
 linker = sequenceCaptureLinkers("gSel3")[[1]]
