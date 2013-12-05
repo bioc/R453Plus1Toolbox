@@ -1,7 +1,7 @@
 .ava2vcf <- function(object, filename, annot) {
       
   # get the index of the reference for each variant
-  refSeqInd <- match(fData(object)$referenceSeq, as.character(id(referenceSequences(object))))
+  refSeqInd <- match(fData(object)$referenceSeqID, as.character(id(referenceSequences(object))))
   
   # get the chromosome and strand for each variant
   chromosome <- as.character(chromosome(referenceSequences(object)[refSeqInd]))

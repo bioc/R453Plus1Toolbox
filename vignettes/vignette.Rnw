@@ -25,7 +25,7 @@
 
 \title{R453Plus1Toolbox \\ A package for importing and analyzing data from Roche's Genome Sequencer System}
 \author{Hans-Ulrich Klein, Christoph Bartenhagen, Christian Ruckert}
-\date{March 11, 2013}
+\date{December 05, 2013}
 
 \maketitle
 
@@ -327,7 +327,8 @@ getVariantPercentages(avaSet, direction="both")[20:25, 1:4]
 @ 
 In the example above, \Rfunction{getVariantPercentages} is simply a short form of calculating
 <<label=varPercentages2, results=hide>>=
-(assayData(avaSet)[[1]] + assayData(avaSet)[[3]]) / (assayData(avaSet)[[2]] + assayData(avaSet)[[4]])
+(assayData(avaSet)[[1]] + assayData(avaSet)[[3]]) / (assayData(avaSet)[[2]]
+ + assayData(avaSet)[[4]])
 @ 
 
 
@@ -464,6 +465,17 @@ geneInfo = plotVariants(data=variants, gene="ENSG00000168769",
 \end{figure}
 Especially for integration into the R453Plus1Toolbox and for compatibility to older versions \Rfunction{plotVariants} also accepts annotated variants of class 
 \Rclass{annotatedVariants} (see section \ref{sec:Annotations}). The function then only distinguishes missense, nonsense and silent point mutations and deletions and does not include mutation labels.\\
+
+
+\subsection{VCF export}
+The variant call format (VCF) is a generic file format for storing DNA polymorphism data such as SNPs, insertions, deletions and structural variants, together with rich annotations (\cite{Danecek2011}). 
+The following command exports all variants stored in an \Rclass{AVASet} object into a vcf file with the given name. Make sure to run \Rfunction{alignShortReads} first and optional add dbSNP identifiers with \Rfunction{annotateVariants} (see section \ref{sec:Annotations} for details)
+<<label=vcfexport, eval=FALSE>>=
+ava2vcf(avaSet, filename="variants.vcf", annot=avaAnnot)
+@
+
+
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%___Analysis of GS Mapper projects___%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -843,6 +855,10 @@ Kohlmann,A. \textit{et~al}. (2009) Targeted next-generation sequencing (NGS) ena
 \bibitem[Li and Durbin, 2010]{Li2010}
 Li,H. and Durbin,R. (2010) Fast and accurate long-read alignment with Burrows-Wheeler transform.
 \textit{Bioinformatics}, \textbf{26}(5), 589--95. 
+
+\bibitem[Danecek {\it et~al}., 2011]{Danecek2011}
+Danecek,P. \textit{et~al}. (2011) The variant call format and VCFtools.
+\textit{Bioinformatics}, \textbf{27}(15), 2156--2158. 
 \end{thebibliography}
 
 \end{document}

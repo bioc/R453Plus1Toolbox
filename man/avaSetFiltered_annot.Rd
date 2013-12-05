@@ -15,7 +15,7 @@
 }
 \source{
     \sQuote{Next-generation sequencing technology reveals a characteristic
-    pattern of molecular mutations in 72.8% of chronic myelomonocytic 
+    pattern of molecular mutations in 72.8\% of chronic myelomonocytic 
     leukemia by detecting frequent alterations in TET2, CBL, RAS, and RUNX1} 
     (Kohlmann A et al., J Clin Oncol. 2010 Aug 20;28(24):3858-65. Epub 2010 Jul 19)
 }

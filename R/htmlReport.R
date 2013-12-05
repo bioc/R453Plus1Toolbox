@@ -270,7 +270,7 @@
     seq_end=fData(object)[vars_ID, ]$end
 
     ## report absolute variant position in genome
-    refSeqInd=match(fData(object)[vars_ID, ]$referenceSeq,
+    refSeqInd=match(fData(object)[vars_ID, ]$referenceSeqID,
         as.character(id(referenceSequences(object))))
     chromosome=as.character(
         chromosome(referenceSequences(object)[refSeqInd]))
