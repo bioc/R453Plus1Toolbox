@@ -133,7 +133,7 @@
   }
 
   h_format <- DataFrame(Number=c("1", "."), Type=c("Integer", "Integer"), 
-                        Description=c("Read Depth", "Allelic depths for the ref and alt alleles in the order listed")) #FORMAT zu den einzelnen samples
+                        Description=c("Read Depth", "Allelic depths for the alt alleles in the order listed")) #FORMAT zu den einzelnen samples
   rownames(h_format) <- c("DP", "AD")
   
   header <- VCFHeader(reference="BSgenome.Hsapiens.UCSC.hg19", samples=as.character(pData(object)$SampleID), 
