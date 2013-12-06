@@ -58,6 +58,8 @@ importFrom(xtable, xtable)
 
 importFrom(tools, texi2dvi)
 
+importFrom(TeachingDemos, spread.labs)
+
 exportClasses(
     AVASet,
     MapperSet,
