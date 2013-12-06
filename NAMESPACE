@@ -5,6 +5,8 @@ import(methods)
 
 import(BiocGenerics)
 
+import(GenomicRanges)
+
 importClassesFrom(Biobase, AnnotatedDataFrame, AssayData, MIAME, Versions, Versioned, VersionedBiobase, eSet)
 importMethodsFrom(Biobase, assayData, "assayData<-", combine, fData, featureData, "featureData<-",
     pData, phenoData, "phenoData<-", sampleNames, varMetadata)
