@@ -34,7 +34,7 @@ importFrom(Biostrings, BStringSet, DNAString, DNAStringSet, nucleotideSubstituti
 
 importClassesFrom(BSgenome, BSgenome)
 
-importFrom(graphics, axis, barplot, boxplot, legend, lines, mtext, par, plot, points, polygon, rect,
+importFrom(graphics, axis, barplot, legend, lines, mtext, par, plot, points, polygon, rect,
     strheight, strwidth, text)
 
 importFrom(grDevices, dev.off, pdf, png, rgb)
