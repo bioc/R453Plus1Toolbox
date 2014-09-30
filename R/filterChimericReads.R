@@ -99,7 +99,7 @@
         readsLinker = character()
 
         f = vmatchPattern(linkerSeq, seqs, max.mismatch=4)
-        indF = countIndex(f) > 0
+        indF = elementLengths(f) > 0
         seqLength = width(seqs)[indF]
         for (i in setdiff(0:sum(indF), 0)) {
             if (! (any(startIndex(f)[indF][[i]] < 10) |
@@ -109,7 +109,7 @@
         }
       
         r = vmatchPattern(linkerSeq, reverseComplement(seqs), max.mismatch=4)
-        indR = countIndex(r) > 0
+        indR = elementLengths(r) > 0
         seqLength = width(seqs)[indR]
         for (i in setdiff(0:sum(indR), 0)) {
             if (! (any(startIndex(r)[indR][[i]] < 10) |

@@ -96,7 +96,7 @@ detectBreakpoints(chimericReads, bpDist=100, minClusterSize=4, removeSoftClips=T
   \code{detectBreakpoints} returns an object of class
   \code{breakpoints}, which is a list of breakpoint clusters, which gives
   access to all alignments and consensus breakpoints:  \cr
-  \item{seqs}{This \code{\link{IRanges}} \code{\link{DataFrame}} is
+  \item{seqs}{This \code{\link{IRanges}} \code{DataFrame} is
     mainly a rearranged version of the alignment input in
     \code{chimericReads}. In addition, it shows the corresponding
     breakpoints and local alignment coordinates.}
