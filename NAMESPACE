@@ -15,7 +15,7 @@ importFrom(Biobase, assayDataElementNames, assayDataNew)
 importClassesFrom(IRanges, RangesList)
 importMethodsFrom(IRanges, "%in%", Views, aggregate, as.data.frame, as.matrix, as.vector, cbind, 
     colnames, "colnames<-", countOverlaps, coverage, duplicated, end, "end<-", findOverlaps, gsub,
-    intersect, lapply, levels, mad, match, mean, median, nchar, ncol, nrow, order,
+    intersect, lapply, mad, match, mean, median, nchar, ncol, nrow, order,
     paste, pmax, pmin, ranges, rbind, restrict, rev, rownames, "rownames<-", sapply, score, sd, 
     setdiff, shift, sort, split, start, subject, subset, substr, substring, summary, t, 
     table, union, unique, unlist, values, "values<-", which, width)
