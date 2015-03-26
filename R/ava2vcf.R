@@ -181,7 +181,7 @@
   fixed <- DataFrame(REF=DNAStringSet(ref), ALT=CharacterList(as.list(alt)), QUAL=0, FILTER=as.character("."))
   
   # merge it all together
-  vcf <- VCF(rowData=rowData, colData=colData, exptData=exptData, fixed=fixed, geno=format, info=info)
+  vcf <- VCF(rowRanges=rowData, colData=colData, exptData=exptData, fixed=fixed, geno=format, info=info)
 
   # return VCF object or write it to file
   if(missing(filename)) {
