@@ -25,6 +25,10 @@ import(IRanges)
 importFrom(XVector, subseq, compact)
 importMethodsFrom(XVector, toString)
 
+importClassesFrom(S4Vectors, DataFrame, Rle, SimpleList)
+importMethodsFrom(S4Vectors, DataFrame, Rle, SimpleList)
+importFrom(S4Vectors, DataFrame, SimpleList)
+
 importFrom(biomaRt, getBM, getSequence, useMart)
 
 importClassesFrom(Biostrings, DNAString, DNAStringSet, PhredQuality, QualityScaledDNAStringSet, 
@@ -32,8 +36,9 @@ importClassesFrom(Biostrings, DNAString, DNAStringSet, PhredQuality, QualityScal
 importMethodsFrom(Biostrings, PDict, aligned, alphabetFrequency, append, complement, 
     deletion, endIndex, insertion, matchPDict, matchPattern, mismatchTable, 
     pairwiseAlignment, quality, reverseComplement, startIndex, translate, vmatchPattern)
-importFrom(Biostrings, BStringSet, dinucleotideFrequency, DNAString, DNAStringSet, nucleotideSubstitutionMatrix, 
-    oligonucleotideFrequency, PhredQuality, QualityScaledDNAStringSet, trinucleotideFrequency, writeXStringSet)
+importFrom(Biostrings, BStringSet, dinucleotideFrequency, DNAString, DNAStringSet, getSeq, 
+    nucleotideSubstitutionMatrix, oligonucleotideFrequency, PhredQuality, QualityScaledDNAStringSet, 
+    trinucleotideFrequency, writeXStringSet)
 
 importClassesFrom(BSgenome, BSgenome)
 
