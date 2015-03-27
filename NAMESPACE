@@ -12,25 +12,28 @@ importMethodsFrom(Biobase, assayData, "assayData<-", combine, fData, featureData
     pData, phenoData, "phenoData<-", sampleNames, varMetadata)
 importFrom(Biobase, assayDataElementNames, assayDataNew)
     
-importClassesFrom(IRanges, RangesList)
-importMethodsFrom(IRanges, "%in%", Views, aggregate, as.data.frame, as.matrix, as.vector, cbind, 
-    colnames, "colnames<-", countOverlaps, coverage, duplicated, end, "end<-", findOverlaps, gsub,
-    intersect, lapply, mad, match, mean, median, nchar, ncol, nrow, order,
-    paste, pmax, pmin, ranges, rbind, restrict, rev, rownames, "rownames<-", sapply, score, sd, 
-    setdiff, shift, sort, split, start, subject, subset, substr, substring, summary, t, 
-    table, union, unique, unlist, values, "values<-", which, width)
-importFrom(IRanges, IRanges, RangedData)
+#importClassesFrom(IRanges, RangesList)
+#importMethodsFrom(IRanges, "%in%", Views, aggregate, as.data.frame, as.matrix, as.vector, cbind, 
+#    colnames, "colnames<-", countOverlaps, coverage, duplicated, elementLengths, end, "end<-", 
+#    findOverlaps, gsub, intersect, lapply, mad, match, mean, median, nchar, ncol, nrow, order,
+#    paste, pmax, pmin, ranges, rbind, restrict, rev, rownames, "rownames<-", sapply, score, sd, 
+#    setdiff, shift, sort, split, start, subject, subset, substr, substring, summary, t, 
+#    table, union, unique, unlist, values, "values<-", which, width)
+#importFrom(IRanges, IRanges, RangedData)
+import(IRanges)
 
 importFrom(XVector, subseq, compact)
 importMethodsFrom(XVector, toString)
 
 importFrom(biomaRt, getBM, getSequence, useMart)
 
-importClassesFrom(Biostrings, DNAString, DNAStringSet, XStringSet, QualityScaledDNAStringSet, QualityScaledXStringSet, XStringQuality, BString, PhredQuality, SolexaQuality)
-importMethodsFrom(Biostrings, PDict, aligned, complement, countIndex, deletion, endIndex,
-    insertion, matchPDict, matchPattern, mismatchTable, pairwiseAlignment, reverseComplement,
-    startIndex, translate, vmatchPattern, quality, append)
-importFrom(Biostrings, BStringSet, DNAString, DNAStringSet, nucleotideSubstitutionMatrix)
+importClassesFrom(Biostrings, DNAString, DNAStringSet, PhredQuality, QualityScaledDNAStringSet, 
+    QualityScaledXStringSet, XStringQuality, XStringSet, BString, SolexaQuality)
+importMethodsFrom(Biostrings, PDict, aligned, alphabetFrequency, append, complement, 
+    deletion, endIndex, insertion, matchPDict, matchPattern, mismatchTable, 
+    pairwiseAlignment, quality, reverseComplement, startIndex, translate, vmatchPattern)
+importFrom(Biostrings, BStringSet, dinucleotideFrequency, DNAString, DNAStringSet, nucleotideSubstitutionMatrix, 
+    oligonucleotideFrequency, PhredQuality, QualityScaledDNAStringSet, trinucleotideFrequency, writeXStringSet)
 
 importClassesFrom(BSgenome, BSgenome)
 
