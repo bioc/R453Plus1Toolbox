@@ -26,7 +26,7 @@ importFrom(XVector, subseq, compact)
 importMethodsFrom(XVector, toString)
 
 importClassesFrom(S4Vectors, DataFrame, Rle, SimpleList)
-importMethodsFrom(S4Vectors, DataFrame, Rle, SimpleList)
+importMethodsFrom(S4Vectors, Rle)
 importFrom(S4Vectors, DataFrame, SimpleList)
 
 importFrom(biomaRt, getBM, getSequence, useMart)
