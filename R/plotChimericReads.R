@@ -59,7 +59,7 @@
     ## realign the reversed reads to the reversed reference sequence
     substitutionMatrix = nucleotideSubstitutionMatrix(match=1, mismatch=-1)
     alignment = pairwiseAlignment(pattern=alnReads, subject=commonBps$refSeq[1],
-        type="global-local", substitutionMatrix=substitutionMatrix, gapOpening=0, gapExtension=-1)
+        type="global-local", substitutionMatrix=substitutionMatrix, gapOpening=0, gapExtension=1)
 
     ## return an updated breakpoints-object(remember: the function requires, that the object holds only one breakpoint!)
     commonBpsC2(brpData) = list(commonBps)

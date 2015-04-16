@@ -24,7 +24,7 @@
   be removed. Default is FALSE}
   \item{minOverlap}{The minimal score that must be achived when aligning
   the linker. Default is length(linker)/2}
-  \item{penalty}{The penalty for substitutions or indels. Default is -2}
+  \item{penalty}{The penalty for substitutions or indels. Default is 2}
 }
 
 \value{\code{removeLinker} returns a \code{DNAStringSet} with trimmed reads.}
@@ -32,7 +32,7 @@
 \details{The best alignment of the linker within the start (length of
   linker + 5) of each given sequence is computed. The followong scoring
   schema is used: Each matching bases scores +1. Each substitution or
-  indel scores the given penalty argument (default: penalty=-2). There
+  indel scores the given penalty argument (default: penalty=2). There
   are no penalties for gaps and the end of the linker (overlap). An
   alignment is considered as match, if the scores is larger of equal to
   minOverlap (default: minOverlap=round(length(linker)/2)). In cases of
