@@ -23,7 +23,7 @@
     for (i in 1:length(mids)) {
         pA = pairwiseAlignment(pattern=readsPrefix, subject=mids[[i]],
             type="local-global", substitutionMatrix=submat,
-            gapOpening=0, gapExtension=-1)
+            gapOpening=0, gapExtension=1)
         scores[,i] = score(pA)
         patternRanges[[i]] = pA@pattern@range
     }

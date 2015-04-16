@@ -424,7 +424,7 @@
         ## alignment
         substitutionMatrix = nucleotideSubstitutionMatrix(match=1, mismatch=-1)
         alignment = pairwiseAlignment(pattern=alnReads, subject=refSeq, 
-          type="global-local", substitutionMatrix=substitutionMatrix, gapOpening=0, gapExtension=-1)
+          type="global-local", substitutionMatrix=substitutionMatrix, gapOpening=0, gapExtension=1)
         scores[r] = sum(score(alignment))
         alignments[[r]] = alignment
         alignedReads[[r]] = AlignedRead(sread=alnReads, chromosome=factor(alnChrs), position=start(Views(alignment)), strand=factor(alnStrands))
