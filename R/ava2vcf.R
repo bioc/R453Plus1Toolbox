@@ -138,14 +138,14 @@
   
   header <- VCFHeader(reference="BSgenome.Hsapiens.UCSC.hg19", samples=as.character(pData(object)$SampleID), 
                       header=DataFrameList(META=h_meta, INFO=h_info, FORMAT=h_format))
-  exptData <- SimpleList(header=header)
+  metadata <- list(header=header)
 
   # body
-  rowData <- GRanges(seqnames=Rle(chromosome), ranges=IRanges(start=abs_start, end=abs_start), strand="+", paramRangeID=rownames(fData(object)))
+  rowRanges <- GRanges(seqnames=Rle(chromosome), ranges=IRanges(start=abs_start, end=abs_start), strand="+", paramRangeID=rownames(fData(object)))
   if(!missing(annot)) {
-    names(rowData) <- snps
+    names(rowRanges) <- snps
   } else {
-    names(rowData) <- rep(".", length(rowData))
+    names(rowRanges) <- rep(".", length(rowRanges))
   }
         
   colData <- DataFrame(Samples=pData(object)$Annotation, row.names=pData(object)$SampleID)
@@ -181,7 +181,7 @@
   fixed <- DataFrame(REF=DNAStringSet(ref), ALT=CharacterList(as.list(alt)), QUAL=0, FILTER=as.character("."))
   
   # merge it all together
-  vcf <- VCF(rowRanges=rowData, colData=colData, exptData=exptData, fixed=fixed, geno=format, info=info)
+  vcf <- VCF(rowRanges=rowRanges, colData=colData, metadata=metadata, fixed=fixed, geno=format, info=info)
 
   # return VCF object or write it to file
   if(missing(filename)) {

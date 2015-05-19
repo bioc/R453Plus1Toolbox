@@ -1,34 +1,26 @@
-#importClassesFrom(methods, ANY, character, data.frame, list, logical, matrix, missing, numeric)
-#importMethodsFrom(methods, initialize, show)
-#importFrom(methods, "@<-", as, callNextMethod, new)
 import(methods)
+importFrom(utils, read.csv, read.table, write.csv)
+importFrom(grDevices, dev.off, pdf, png, rgb)
+importFrom(graphics, axis, barplot, legend, lines, mtext, par, plot, points,
+    polygon, rect, strheight, strwidth, text)
+importFrom(stats, as.dist, cutree, filter, hclust)
+importFrom(tools, texi2dvi)
+importFrom(xtable, xtable)
+importFrom(R2HTML, HTML, HTML.title, HTMLEndFile, HTMLInitFile)
+importFrom(TeachingDemos, spread.labs)
 
 import(BiocGenerics)
-
+import(S4Vectors)
+import(IRanges)
+import(XVector)
 import(GenomicRanges)
+import(SummarizedExperiment)
 
 importClassesFrom(Biobase, AnnotatedDataFrame, AssayData, MIAME, Versions, Versioned, VersionedBiobase, eSet)
 importMethodsFrom(Biobase, assayData, "assayData<-", combine, fData, featureData, "featureData<-",
     pData, phenoData, "phenoData<-", sampleNames, varMetadata)
 importFrom(Biobase, assayDataElementNames, assayDataNew)
     
-#importClassesFrom(IRanges, RangesList)
-#importMethodsFrom(IRanges, "%in%", Views, aggregate, as.data.frame, as.matrix, as.vector, cbind, 
-#    colnames, "colnames<-", countOverlaps, coverage, duplicated, elementLengths, end, "end<-", 
-#    findOverlaps, gsub, intersect, lapply, mad, match, mean, median, nchar, ncol, nrow, order,
-#    paste, pmax, pmin, ranges, rbind, restrict, rev, rownames, "rownames<-", sapply, score, sd, 
-#    setdiff, shift, sort, split, start, subject, subset, substr, substring, summary, t, 
-#    table, union, unique, unlist, values, "values<-", which, width)
-#importFrom(IRanges, IRanges, RangedData)
-import(IRanges)
-
-importFrom(XVector, subseq, compact)
-importMethodsFrom(XVector, toString)
-
-importClassesFrom(S4Vectors, DataFrame, Rle, SimpleList)
-importMethodsFrom(S4Vectors, Rle)
-importFrom(S4Vectors, DataFrame, SimpleList)
-
 importFrom(biomaRt, getBM, getSequence, useMart)
 
 importClassesFrom(Biostrings, DNAString, DNAStringSet, PhredQuality, QualityScaledDNAStringSet, 
@@ -42,31 +34,14 @@ importFrom(Biostrings, BStringSet, dinucleotideFrequency, DNAString, DNAStringSe
 
 importClassesFrom(BSgenome, BSgenome)
 
-importFrom(graphics, axis, barplot, legend, lines, mtext, par, plot, points, polygon, rect,
-    strheight, strwidth, text)
-
-importFrom(grDevices, dev.off, pdf, png, rgb)
-
-importFrom(R2HTML, HTML, HTML.title, HTMLEndFile, HTMLInitFile)
-
 importFrom(Rsamtools, scanBam)
 
 importClassesFrom(ShortRead, AlignedRead)
 importMethodsFrom(ShortRead, chromosome, id, name, position)
 importFrom(ShortRead, AlignedDataFrame, AlignedRead, alignData, sread, alphabetByCycle)
 
-importFrom(stats, as.dist, cutree, filter, hclust)
-
-importFrom(utils, read.csv, read.table, write.csv)
-
 importFrom(VariantAnnotation, VCF, VCFHeader)
 importMethodsFrom(VariantAnnotation, writeVcf)
-
-importFrom(xtable, xtable)
-
-importFrom(tools, texi2dvi)
-
-importFrom(TeachingDemos, spread.labs)
 
 exportClasses(
     AVASet,
