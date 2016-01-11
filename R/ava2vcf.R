@@ -142,13 +142,13 @@
 
   # body
   rowRanges <- GRanges(seqnames=Rle(chromosome), ranges=IRanges(start=abs_start, end=abs_start), strand="+", paramRangeID=rownames(fData(object)))
+  names(rowRanges) <- rownames(object)
   if(!missing(annot)) {
-    names(rowRanges) <- snps
-  } else {
-    names(rowRanges) <- rep(".", length(rowRanges))
+    rowRanges$SNP <- snps
   }
         
-  colData <- DataFrame(Samples=pData(object)$Annotation, row.names=pData(object)$SampleID)
+#  colData <- DataFrame(Samples=pData(object)$Annotation, row.names=pData(object)$SampleID)
+   colData <- DataFrame(SampleID=pData(object)$SampleID, row.names=sampleNames(object))
 
   if(!missing(annot)) {
     info <- DataFrame(DP=rowSums(assayData(object)$totalForwCount + assayData(object)$totalRevCount),
