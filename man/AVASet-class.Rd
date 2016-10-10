@@ -3,6 +3,7 @@
 \docType{class}
 \alias{AVASet-class}
 \alias{[,AVASet,ANY,ANY-method}
+\alias{[,AVASet,ANY,ANY,ANY-method}
 \alias{annotateVariants,AVASet-method}
 \alias{assayDataAmp,AVASet-method}
 \alias{assayDataAmp<-}

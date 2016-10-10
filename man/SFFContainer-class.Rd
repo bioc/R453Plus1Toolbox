@@ -52,6 +52,7 @@
 \alias{reads,SFFContainer-method}
 \alias{reads}
 \alias{[,SFFContainer,ANY,ANY-method}
+\alias{[,SFFContainer,ANY,ANY,ANY-method}
 
 \title{Class \code{"SFFContainer"}}
 \description{

@@ -1,7 +1,7 @@
 import(methods)
-importFrom(utils, read.csv, read.table, write.csv)
-importFrom(grDevices, dev.off, pdf, png, rgb)
-importFrom(graphics, axis, barplot, legend, lines, mtext, par, plot, points,
+importFrom(utils, read.csv, read.table, write.csv, Sweave)
+importFrom(grDevices, dev.off, pdf, png, rgb, rainbow)
+importFrom(graphics, abline, axis, barplot, hist, legend, lines, mtext, par, plot, points,
     polygon, rect, strheight, strwidth, text)
 importFrom(stats, as.dist, cutree, filter, hclust)
 importFrom(tools, texi2dvi)

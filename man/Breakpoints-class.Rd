@@ -11,6 +11,7 @@
 \alias{alignedReadsC2}
 \alias{alignedReadsC2,Breakpoints-method}
 \alias{[,Breakpoints,ANY,ANY-method}
+\alias{[,Breakpoints,ANY,ANY,ANY-method}
 \alias{commonAlignC1<-}
 \alias{commonAlignC1<-,Breakpoints,list-method}
 \alias{commonAlignC1}
