@@ -238,7 +238,7 @@
 
 .getEnsemblInfo <- function(gene, transcript){
   ## retrieve exon and gene information from Ensembl (if Ensembl gene-id is provided)
-  ensembl=useMart("ensembl", dataset="hsapiens_gene_ensembl")
+  ensembl=useMart("ensembl", dataset="hsapiens_gene_ensembl", host="http://grch37.ensembl.org")
   bmAttributes = c("ensembl_gene_id", "ensembl_transcript_id", "rank", "cds_start", "cds_end", "cds_length")
   bmExons = getBM(attributes=bmAttributes, filters="ensembl_gene_id", values=gene, mart=ensembl)
   bmExons = subset(bmExons, !apply(is.na(bmExons), 1, any))

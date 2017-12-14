@@ -25,7 +25,7 @@
 
 \arguments{
   \item{alnReads}{A list storing the aligned reads as produced by the function \link{scanBam}.}
-  \item{targetRegion}{A object of class rangesList containing the target region
+  \item{targetRegion}{A object of class IRangesList containing the target region
   of e.g. a used capture array. The parameter may be omitted in case of
   a non targeted sequencing approach.}
   \item{linkerSeq}{A linker sequence that was used during sample

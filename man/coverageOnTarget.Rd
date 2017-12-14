@@ -1,7 +1,7 @@
 \name{coverageOnTarget}
 
 \alias{coverageOnTarget}
-\alias{coverageOnTarget,list,RangesList-method}
+\alias{coverageOnTarget,list,GRanges-method}
 
 \title{
 Computes the coverage restricted to the target region.
@@ -19,7 +19,7 @@ coverageOnTarget(alnReads, targetRegion)
   A list as returned by \code{scanBam} storing aligned reads.
 }
   \item{targetRegion}{
-  The target region as a \code{RangesList}. The chromosome names must
+  The target region as a \code{GRanges} object. The chromosome names must
   fit to the chromosome names used in the alignment information of the
   given reads.
 }
@@ -52,7 +52,7 @@ Hans-Ulrich Klein
 library(Rsamtools)
 bamFile = system.file("extdata", "SVDetection", "bam", "N01.bam", package="R453Plus1Toolbox")
 bam = scanBam(bamFile)
-region = RangesList("11"=IRanges(start=118307205, end=118395936))
+region = GRanges(IRanges(start=118307205, end=118395936), seqnames=11)
 cov = coverageOnTarget(bam, region)
 }
 

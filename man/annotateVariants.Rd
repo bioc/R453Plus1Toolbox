@@ -11,8 +11,8 @@
 \description{This method annotates given genomic variants (mutations).
 Annotation includes affected genes, exons and codons. Resulting amino acid
 changes are returned as well as dbSNP identifiers, if the mutation is already
-known. All information is fetched from Ensembl via biomaRt using the datasets
-\code{hsapiens_gene_ensembl} and \code{hsapiens_snp}.}
+known. All information is fetched from the Ensembl GRCh37 server via biomaRt
+using the datasets \code{hsapiens_gene_ensembl} and \code{hsapiens_snp}.}
 
 \usage{annotateVariants(object, bsGenome)}
 

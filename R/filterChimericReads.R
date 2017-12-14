@@ -74,14 +74,11 @@
     # 2: remove all reads that do not align to the chip's target region
     if (!missing(targetRegion)) {
         message("Removing reads that do not align to the target region.")
-        readRanges = RangedData(
+        readRanges = GRanges(
             IRanges(start=reads$start, end=reads$end),
-            space=reads$rname, name=reads$qname)
-        ind = overlapsAny(readRanges, targetRegion)
-        targetReads = character()
-        for (chr in names(ind[sum(ind) > 0])) {
-            targetReads = c(targetReads, readRanges[chr]$name[ind[[chr]]])
-        }
+            seqnames=reads$rname, name=reads$qname)
+        ind = suppressWarnings(overlapsAny(readRanges, GRanges(targetRegion)))
+        targetReads <- readRanges$name[ind]
         reads = reads[is.element(reads$qname, targetReads),]
         log$TargetRegion = length(unique(reads$qname))
     } else {
