@@ -2,28 +2,18 @@
 
     result = list()
     for (i in 1:length(alnReads)) {
-        df = data.frame(
-            space=alnReads[[i]]$rname,
-            start=alnReads[[i]]$pos,
-            end=alnReads[[i]]$pos + alnReads[[i]]$qwidth - 1,
-            no=1:length(alnReads[[i]]$rname),
-            onTarget=FALSE
-        )
-        rd = as(df, "RangedData")
-        rm(df)
-
-        target = RangedData(targetRegion)
-
-        ml = overlapsAny(rd, target)
-        values(rd)[, "onTarget"] = ml
-        result[[i]] = rd[["onTarget"]][order(as.numeric(rd[["no"]]))]
+        rd = GRanges(IRanges(start=alnReads[[i]]$pos,
+                             end=alnReads[[i]]$pos + alnReads[[i]]$qwidth - 1),
+                             seqnames=alnReads[[i]]$rname)
+      
+        result[[i]] = overlapsAny(rd, targetRegion)
     }
 
     return(result)
 }
 
 setMethod("readsOnTarget",
-    signature=signature(alnReads="list", targetRegion="RangesList"),
+    signature=signature(alnReads="list", targetRegion="GRanges"),
     .readsOnTarget)
 
 

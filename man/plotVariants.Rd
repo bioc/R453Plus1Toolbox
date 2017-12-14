@@ -7,7 +7,7 @@
 \title{Plots variant positions}
 
 \description{This function illustrates the positions and types of mutations within a given gene and transcript. The plot shows only coding regions (thus, units are amino acids / codons). The coding 
-region is further divided into exons labeled with their rank in the transcript.}
+region is further divided into exons labeled with their rank in the transcript. Transcript annotation is obtained from the ensembl GRCh37 server.}
 
 \usage{plotVariants(data, gene, transcript, regions, mutationInfo, groupBy, horiz=FALSE, cex=1, title="", legend=TRUE)}
 

@@ -2,20 +2,17 @@
 
     result = list()
     for (i in 1:length(alnReads)) {
-        df = data.frame(
-            space=alnReads[[i]]$rname,
-            start=alnReads[[i]]$pos,
-            end=alnReads[[i]]$pos + alnReads[[i]]$qwidth - 1)
-
-        rd = as(df, "RangedData")
+        rd = GRanges(IRanges(start=alnReads[[i]]$pos,
+                             end=alnReads[[i]]$pos + alnReads[[i]]$qwidth - 1),
+                             seqnames=alnReads[[i]]$rname)
         cov = coverage(rd)
 
-        chrs = intersect(names(cov), names(targetRegion))
+        chrs = as.character(intersect(names(cov), seqnames(targetRegion)))
         result[[i]] = numeric()
         for (chr in chrs) {
-            ind = end(targetRegion[[chr]]) > sum(width(cov[[chr]]))
-            end(targetRegion[[chr]])[ind] = sum(width(cov[[chr]]))
-            tmpTC = unlist(aggregate(cov[[chr]], targetRegion[[chr]], FUN=as.numeric))
+            ind = end(targetRegion[seqnames(targetRegion) == chr]) > sum(width(cov[[chr]]))
+            end(targetRegion[seqnames(targetRegion) == chr])[ind] = sum(width(cov[[chr]]))
+            tmpTC = unlist(aggregate(cov[[chr]], targetRegion[seqnames(targetRegion) == chr], FUN=as.numeric))
             names(tmpTC) = rep(chr, length(tmpTC))
             result[[i]] = as.integer(c(result[[i]], tmpTC))
         }
@@ -26,7 +23,7 @@
 
 
 setMethod("coverageOnTarget", 
-    signature=signature(alnReads="list", targetRegion="RangesList"),
+    signature=signature(alnReads="list", targetRegion="GRanges"),
     .coverageOnTarget)
 
 

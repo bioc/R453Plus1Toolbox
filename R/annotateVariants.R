@@ -15,10 +15,10 @@
 
 
     # variants as IRanges
-    variantRanges = RangedData(IRanges(start=object$start, end=object$end),
+    variantRanges = GRanges(IRanges(start=object$start, end=object$end),
         ID=row.names(object), strand=object$strand,
         seqSur=object$seqSur, seqRef=object$seqRef,
-        seqMut=object$seqMut, space=object$chromosome)
+        seqMut=object$seqMut, seqnames=object$chromosome)
 
 
     # fetch all genomic information from ENSEMBL
@@ -53,14 +53,14 @@
         return(variants)
     }
     bmInfoNames = getBM(attributes=c("ensembl_transcript_id",
-        "external_gene_id", "external_transcript_id"),
+        "external_gene_name", "external_transcript_name"),
         filters="ensembl_transcript_id",
         values=unique(bmInfo$ensembl_transcript_id),
         mart=ensembl)
     mInd = match(bmInfo$ensembl_transcript_id,
         bmInfoNames$ensembl_transcript_id)
-    bmInfo$external_gene_id = bmInfoNames$external_gene_id[mInd]
-    bmInfo$external_transcript_id = bmInfoNames$external_transcript_id[mInd]
+    bmInfo$external_gene_id = bmInfoNames$external_gene_name[mInd]
+    bmInfo$external_transcript_id = bmInfoNames$external_transcript_name[mInd]
     cat("done.\n")
   
   
@@ -69,23 +69,20 @@
     cols = c("ensembl_gene_id", "start_position",
         "end_position", "chromosome_name", "strand", "external_gene_id")
     geneDF = bmInfo[!duplicated(bmInfo[,"ensembl_gene_id",]), cols]
-    geneRanges = RangedData(IRanges(start=geneDF$start_position,
-        end=geneDF$end_position),
+    geneRanges = GRanges(IRanges(start=geneDF$start_position, end=geneDF$end_position),
         ensembl_gene_id=geneDF$ensembl_gene_id,
         strand=geneDF$strand,
         external_gene_id=geneDF$external_gene_id,
-        space=geneDF$chromosome_name)
+        seqnames=geneDF$chromosome_name)
     matchList = findOverlaps(query=ranges(geneRanges),
         subject=ranges(variantRanges))
-    for (chr in names(matchList)) {
-        numHits = nrow(as.matrix(matchList[[chr]]))
-        for (hit in setdiff(0:numHits, 0)) {
-            varInd = as.matrix(matchList[[chr]])[hit, "subjectHits"]
-            geneInd = as.matrix(matchList[[chr]])[hit, "queryHits"]
-            variants[[variantRanges[chr][["ID"]][varInd]]]$genes =
-            rbind(variants[[variantRanges[chr][["ID"]][varInd]]]$genes,
-                as.data.frame(geneRanges[chr])[geneInd,])
-        }
+    
+    for (hit in setdiff(0:length(matchList), 0)) {
+               varInd = subjectHits(matchList)[hit]
+               geneInd = queryHits(matchList)[hit]
+               variants[[variantRanges$ID[varInd]]]$genes =
+               rbind(variants[[variantRanges$ID[varInd]]]$genes,
+                   as.data.frame(geneRanges[geneInd]))
     }
     cat("done.\n")
   
@@ -96,25 +93,24 @@
         "transcript_start", "transcript_end", "chromosome_name",
         "strand", "external_transcript_id")
     transcriptDF = bmInfo[!duplicated(bmInfo[,"ensembl_transcript_id",]), cols]
-    transcriptRanges = RangedData(IRanges(start=transcriptDF$transcript_start,
+    transcriptRanges = GRanges(IRanges(start=transcriptDF$transcript_start,
         end=transcriptDF$transcript_end),
         ensembl_gene_id=transcriptDF$ensembl_gene_id,
         ensembl_transcript_id=transcriptDF$ensembl_transcript_id,
         external_transcript_id=transcriptDF$external_transcript_id,
         strand=transcriptDF$strand,
-        space=transcriptDF$chromosome_name)
+        seqnames=transcriptDF$chromosome_name)
     matchList = findOverlaps(query=ranges(transcriptRanges),
         subject=ranges(variantRanges))
-    for (chr in names(matchList)) {
-        numHits = nrow(as.matrix(matchList[[chr]]))
-        for (hit in setdiff(0:numHits, 0)) {
-            varInd = as.matrix(matchList[[chr]])[hit, "subjectHits"]
-            transInd = as.matrix(matchList[[chr]])[hit, "queryHits"]
-            variants[[variantRanges[chr][["ID"]][varInd]]]$transcripts =
-            rbind(variants[[variantRanges[chr][["ID"]][varInd]]]$transcripts,
-                as.data.frame(transcriptRanges[chr])[transInd,])
-        }
+    
+    for (hit in setdiff(0:length(matchList), 0)) {
+      varInd = subjectHits(matchList)[hit]
+      transInd = queryHits(matchList)[hit]
+      variants[[variantRanges$ID[varInd]]]$transcripts =
+        rbind(variants[[variantRanges$ID[varInd]]]$transcripts,
+              as.data.frame(transcriptRanges[transInd]))
     }
+    
     cat("done.\n")
   
 
@@ -126,7 +122,7 @@
         "cds_start", "cds_end", "cds_length", "chromosome_name", "strand")
     exonDF = bmInfo[!duplicated(
         bmInfo[,c("ensembl_transcript_id","ensembl_exon_id")]), cols]
-    exonRanges = RangedData(
+    exonRanges = GRanges(
         IRanges(start=exonDF$exon_chrom_start, end=exonDF$exon_chrom_end),
         ensembl_gene_id=exonDF$ensembl_gene_id,
         ensembl_transcript_id=exonDF$ ensembl_transcript_id,
@@ -140,16 +136,16 @@
         cds_end=exonDF$cds_end,
         cds_length=exonDF$cds_length,
         strand=exonDF$strand,
-        space=exonDF$chromosome_name)
+        seqnames=exonDF$chromosome_name)
     matchList = findOverlaps(query=ranges(exonRanges),
         subject=ranges(variantRanges))
-    for (chr in names(matchList)) {
-        numHits = nrow(as.matrix(matchList[[chr]]))
-        for (hit in setdiff(0:numHits, 0)) {
-            varInd = as.matrix(matchList[[chr]])[hit, "subjectHits"]
-            exonInd = as.matrix(matchList[[chr]])[hit, "queryHits"]
-            tmpExon = as.data.frame(exonRanges[chr])[exonInd,]
-            tmpVar = as.data.frame(variantRanges[chr])[varInd,]
+    
+    for (hit in setdiff(0:length(matchList), 0)) {
+      varInd = subjectHits(matchList)[hit]
+      exonInd = queryHits(matchList)[hit]
+
+            tmpExon = as.data.frame(exonRanges[exonInd])
+            tmpVar = as.data.frame(variantRanges[varInd])
 
             cds = .codingRegion(tmpExon)
       
@@ -185,7 +181,7 @@
       
             # If mutation is in coding region, we compute affected codons
             if (tmpExon$coding) {
-                if (tmpExon$strand == 1) {
+                if (tmpExon$strand == "+") {
                     relCdsPosStart = tmpVar$start - cds[1] + tmpExon$cds_start
                     relCdsPosEnd = tmpVar$end - cds[1] + tmpExon$cds_start
                     seqSur = DNAString(as.character(tmpVar$seqSur))
@@ -343,14 +339,14 @@
                 tmpExon$AminoRef = NA
                 tmpExon$AminoMut = NA
             }
-      
-            variants[[variantRanges[chr][["ID"]][varInd]]]$exons =
-                rbind(variants[[variantRanges[chr][["ID"]][varInd]]]$exons,
-                tmpExon[, c("space", "start", "end", "width", "ensembl_gene_id",
-                "ensembl_transcript_id", "ensembl_exon_id", "rank",
-                "strand", "utr_5", "utr_3", "coding", "numCodonStart",
-                "numCodonEnd", "codonRef", "codonMut", "AminoRef", "AminoMut")])
-        }
+
+            variants[[variantRanges$ID[varInd]]]$exons =
+              rbind(variants[[variantRanges$ID[varInd]]]$exons,
+                    tmpExon[, c("seqnames", "start", "end", "width", "ensembl_gene_id",
+                                "ensembl_transcript_id", "ensembl_exon_id", "rank",
+                                "strand", "utr_5", "utr_3", "coding", "numCodonStart",
+                                "numCodonEnd", "codonRef", "codonMut", "AminoRef", "AminoMut")])
+        
     }
     cat("done.\n")
 
@@ -377,23 +373,23 @@
     if (nrow(snpDF) > 0) {
         snpDF$A = sapply(strsplit(snpDF$allele, "/"), function(x) {x[1]})
         snpDF$B = sapply(strsplit(snpDF$allele, "/"), function(x) {x[2]})        
-        snpRanges = RangedData(IRanges(start=snpDF$chrom_start,
+        snpRanges = GRanges(IRanges(start=snpDF$chrom_start,
             end=snpDF$chrom_start + pmax(nchar(snpDF$A), nchar(snpDF$B)) - 1),
             refsnp_id=snpDF$refsnp_id,
             chrom_strand=snpDF$chrom_strand,
             allele=snpDF$allele,
             A=snpDF$A,
             B=snpDF$B,
-            space=snpDF$chr_name)
+            seqnames=snpDF$chr_name)
         matchList = findOverlaps(query=ranges(snpRanges),
             subject=ranges(variantRanges))
-        for (chr in names(matchList)) {
-            numHits = nrow(as.matrix(matchList[[chr]]))
-            for (hit in setdiff(0:numHits, 0)) {
-                varInd = as.matrix(matchList[[chr]])[hit, "subjectHits"]
-                snpInd = as.matrix(matchList[[chr]])[hit, "queryHits"]
-                tmpSNP = as.data.frame(snpRanges[chr])[snpInd,]
-                tmpVar = as.data.frame(variantRanges[chr])[varInd,]
+     
+        for (hit in setdiff(0:length(matchList), 0)) {
+            varInd = subjectHits(matchList)[hit]
+            snpInd = queryHits(matchList)[hit]
+            
+                tmpSNP = as.data.frame(snpRanges[snpInd])
+                tmpVar = as.data.frame(variantRanges[varInd])
 
                 # We cannot process entries of class "HGMD_MUTATION", because
                 # no alleles are given.
@@ -411,8 +407,8 @@
                     if (substr(vB, start=1, stop=1) == "-") {
                         vB = "-"
                     }
-                    if ((tmpSNP$chrom_strand == 1 & tmpVar$strand == "-") |
-                        (tmpSNP$chrom_strand == -1 & tmpVar$strand == "+")) {
+                    if ((tmpSNP$chrom_strand == "+" & tmpVar$strand == "-") |
+                        (tmpSNP$chrom_strand == "-" & tmpVar$strand == "+")) {
                         sA = as.character(complement(DNAString(sA)))
                         sB = as.character(complement(DNAString(sB)))
                     }                
@@ -432,10 +428,10 @@
                     tmpSNP$identical = FALSE
                 }
 
-                variants[[variantRanges[chr][["ID"]][varInd]]]$snps =
-                    rbind(variants[[variantRanges[chr][["ID"]][varInd]]]$snps,
+                variants[[variantRanges$ID[varInd]]]$snps =
+                  rbind(variants[[variantRanges$ID[varInd]]]$snps,
                         tmpSNP)
-            }
+            
         }
     }
     cat("done.\n")
@@ -523,8 +519,9 @@
     dataset = "hsapiens_gene_ensembl"
     snpDataset = "hsapiens_snp"
 
-    ensembl = useMart("ensembl", dataset=dataset)
-    ensemblSnp = useMart("snp", dataset=snpDataset)
+    ensembl = useMart("ENSEMBL_MART_ENSEMBL", dataset=dataset, host="http://grch37.ensembl.org")
+    ensemblSnp = useMart("ENSEMBL_MART_SNP", dataset=snpDataset, host="http://grch37.ensembl.org")
+    # ensemblSnp = useMart("snp", dataset=snpDataset, host="http://grch37.ensembl.org")
     
     av = new("AnnotatedVariants")
     i = 1
@@ -578,7 +575,7 @@ setMethod("annotateVariants", signature=signature(object="data.frame", bsGenome=
 
     # exon has 5'-UTR
     } else if (!is.na(exon$X5_utr_end) & is.na(exon$X3_utr_end)) {
-        if (exon$strand == 1) {
+        if (exon$strand == "+") {
             if (exon$X5_utr_end == exon$end) {
                 cdsStart = NA
                 cdsEnd = NA
@@ -598,7 +595,7 @@ setMethod("annotateVariants", signature=signature(object="data.frame", bsGenome=
 
     # exon has 3'-UTR
     } else if (is.na(exon$X5_utr_end) & !is.na(exon$X3_utr_end)) {
-        if (exon$strand == 1) {
+        if (exon$strand == "+") {
             if (exon$X3_utr_start == exon$start) {
                 cdsStart = NA
                 cdsEnd = NA
@@ -618,7 +615,7 @@ setMethod("annotateVariants", signature=signature(object="data.frame", bsGenome=
 
     # exon has 5'-UTR and 3'-UTR => coding region must be in between
     } else if (!is.na(exon$X5_utr_end) & !is.na(exon$X3_utr_end)) {
-        if (exon$strand == 1) {
+        if (exon$strand == "+") {
             cdsStart = exon$X5_utr_end + 1
             cdsEnd =exon$X3_utr_start - 1
         } else {

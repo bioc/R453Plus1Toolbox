@@ -1,6 +1,6 @@
 \name{readsOnTarget}
 \alias{readsOnTarget}
-\alias{readsOnTarget,list,RangesList-method}
+\alias{readsOnTarget,list,GRanges-method}
 
 \title{
 Check for each read whether it aligns within the given region.
@@ -20,7 +20,7 @@ a given region.
   A list as returned by \code{scanBam} storing aligned reads.
 }
   \item{targetRegion}{
-  The target region as a \code{RangesList}. The chromosome names must
+  The target region as a \code{GRanges} object. The chromosome names must
   fit to the chromosome names used in the alignment information of the
   given reads.
 }
@@ -50,7 +50,7 @@ one base from any target region or not.}
 library(Rsamtools)
 bamFile = system.file("extdata", "SVDetection", "bam", "N01.bam", package="R453Plus1Toolbox")
 bam = scanBam(bamFile)
-region = RangesList("11"=IRanges(start=118307205, end=118395936))
+region = GRanges(IRanges(start=118307205, end=118395936), seqnames=11)
 targetReads = readsOnTarget(bam, region)
 sum(targetReads[[1]])
 }
