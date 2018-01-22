@@ -25,7 +25,7 @@ setMethod("readsOnTarget",
 #    refBed=import.ucsc(chipDesignBed, subformat="bed")
 #    irCD=refBed[[trackPos]]$ranges
 #    spacesCD=gsub("chr", "", refBed[[trackPos]]$space)
-#    rlCD=RangesList(irCD)
+#    rlCD=IRangesList(irCD)
 #    names(rlCD)=spacesCD
 #
 #    du1=duplicated(samDF[,"name"], fromLast=FALSE)

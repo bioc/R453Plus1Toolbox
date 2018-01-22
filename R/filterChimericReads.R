@@ -244,22 +244,22 @@
 
 
 setMethod("filterChimericReads",
-    signature=signature(alnReads="list", targetRegion="RangesList", linkerSeq="DNAString",
+    signature=signature(alnReads="list", targetRegion="IntegerRangesList", linkerSeq="DNAString",
         minDist="numeric", dupReadDist="numeric"),
     .filterChimericReads)
 
 setMethod("filterChimericReads",
-    signature=signature(alnReads="list", targetRegion="RangesList", linkerSeq="DNAString",
+    signature=signature(alnReads="list", targetRegion="IntegerRangesList", linkerSeq="DNAString",
         minDist="missing", dupReadDist="missing"),
     .filterChimericReads)
 
 setMethod("filterChimericReads",
-    signature=signature(alnReads="list", targetRegion="RangesList", linkerSeq="missing",
+    signature=signature(alnReads="list", targetRegion="IntegerRangesList", linkerSeq="missing",
         minDist="numeric", dupReadDist="numeric"),
     .filterChimericReads)
 
 setMethod("filterChimericReads",
-    signature=signature(alnReads="list", targetRegion="RangesList", linkerSeq="missing",
+    signature=signature(alnReads="list", targetRegion="IntegerRangesList", linkerSeq="missing",
         minDist="missing", dupReadDist="missing"),
     .filterChimericReads)
 

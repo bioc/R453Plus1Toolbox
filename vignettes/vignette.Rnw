@@ -714,7 +714,7 @@ bam = scanBam(bamFile, param=parameters)
 @ 
 
 For the filtering step, we specify a target region, i.e. the used capture array in form of a
-\Rclass{RangesList}. All chimeric reads not overlapping this region with at least one local
+\Rclass{IntegerRangesList}. All chimeric reads not overlapping this region with at least one local
 alignment are discarded. The following example creates a target region out of a given .bed file
 containing region information using functions from package \Rpackage{rtracklayer}. 
 <<label=filterReads, eval=TRUE>>=

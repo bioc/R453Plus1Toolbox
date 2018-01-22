@@ -1,10 +1,10 @@
 \name{filterChimericReads}
 
 \alias{filterChimericReads}
-\alias{filterChimericReads,list,RangesList,DNAString,missing,missing-method}
-\alias{filterChimericReads,list,RangesList,DNAString,numeric,numeric-method}
-\alias{filterChimericReads,list,RangesList,missing,missing,missing-method}
-\alias{filterChimericReads,list,RangesList,missing,numeric,numeric-method}
+\alias{filterChimericReads,list,IntegerRangesList,DNAString,missing,missing-method}
+\alias{filterChimericReads,list,IntegerRangesList,DNAString,numeric,numeric-method}
+\alias{filterChimericReads,list,IntegerRangesList,missing,missing,missing-method}
+\alias{filterChimericReads,list,IntegerRangesList,missing,numeric,numeric-method}
 \alias{filterChimericReads,list,missing,DNAString,missing,missing-method}
 \alias{filterChimericReads,list,missing,DNAString,numeric,numeric-method}
 \alias{filterChimericReads,list,missing,missing,missing,missing-method}
@@ -20,7 +20,7 @@
   reads.}
 
 \usage{
-  \S4method{filterChimericReads}{list,RangesList,DNAString,numeric,numeric}(alnReads, targetRegion, linkerSeq, minDist, dupReadDist)
+  \S4method{filterChimericReads}{list,IntegerRangesList,DNAString,numeric,numeric}(alnReads, targetRegion, linkerSeq, minDist, dupReadDist)
 }
 
 \arguments{
