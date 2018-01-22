@@ -25,7 +25,7 @@ importFrom(biomaRt, getBM, getSequence, useMart)
 
 importClassesFrom(Biostrings, DNAString, DNAStringSet, PhredQuality, QualityScaledDNAStringSet, 
     QualityScaledXStringSet, XStringQuality, XStringSet, BString, SolexaQuality)
-importMethodsFrom(Biostrings, PDict, aligned, alphabetFrequency, append, complement, 
+importMethodsFrom(Biostrings, PDict, aligned, alphabetFrequency, complement, 
     deletion, endIndex, insertion, matchPDict, matchPattern, mismatchTable, 
     pairwiseAlignment, quality, reverseComplement, startIndex, translate, vmatchPattern)
 importFrom(Biostrings, BStringSet, dinucleotideFrequency, DNAString, DNAStringSet, getSeq, 
