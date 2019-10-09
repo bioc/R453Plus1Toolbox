@@ -24,6 +24,7 @@ sff_container *readSFF(char *filename) {
   FILE *file;
   char *buffer;
   unsigned long fileLen;
+  int block_count;
 
   if (NULL == (file = fopen(filename, "rb"))) {
     REprintf("Unable to open file %s \n", filename);
@@ -43,7 +44,7 @@ sff_container *readSFF(char *filename) {
   }
 
   //Read file contents into buffer
-  fread(buffer, fileLen, 1, file);
+  block_count = fread(buffer, fileLen, 1, file);
   fclose(file);
 
 
