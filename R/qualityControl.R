@@ -510,13 +510,15 @@ setMethod("complexity.dust", signature(object="SFFContainer"), .complexity.dust_
   fac1 = tfq / (rls - 2)
   fac2 = ifelse(fac1 == 0, 0, log(fac1, base=ifelse(rls < 66, rls - 2, 64)))
   scores = (-100) * rowSums(fac1 * fac2)
-  if (!is.element("main", names(args))) {
-    main = "Histogram of Entropy complexity scores"
-    hist(scores, main=main, xlab=xlab, ylab=ylab, xlim=xlim, breaks=breaks, col=col, ...)
-  } else {
-    hist(scores, xlab=xlab, ylab=ylab, xlim=xlim, breaks=breaks, col=col, ...)
+  if (!is.element("plot", names(args)) || args$plot == TRUE) {
+    if (!is.element("main", names(args))) {
+      main = "Histogram of Entropy complexity scores"
+      hist(scores, main=main, xlab=xlab, ylab=ylab, xlim=xlim, breaks=breaks, col=col, ...)
+    } else {
+      hist(scores, xlab=xlab, ylab=ylab, xlim=xlim, breaks=breaks, col=col, ...)
+    }
+    abline(v=70, col="blue")
   }
-  abline(v=70, col="blue")
   return(scores)
 }
 
