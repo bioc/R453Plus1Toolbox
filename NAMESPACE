@@ -23,14 +23,18 @@ importFrom(Biobase, assayDataElementNames, assayDataNew)
     
 importFrom(biomaRt, getBM, getSequence, useMart)
 
-importClassesFrom(Biostrings, DNAString, DNAStringSet, PhredQuality, QualityScaledDNAStringSet, 
-    QualityScaledXStringSet, XStringQuality, XStringSet, BString, SolexaQuality)
-importMethodsFrom(Biostrings, PDict, aligned, alphabetFrequency, complement, 
-    deletion, endIndex, insertion, matchPDict, matchPattern, mismatchTable, 
-    pairwiseAlignment, quality, reverseComplement, startIndex, translate, vmatchPattern)
-importFrom(Biostrings, BStringSet, dinucleotideFrequency, DNAString, DNAStringSet, getSeq, 
-    nucleotideSubstitutionMatrix, oligonucleotideFrequency, PhredQuality, QualityScaledDNAStringSet, 
-    trinucleotideFrequency, writeXStringSet)
+importClassesFrom(Biostrings, BString, DNAString, XStringSet, DNAStringSet,
+    XStringQuality, PhredQuality, SolexaQuality,
+    QualityScaledDNAStringSet, QualityScaledXStringSet)
+importMethodsFrom(Biostrings, PDict, alphabetFrequency, complement, endIndex,
+    matchPDict, matchPattern, quality, reverseComplement, startIndex,
+    translate, vmatchPattern)
+importFrom(Biostrings, DNAString, BStringSet, DNAStringSet, getSeq,
+    dinucleotideFrequency, trinucleotideFrequency, oligonucleotideFrequency,
+    PhredQuality, QualityScaledDNAStringSet, writeXStringSet)
+
+importFrom(pwalign, nucleotideSubstitutionMatrix, pairwiseAlignment,
+    aligned, insertion, deletion, mismatchTable)
 
 importClassesFrom(BSgenome, BSgenome)
 
