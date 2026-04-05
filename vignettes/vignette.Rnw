@@ -452,14 +452,14 @@ The following example calls \Rfunction{plotVariants} for the gene TET2 having th
 <<label=loadXLS>>=
 data(plotVariantsExample)
 @
-<<label=plotVariants,fig=TRUE,include=FALSE,eps=FALSE,pdf=TRUE>>=
+<<label=plotVariants,fig=TRUE,include=FALSE,eps=FALSE,pdf=TRUE,eval=FALSE>>=
 geneInfo = plotVariants(data=variants, gene="ENSG00000168769", 
  transcript="ENST00000513237", regions=regions, 
  mutationInfo=mutationInfo, horiz=TRUE, cex=0.8)
 @
 \begin{figure}[hp]
 \begin{center}
-  \includegraphics{R453Plus1-plotVariants}
+  \includegraphics{plotVariants.pdf}
   \caption{Plot of the variants for gene TET2 by passing mutations as a data frame. This version includes mutation labels and allows user defined mutation types.}
 \end{center}
 \end{figure}

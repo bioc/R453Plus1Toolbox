@@ -489,8 +489,10 @@
 
     ## determine surroundings of +/-3 based in reference sequence
     if (missing(bsGenome)) {
-        library("BSgenome.Hsapiens.UCSC.hg19")
-        bsGenome = Hsapiens
+        if (!requireNamespace("BSgenome.Hsapiens.UCSC.hg19", quietly = TRUE)) {
+            stop("Package BSgenome.Hsapiens.UCSC.hg19 is required if no genome is specified.")
+        }
+        bsGenome = BSgenome.Hsapiens.UCSC.hg19::Hsapiens
     }    
     surr = vector(mode="character", length=length(chrs))
     for(i in 1:length(chrs))

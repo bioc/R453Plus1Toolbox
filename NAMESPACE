@@ -21,7 +21,7 @@ importMethodsFrom(Biobase, assayData, "assayData<-", combine, fData, featureData
     pData, phenoData, "phenoData<-", sampleNames, varMetadata)
 importFrom(Biobase, assayDataElementNames, assayDataNew)
     
-importFrom(biomaRt, getBM, getSequence, useMart)
+importFrom(biomaRt, getBM, getSequence, useMart, useEnsembl)
 
 importClassesFrom(Biostrings, BString, DNAString, XStringSet, DNAStringSet,
     XStringQuality, PhredQuality, SolexaQuality,

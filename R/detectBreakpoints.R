@@ -2,9 +2,10 @@
 
     # use library BSgenome.Hsapiens.UCSC.hg19 as default genome for common breakpoint detection
     if(missing(bsGenome)){
-      if(!require(BSgenome.Hsapiens.UCSC.hg19))
+      if (!requireNamespace("BSgenome.Hsapiens.UCSC.hg19", quietly = TRUE)) {
         stop("library BSgenome.Hsapiens.UCSC.hg19 not found (please try to pass your own genome via function parameters)")
-      bsGenome = Hsapiens
+      }
+      bsGenome = BSgenome.Hsapiens.UCSC.hg19::Hsapiens
     }
     
     # check sam/bam input
