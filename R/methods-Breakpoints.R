@@ -130,13 +130,14 @@ setMethod(show, signature(object="Breakpoints"),
     }
 )
 
-setMethod(table, signature(...="Breakpoints"),
+setMethod("table", signature("Breakpoints"),
     function(...) {
-      if(length(...) > 0){
-        size = sapply(seqsC1(...), function(x) nrow(x)) + sapply(seqsC2(...), function(x) nrow(x))
-        return(table(size))
+      brp <- list(...)[[1]]
+      if(length(brp) > 0){
+        size <- sapply(seqsC1(brp), nrow) + sapply(seqsC2(brp), nrow)
+        return(base::table(size))
       }else{
-        stop("The given object is empty")
+        stop("The given object is empty.")
       }
     }
 )
