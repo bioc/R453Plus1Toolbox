@@ -15,6 +15,8 @@ setGeneric("alignedReadsC1", function(object) {
     standardGeneric("alignedReadsC1")})
 setGeneric("alignedReadsC2", function(object) {
     standardGeneric("alignedReadsC2")})
+setGeneric("breakpointTable", function(object, ...) {
+    standardGeneric("breakpointTable")})
 
 setGeneric("seqsC1<-", function(object, value) {
     standardGeneric("seqsC1<-")})

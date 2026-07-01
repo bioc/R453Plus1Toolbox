@@ -84,7 +84,7 @@ filterReads = filterChimericReads(bam, targetRegion=captureArray, linkerSeq=link
 
 # detect breakpoints of size >= 3
 breakpoints = detectBreakpoints(filterReads, minClusterSize=3)
-table(breakpoints)
+breakpointTable(breakpoints)
 summary(breakpoints)
 
 # merge breakpoints

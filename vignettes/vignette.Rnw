@@ -738,7 +738,7 @@ Finally, we call the \Rfunction{detectBreakpoints} and \Rfunction{mergeBreakpoin
 <<label=detectBreakpoints, eval=TRUE>>=
 bp = detectBreakpoints(filterReads, minClusterSize=1)
 bp
-table(bp)
+breakpointTable(bp)
 
 mbp = mergeBreakpoints(bp)
 summary(mbp)

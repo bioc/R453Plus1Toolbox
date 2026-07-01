@@ -163,7 +163,7 @@ bamReads[[1]] = list(
 
 bps = detectBreakpoints(bamReads, minClusterSize=1, bsGenome=Scerevisiae)
 summary(bps)
-table(bps)
+breakpointTable(bps)
 
 mergeBreakpoints(bps)
 }
